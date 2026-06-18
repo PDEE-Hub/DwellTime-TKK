@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dwell Time Dashboard | ทกท. ปีงบประมาณ 2569</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg:          #09162A;
+  --bg2:         #0D1E36;
+  --card:        #111F35;
+  --card2:       #172840;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --gold:        #C9A227;
+  --gold-bright: #EDCB58;
+  --blue:        #4A9EE8;
+  --blue-dim:    rgba(74,158,232,0.13);
+  --green:       #2DB892;
+  --green-dim:   rgba(45,184,146,0.13);
+  --orange:      #E07040;
+  --orange-dim:  rgba(224,112,64,0.13);
+  --amber:       #E8A020;
+  --amber-dim:   rgba(232,160,32,0.13);
+  --red:         #D84040;
+  --yellow:      #CDB820;
+  --yellow-dim:  rgba(205,184,32,0.13);
+  --text:        #DDE5EF;
+  --text2:       #7A90A8;
+  --text3:       #435870;
+  --grid:        rgba(255,255,255,0.05);
+  --tick:        #546880;
+  --radius:      8px;
+  --radius-sm:   5px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ─── HEADER ─── */
+.hdr {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border2);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.hdr-left { display: flex; align-items: center; gap: 14px; }
+.hdr-badge {
+  background: var(--gold);
+  color: #0A0A0A;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+.hdr-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.hdr-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.hdr-right { display: flex; align-items: center; gap: 20px; }
+.hdr-stat { text-align: right; }
+.hdr-stat-val { font-size: 17px; font-weight: 600; color: var(--gold-bright); }
+.hdr-stat-lbl { font-size: 10px; color: var(--text3); }
+
+/* ─── TABS ─── */
+.tab-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  gap: 4px;
+}
+.tab-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3);
+  font-family: inherit; font-size: 13px;
+  padding: 12px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--gold-bright); border-bottom-color: var(--gold); }
+
+/* ─── MAIN ─── */
+.main { padding: 20px 28px; max-width: 1400px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ─── SECTION LABEL ─── */
+.sec-lbl {
+  font-size: 10px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text3);
+  margin: 20px 0 10px;
+}
+.sec-lbl:first-child { margin-top: 0; }
+
+/* ─── KPI CARDS ─── */
+.kpi-row { display: grid; gap: 10px; margin-bottom: 16px; }
+.kpi-row-6 { grid-template-columns: repeat(6, 1fr); }
+.kpi-row-4 { grid-template-columns: repeat(4, 1fr); }
+.kpi-row-3 { grid-template-columns: repeat(3, 1fr); }
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  position: relative; overflow: hidden;
+}
+.kpi::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.kpi.blue::before   { background: var(--blue); }
+.kpi.green::before  { background: var(--green); }
+.kpi.orange::before { background: var(--orange); }
+.kpi.gold::before   { background: var(--gold); }
+.kpi.amber::before  { background: var(--amber); }
+.kpi.red::before    { background: var(--red); }
+.kpi.yellow::before { background: var(--yellow); }
+
+/* color tint on card bg */
+.kpi.green  { background: linear-gradient(135deg, #111F35 80%, rgba(45,184,146,0.07)); }
+.kpi.yellow { background: linear-gradient(135deg, #111F35 80%, rgba(205,184,32,0.07)); }
+.kpi.orange { background: linear-gradient(135deg, #111F35 80%, rgba(224,112,64,0.08)); }
+.kpi.red    { background: linear-gradient(135deg, #111F35 80%, rgba(216,64,64,0.10)); }
+
+/* ─── DONUT HTML LEGEND ─── */
+.donut-legend { display:flex; flex-wrap:wrap; gap:5px 14px; margin-bottom:10px; }
+.donut-legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text2); white-space:nowrap; }
+.donut-legend-pct { font-weight:500; color:var(--text); margin-left:2px; }
+
+/* ─── STATUS STRIP ─── */
+.status-strip {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 28px;
+  display: flex; align-items: center; gap: 6px;
+}
+.status-strip-lbl { font-size: 10px; color: var(--text3); margin-right: 6px; }
+.status-pip {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--text2);
+  padding: 2px 10px 2px 6px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+.status-pip.s-green  { background: rgba(45,184,146,0.1);  border-color: rgba(45,184,146,0.25);  color: #2DB892; }
+.status-pip.s-yellow { background: rgba(205,184,32,0.1);  border-color: rgba(205,184,32,0.25);  color: #CDB820; }
+.status-pip.s-orange { background: rgba(224,112,64,0.1);  border-color: rgba(224,112,64,0.25);  color: #E07040; }
+.status-pip.s-red    { background: rgba(216,64,64,0.1);   border-color: rgba(216,64,64,0.25);   color: #D84040; }
+.pip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.s-green  .pip-dot { background: #2DB892; }
+.s-yellow .pip-dot { background: #CDB820; }
+.s-orange .pip-dot { background: #E07040; }
+.s-red    .pip-dot { background: #D84040; }
+
+/* ─── FOOTER ─── */
+.site-footer {
+  margin-top: 28px; padding: 16px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.footer-row { display: flex; align-items: center; gap: 8px; }
+.footer-tag {
+  font-size: 9px; font-weight: 600; letter-spacing: .06em;
+  background: var(--bg); border: 1px solid var(--border2);
+  color: var(--text3); padding: 2px 7px; border-radius: 3px;
+}
+.footer-text { font-size: 10px; color: var(--text3); }
+.footer-text strong { color: var(--text2); font-weight: 500; }
+.kpi-lbl { font-size: 10px; color: var(--text2); margin-bottom: 6px; }
+.kpi-val { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.kpi-sub.up   { color: var(--green); }
+.kpi-sub.down { color: var(--orange); }
+
+/* ─── CHART PANELS ─── */
+.chart-row { display: grid; gap: 12px; margin-bottom: 12px; }
+.chart-row-2 { grid-template-columns: 1fr 1fr; }
+.chart-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.chart-row-full { grid-template-columns: 1fr; }
+.chart-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.chart-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.chart-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.chart-sub { font-size: 10px; color: var(--text3); margin-bottom: 10px; }
+.chart-canvas-wrap { position: relative; width: 100%; }
+.h200 { height: 200px; }
+.h230 { height: 230px; }
+.h260 { height: 260px; }
+
+/* ─── LEGEND ─── */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
+.ld { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.ld-line { width: 16px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+.ld-dash { width: 16px; height: 0; border-top: 2px dashed; border-radius: 1px; flex-shrink: 0; }
+
+/* ─── TOGGLE BUTTONS ─── */
+.tog-group { display: flex; gap: 4px; }
+.tog-btn {
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text3); font-family: inherit; font-size: 10px;
+  padding: 3px 10px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all .15s;
+}
+.tog-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+
+/* ─── WAREHOUSE TAB SPECIAL ─── */
+.claim {
+  border-left: 3px solid var(--orange);
+  padding: 12px 16px;
+  background: var(--orange-dim);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 16px;
+}
+.claim p { font-size: 14px; font-weight: 500; color: var(--text); }
+.claim small { font-size: 10px; color: var(--text2); }
+
+.finding-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.finding-title { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 10px; letter-spacing:.04em; text-transform:uppercase; }
+.finding-row {
+  display: flex; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+.finding-row:last-child { border-bottom: none; padding-bottom: 0; }
+.finding-row .lbl { color: var(--text2); }
+.finding-row .num { font-weight: 500; color: var(--text); }
+.finding-row .num.warn { color: var(--orange); }
+.finding-row .num.danger { color: var(--red); }
+
+.gauge-bar {
+  width: 100%; height: 8px;
+  background: var(--bg2); border-radius: 4px;
+  overflow: hidden; margin-top: 8px;
+}
+.gauge-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+
+.conclusion {
+  background: rgba(224,112,64,0.07);
+  border: 1px solid rgba(224,112,64,0.25);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-top: 12px;
+}
+.conclusion-title { font-size: 12px; font-weight: 600; color: var(--orange); margin-bottom: 10px; }
+.conclusion ul { padding-left: 18px; }
+.conclusion li { font-size: 11px; color: var(--text2); line-height: 1.9; }
+.conclusion li strong { color: var(--text); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .kpi-row-6 { grid-template-columns: repeat(3,1fr); }
+  .kpi-row-4 { grid-template-columns: repeat(2,1fr); }
+  .chart-row-2, .chart-row-3 { grid-template-columns: 1fr; }
+  .main { padding: 14px 14px; }
+  .hdr { padding: 0 14px; }
+  .tab-bar { padding: 0 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="hdr">
+  <div class="hdr-left">
+    <span class="hdr-badge">ทกท.</span>
+    <div>
+      <div class="hdr-title">Dwell Time Dashboard — ตู้สินค้าขาเข้า-ขาออก</div>
+      <div class="hdr-sub">การท่าเรือแห่งประเทศไทย · ท่าเรือกรุงเทพ · ต.ค. 2568 – เม.ย. 2569</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-stat">
+      <div class="hdr-stat-val">426,216</div>
+      <div class="hdr-stat-lbl">ตู้สินค้า FCL รวม</div>
+    </div>
+    <div class="hdr-stat">
+      <div class="hdr-stat-val">7 เดือน</div>
+      <div class="hdr-stat-lbl">ระยะเวลา</div>
+    </div>
+  </div>
+</header>
+
+<!-- ── TAB BAR ── -->
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="overview">ภาพรวม</button>
+  <button class="tab-btn" data-tab="import">ขาเข้า (Import)</button>
+  <button class="tab-btn" data-tab="export">ขาออก (Export)</button>
+  <button class="tab-btn" data-tab="warehouse">Warehouse Analysis</button>
+</nav>
+
+<!-- ── STATUS STRIP ── -->
+<div class="status-strip">
+  <span class="status-strip-lbl">ระดับความเสี่ยง Dwell Time:</span>
+  <span class="status-pip s-green"><span class="pip-dot"></span>ปลอดภัย (≤4.5 วัน / &lt;15%)</span>
+  <span class="status-pip s-yellow"><span class="pip-dot"></span>พึงระวัง (4.5–5.5 วัน / 15–20%)</span>
+  <span class="status-pip s-orange"><span class="pip-dot"></span>ต้องระวัง (5.5–7 วัน / 20–25%)</span>
+  <span class="status-pip s-red"><span class="pip-dot"></span>อันตราย (&gt;7 วัน / &gt;25%)</span>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+<!-- ════ TAB: OVERVIEW ════ -->
+<div class="panel active" id="tab-overview">
+  <div class="kpi-row kpi-row-6">
+    <div class="kpi blue">
+      <div class="kpi-lbl">ตู้ขาเข้า (รวม)</div>
+      <div class="kpi-val">279,215</div>
+      <div class="kpi-sub">65.5% ของตู้ทั้งหมด</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">ตู้ขาออก (รวม)</div>
+      <div class="kpi-val">147,001</div>
+      <div class="kpi-sub">34.5% ของตู้ทั้งหมด</div>
+    </div>
+    <div class="kpi yellow">
+      <div class="kpi-lbl">Dwell เฉลี่ย ขาเข้า</div>
+      <div class="kpi-val">5.17 วัน</div>
+      <div class="kpi-sub">Median: 4 วัน · P90: 11 วัน</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Dwell เฉลี่ย ขาออก</div>
+      <div class="kpi-val">6.57 วัน</div>
+      <div class="kpi-sub">Median: 5 วัน · P90: 10 วัน</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Warehouse Intensity (&gt;7 วัน)</div>
+      <div class="kpi-val">~21%</div>
+      <div class="kpi-sub down">สูงสุด ม.ค. 69: 27.4%</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Total Container-Days</div>
+      <div class="kpi-val">2.41 ล้าน</div>
+      <div class="kpi-sub">ตลอด 7 เดือน</div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-full">
+    <div class="chart-box">
+      <div class="chart-hdr">
+        <div>
+          <div class="chart-title">ค่าเฉลี่ย Dwell Time รายเดือน — Import vs Export</div>
+          <div class="chart-sub">วัน · แสดง Mean / Median ตามเลือก</div>
+        </div>
+        <div class="tog-group" id="tog-overview">
+          <button class="tog-btn active" data-metric="mean">Mean</button>
+          <button class="tog-btn" data-metric="median">Median</button>
+          <button class="tog-btn" data-metric="p90">P90</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld" style="background:var(--blue)"></span>Import</span>
+        <span class="legend-item"><span class="ld" style="background:var(--green)"></span>Export</span>
+      </div>
+      <div class="chart-canvas-wrap h230"><canvas id="c-overview-trend"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">จำนวนตู้สินค้า (TEU) รายเดือน</div>
+      <div class="chart-sub">Import (น้ำเงิน) · Export (เขียว)</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-overview-vol"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">การกระจาย Dwell Time — ภาพรวม (%)</div>
+      <div class="chart-sub">Import (ซ้าย) vs Export (ขวา)</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-overview-dist"></canvas></div>
+    </div>
+  </div>
+</div><!-- /overview -->
+
+
+<!-- ════ TAB: IMPORT ════ -->
+<div class="panel" id="tab-import">
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi blue">
+      <div class="kpi-lbl">ตู้ขาเข้า ทั้งหมด</div>
+      <div class="kpi-val">279,215</div>
+      <div class="kpi-sub">เฉลี่ย 39,888 ตู้/เดือน</div>
+    </div>
+    <div class="kpi yellow">
+      <div class="kpi-lbl">Dwell เฉลี่ย</div>
+      <div class="kpi-val">5.17 วัน</div>
+      <div class="kpi-sub">Median: 4 วัน · P90: 11 วัน</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Warehouse Grade (&gt;7 วัน)</div>
+      <div class="kpi-val">20.0%</div>
+      <div class="kpi-sub down">ม.ค. 69 สูงสุด 27.3%</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Long-Dwell (&gt;14 วัน)</div>
+      <div class="kpi-val">11,695 ตู้</div>
+      <div class="kpi-sub down">4.2% ของขาเข้าทั้งหมด</div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">Dwell Time ขาเข้า รายเดือน</div>
+      <div class="chart-sub">Mean / Median / P90 (วัน)</div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld-line" style="background:var(--blue)"></span>Mean</span>
+        <span class="legend-item"><span class="ld-dash" style="border-color:var(--blue)"></span>Median</span>
+        <span class="legend-item"><span class="ld-dash" style="border-color:var(--text3)"></span>P90</span>
+      </div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-imp-trend"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">การกระจาย Dwell Time — ขาเข้า</div>
+      <div class="chart-sub">สัดส่วนตาม bucket (%)</div>
+      <div id="c-imp-dist-legend" class="donut-legend"></div>
+      <div class="chart-canvas-wrap h230"><canvas id="c-imp-dist"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">Warehouse Intensity ขาเข้า รายเดือน</div>
+      <div class="chart-sub">% ตู้ที่อยู่นานกว่า 7 วัน และ 14 วัน</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-imp-intensity"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Dwell แยกขนาดตู้ — ขาเข้า</div>
+      <div class="chart-sub">20 ฟุต vs 40 ฟุต (Mean · Median)</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-imp-size"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-full">
+    <div class="chart-box">
+      <div class="chart-title">สัดส่วน Dwell Bucket รายเดือน — ขาเข้า (%)</div>
+      <div class="chart-sub">Import: ≤3 วัน ลดลงใน ม.ค. และ เม.ย. 69 · warehouse grade เพิ่ม</div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld" style="background:#2DB892"></span>≤3 วัน (Transit)</span>
+        <span class="legend-item"><span class="ld" style="background:#4A9EE8"></span>4–7 วัน (Buffer)</span>
+        <span class="legend-item"><span class="ld" style="background:#E8A020"></span>8–14 วัน (Warehouse)</span>
+        <span class="legend-item"><span class="ld" style="background:#E07040"></span>&gt;14 วัน (Long-term)</span>
+      </div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-imp-stacked"></canvas></div>
+    </div>
+  </div>
+</div><!-- /import -->
+
+
+<!-- ════ TAB: EXPORT ════ -->
+<div class="panel" id="tab-export">
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi blue">
+      <div class="kpi-lbl">ตู้ขาออก ทั้งหมด</div>
+      <div class="kpi-val">147,001</div>
+      <div class="kpi-sub">เฉลี่ย 21,000 ตู้/เดือน</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Dwell เฉลี่ย</div>
+      <div class="kpi-val">6.57 วัน</div>
+      <div class="kpi-sub down">Median: 5 วัน · P90: 10 วัน</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Warehouse Grade (&gt;7 วัน)</div>
+      <div class="kpi-val">22.3%</div>
+      <div class="kpi-sub down">ต.ค. 68 สูงสุด 27.0%</div>
+    </div>
+    <div class="kpi yellow">
+      <div class="kpi-lbl">Long-Dwell (&gt;14 วัน)</div>
+      <div class="kpi-val">4,071 ตู้</div>
+      <div class="kpi-sub">2.8% ของขาออกทั้งหมด</div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">Dwell Time ขาออก รายเดือน</div>
+      <div class="chart-sub">Mean / Median / P90 (วัน)</div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld-line" style="background:var(--green)"></span>Mean</span>
+        <span class="legend-item"><span class="ld-dash" style="border-color:var(--green)"></span>Median</span>
+        <span class="legend-item"><span class="ld-dash" style="border-color:var(--text3)"></span>P90</span>
+      </div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-exp-trend"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">การกระจาย Dwell Time — ขาออก</div>
+      <div class="chart-sub">สัดส่วนตาม bucket (%)</div>
+      <div id="c-exp-dist-legend" class="donut-legend"></div>
+      <div class="chart-canvas-wrap h230"><canvas id="c-exp-dist"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">Warehouse Intensity ขาออก รายเดือน</div>
+      <div class="chart-sub">% ตู้ที่อยู่นานกว่า 7 วัน และ 14 วัน</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-exp-intensity"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Dwell แยกขนาดตู้ — ขาออก</div>
+      <div class="chart-sub">20 ฟุต vs 40 ฟุต (Mean · Median)</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-exp-size"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-full">
+    <div class="chart-box">
+      <div class="chart-title">สัดส่วน Dwell Bucket รายเดือน — ขาออก (%)</div>
+      <div class="chart-sub">Export: กระจุกตัวใน 4–7 วัน สูงถึง 60%+ · สะท้อน pattern การรอเรือประจำ</div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld" style="background:#2DB892"></span>≤3 วัน</span>
+        <span class="legend-item"><span class="ld" style="background:#4A9EE8"></span>4–7 วัน</span>
+        <span class="legend-item"><span class="ld" style="background:#E8A020"></span>8–14 วัน</span>
+        <span class="legend-item"><span class="ld" style="background:#E07040"></span>&gt;14 วัน</span>
+      </div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-exp-stacked"></canvas></div>
+    </div>
+  </div>
+</div><!-- /export -->
+
+
+<!-- ════ TAB: WAREHOUSE ════ -->
+<div class="panel" id="tab-warehouse">
+  <div class="claim">
+    <p>ทกท. ทำหน้าที่เป็น "คลังสินค้ากลางกรุงเทพฯ" — ไม่ใช่ท่าเรือผ่านสินค้า</p>
+    <small>วิเคราะห์จาก 426,216 ตู้ FCL · ต.ค. 2568 – เม.ย. 2569 · FCL ทุกขนาด 20/40 ฟุต</small>
+  </div>
+
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi red">
+      <div class="kpi-lbl">Excess Container-Days</div>
+      <div class="kpi-val">518,184</div>
+      <div class="kpi-sub down">วันที่เกินจาก 7 วัน (pure warehouse activity)</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-lbl">Throughput Efficiency</div>
+      <div class="kpi-val">53.1%</div>
+      <div class="kpi-sub down">ของ capacity ที่แท้จริง</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-lbl">Avg Yard Occupancy</div>
+      <div class="kpi-val">~11,400 TEU/วัน</div>
+      <div class="kpi-sub down">เฉลี่ย 7 เดือน (ลาน 20,000 TEU)</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-lbl">Long-Dwell &gt;14 วัน</div>
+      <div class="kpi-val">15,766 ตู้</div>
+      <div class="kpi-sub down">เฉลี่ย 26.3 วัน · สูงสุด 374 วัน</div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-full">
+    <div class="chart-box">
+      <div class="chart-title">Dwell Bucket รายเดือน (รวม Import + Export) — สัดส่วน %</div>
+      <div class="chart-sub">ส่วน "warehouse grade" (เหลือง + ส้ม) รวมกันสูงถึง 20–27% ทุกเดือน</div>
+      <div class="legend">
+        <span class="legend-item"><span class="ld" style="background:#2DB892"></span>≤3 วัน (Transit ปกติ)</span>
+        <span class="legend-item"><span class="ld" style="background:#4A9EE8"></span>4–7 วัน (Buffer zone)</span>
+        <span class="legend-item"><span class="ld" style="background:#E8A020"></span>8–14 วัน (Warehouse grade)</span>
+        <span class="legend-item"><span class="ld" style="background:#E07040"></span>&gt;14 วัน (Long-term storage)</span>
+      </div>
+      <div class="chart-canvas-wrap h230"><canvas id="c-wh-stacked"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="chart-box">
+      <div class="chart-title">Excess Container-Days รายเดือน</div>
+      <div class="chart-sub">วันที่เกินจาก 7 วัน — "เวลาที่ลานทำหน้าที่คลัง"</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-wh-excess"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Yard Slot Utilization รายเดือน (%)</div>
+      <div class="chart-sub">เทียบกับความจุ 20,000 TEU · แดง = &gt;60% · เหลือง = &gt;55%</div>
+      <div class="chart-canvas-wrap h200"><canvas id="c-wh-util"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row chart-row-2">
+    <div class="finding-box">
+      <div class="finding-title">Throughput Capacity Analysis</div>
+      <div class="finding-row"><span class="lbl">ตู้ที่รับได้จริง (7 เดือน)</span><span class="num">426,216 ตู้</span></div>
+      <div class="finding-row"><span class="lbl">ศักยภาพถ้า dwell ≤3 วัน</span><span class="num">802,919 ตู้</span></div>
+      <div class="finding-row"><span class="lbl">Capacity หายไปกับ warehouse</span><span class="num warn">−376,703 ตู้</span></div>
+      <div class="finding-row"><span class="lbl">Throughput Efficiency</span><span class="num warn">53.1%</span></div>
+      <div style="margin-top:12px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:5px">ใช้งานจริง</div>
+        <div class="gauge-bar"><div class="gauge-fill" style="width:53.1%;background:var(--blue)"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin:8px 0 5px">ถูก warehouse ยึดครอง</div>
+        <div class="gauge-bar"><div class="gauge-fill" style="width:46.9%;background:var(--orange)"></div></div>
+      </div>
+    </div>
+    <div class="finding-box">
+      <div class="finding-title">Long-Dwell Profile (&gt;14 วัน)</div>
+      <div class="finding-row"><span class="lbl">Import &gt;14 วัน</span><span class="num">11,695 ตู้ (74.2%)</span></div>
+      <div class="finding-row"><span class="lbl">Export &gt;14 วัน</span><span class="num">4,071 ตู้ (25.8%)</span></div>
+      <div class="finding-row"><span class="lbl">เฉลี่ย dwell ในกลุ่มนี้</span><span class="num warn">26.3 วัน</span></div>
+      <div class="finding-row"><span class="lbl">อยู่นานกว่า 30 วัน</span><span class="num warn">2,331 ตู้</span></div>
+      <div class="finding-row"><span class="lbl">อยู่นานกว่า 60 วัน</span><span class="num danger">701 ตู้</span></div>
+      <div class="finding-row"><span class="lbl">สูงสุดในฐานข้อมูล</span><span class="num danger">374 วัน (1 ปี+)</span></div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <div class="conclusion-title">ข้อสรุปเชิงนโยบาย — เชื่อมกับ Financial Performance ทกท.</div>
+    <ul>
+      <li>Excess dwell 518,184 container-days ≈ <strong>ลานตู้ขนาด ~2,400 TEU ถูกจองตลอด 7 เดือน</strong> โดยไม่ผ่าน handling cycle ปกติ</li>
+      <li>ประสิทธิภาพ throughput 53.1% ยืนยันว่า ทกท. ไม่ได้ทำงานเป็น <strong>flow-through port</strong> แต่เป็น distribution hub ที่มี cargo นิ่ง</li>
+      <li>Long-dwell ขาเข้า 74% ชี้ว่า <strong>ผู้นำเข้าในกรุงเทพฯ ใช้ ทกท. เป็นคลังต้นทาง</strong> ก่อนกระจายสินค้า — rational ต่อเขา แต่ blocking capacity ของท่า</li>
+      <li>รูปแบบนี้อธิบาย <strong>Inverse Efficiency</strong> ใน Financial Dashboard: ทกท. แบกรับ operational cost (rehandling, ดูแลลาน, กำลังพล) สูงกว่าสัดส่วน revenue ที่ได้จริง</li>
+      <li>สนับสนุน argument การย้ายท่า: <strong>ถ้า ทกท. ทำหน้าที่ "คลังสินค้า" ก็ไม่ควรอยู่บนที่ดินริมน้ำ กทม. ที่มีมูลค่าสูง</strong></li>
+    </ul>
+  </div>
+</div><!-- /warehouse -->
+
+</div><!-- /main -->
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────
+const M = ['ต.ค. 68','พ.ย. 68','ธ.ค. 68','ม.ค. 69','ก.พ. 69','มี.ค. 69','เม.ย. 69'];
+
+const IMP = {
+  count:  [37578, 36775, 40903, 42919, 39968, 37014, 44058],
+  mean:   [5.08,  4.67,  4.96,  5.94,  4.79,  5.16,  5.61],
+  median: [4,     3,     4,     4,     4,     4,     4],
+  p90:    [10,    10,    10,    12,    10,    11,    11],
+  gt7:    [18.5,  15.7,  17.2,  27.3,  16.7,  20.1,  24.5],
+  gt14:   [4.0,   3.8,   3.7,   5.6,   3.5,   4.6,   4.0],
+  dist:   [45.6,  34.2,  16.0,  4.2],
+  stacked:[
+    [47.6,36.0,12.5,3.9],[51.0,34.4,10.8,3.8],[48.0,35.1,13.2,3.7],
+    [34.0,38.7,21.7,5.6],[46.7,36.6,13.2,3.5],[41.0,38.9,15.5,4.6],
+    [36.5,39.0,20.5,4.0]
+  ]
+};
+const EXP = {
+  count:  [22662, 22951, 21141, 18477, 18504, 23043, 20223],
+  mean:   [6.46,  5.92,  6.84,  6.93,  7.75,  5.25,  6.86],
+  median: [6,     5,     6,     5,     5,     5,     5],
+  p90:    [10,    9,     10,    12,    10,    9,     10],
+  gt7:    [27.0,  21.0,  25.2,  27.4,  20.4,  15.0,  20.7],
+  gt14:   [3.9,   1.8,   1.5,   5.5,   3.8,   1.7,   1.7],
+  dist:   [18.8,  58.9,  19.5,  2.8],
+  stacked:[
+    [20.6,52.4,23.1,3.9],[20.5,58.4,19.3,1.8],[16.4,58.2,23.9,1.5],
+    [32.3,39.7,22.5,5.5],[26.3,54.4,15.5,3.8],[36.4,47.6,14.3,1.7],
+    [24.0,53.6,20.7,1.7]
+  ]
+};
+const COMB = {
+  count:  [60240, 59726, 62044, 61396, 58472, 60057, 64281],
+  util:   [54.4,  51.3,  56.1,  61.8,  59.8,  50.3,  64.3],
+  excess: [68172, 50482, 72033, 97883, 85037, 56590, 87987],
+  stacked:[
+    [36.3,42.0,17.8,3.9],[38.5,43.8,14.7,3.0],[35.3,44.7,16.9,3.0],
+    [33.6,39.0,21.7,5.6],[39.3,42.9,14.3,3.5],[39.5,42.3,14.7,3.5],
+    [32.4,44.3,20.0,3.3]
+  ]
+};
+
+// ─── CHART DEFAULTS ─────────────────────────────────────────────────────
+Chart.defaults.font.family = "'IBM Plex Sans Thai', sans-serif";
+Chart.defaults.color = '#7A90A8';
+const GRID = 'rgba(255,255,255,0.05)';
+const TICK = '#546880';
+
+const BASE_OPTS = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { color: GRID }, ticks: { color: TICK, font: { size: 11 } }, border: { display: false } },
+    y: { grid: { color: GRID }, ticks: { color: TICK, font: { size: 11 } }, border: { display: false } }
+  }
+};
+
+function lineDs(label, data, color, dash=[]) {
+  return {
+    label, data, borderColor: color,
+    backgroundColor: color.replace(')',',0.12)').replace('rgb','rgba'),
+    fill: dash.length === 0,
+    tension: 0.35, pointRadius: 4, pointHoverRadius: 6,
+    borderWidth: 2.2, borderDash: dash, pointStyle: 'circle'
+  };
+}
+function barDs(label, data, color, radius=4) {
+  return { label, data, backgroundColor: color, borderRadius: radius };
+}
+function stackedDs(label, data, color) {
+  return { label, data, backgroundColor: color, stack: 's', borderRadius: 2 };
+}
+
+// ─── CHART REGISTRY ─────────────────────────────────────────────────────
+const charts = {};
+function mkChart(id, config) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), config);
+  return charts[id];
+}
+
+// ─── THRESHOLD COLOR HELPER ───────────────────────────────────────────────
+const IMP_THR = [{max:4.5,c:'#2DB892'},{max:5.5,c:'#CDB820'},{max:6.5,c:'#E07040'},{max:99,c:'#D84040'}];
+const EXP_THR = [{max:5.5,c:'#2DB892'},{max:7.0,c:'#CDB820'},{max:8.0,c:'#E07040'},{max:99,c:'#D84040'}];
+const INT_THR = [{max:15,c:'#2DB892'},{max:20,c:'#CDB820'},{max:25,c:'#E07040'},{max:99,c:'#D84040'}];
+function ptColor(val, thr) { for(const t of thr) if(val<=t.max) return t.c; return thr[thr.length-1].c; }
+function ptColors(data, thr) { return data.map(v=>ptColor(v,thr)); }
+
+// ─── OVERVIEW: TREND ────────────────────────────────────────────────────
+let currentMetric = 'mean';
+function buildOverviewTrend(metric) {
+  const imp = IMP[metric], exp = EXP[metric];
+  const impThr = metric==='p90' ? null : IMP_THR;
+  const expThr = metric==='p90' ? null : EXP_THR;
+  const impDs = lineDs('Import', imp, 'rgb(74,158,232)');
+  const expDs = lineDs('Export', exp, 'rgb(45,184,146)', [5,4]);
+  if(impThr) { impDs.pointBackgroundColor=ptColors(imp,impThr); impDs.pointBorderColor=ptColors(imp,impThr); impDs.pointRadius=5; }
+  if(expThr) { expDs.pointBackgroundColor=ptColors(exp,expThr); expDs.pointBorderColor=ptColors(exp,expThr); expDs.pointRadius=5; }
+  mkChart('c-overview-trend', {
+    type: 'line',
+    data: { labels: M, datasets: [impDs, expDs]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:false }, tooltip:{ mode:'index', intersect:false }},
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks: { color:TICK, font:{size:11}, callback: v=>v+' วัน' }, min: 0 }
+      }
+    }
+  });
+}
+
+// ─── OVERVIEW: VOLUME ────────────────────────────────────────────────────
+function buildOverviewVol() {
+  mkChart('c-overview-vol', {
+    type: 'bar',
+    data: { labels: M, datasets: [
+      barDs('Import', IMP.count, 'rgba(74,158,232,0.75)'),
+      barDs('Export', EXP.count, 'rgba(45,184,146,0.75)')
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{display:false}, tooltip:{ mode:'index', intersect:false,
+        callbacks:{ label: c => c.dataset.label+': '+c.parsed.y.toLocaleString()+' ตู้' }
+      }},
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11}, callback: v=>v.toLocaleString() }}
+      }
+    }
+  });
+}
+
+// ─── OVERVIEW: DIST (grouped bar) ────────────────────────────────────────
+function buildOverviewDist() {
+  const labels = ['≤3 วัน','4–7 วัน','8–14 วัน','>14 วัน'];
+  mkChart('c-overview-dist', {
+    type: 'bar',
+    data: { labels, datasets: [
+      barDs('Import', IMP.dist, 'rgba(74,158,232,0.8)'),
+      barDs('Export', EXP.dist, 'rgba(45,184,146,0.8)')
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:true, position:'top',
+        labels:{ color:TICK, font:{size:10}, boxWidth:10 }},
+        tooltip:{ callbacks:{ label: c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%' }}
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11}, callback:v=>v+'%' }, max:70 }
+      }
+    }
+  });
+}
+
+// ─── IMPORT / EXPORT: TREND ──────────────────────────────────────────────
+function buildTrend(id, data, color) {
+  const thr = color.includes('74,158') ? IMP_THR : EXP_THR;
+  const meanDs = lineDs('Mean', data.mean, color);
+  meanDs.pointBackgroundColor = ptColors(data.mean, thr);
+  meanDs.pointBorderColor     = ptColors(data.mean, thr);
+  meanDs.pointRadius = 5;
+  mkChart(id, {
+    type: 'line',
+    data: { labels: M, datasets: [
+      meanDs,
+      lineDs('Median', data.median, color, [5,4]),
+      { label:'P90', data:data.p90, borderColor:'#435870', fill:false,
+        tension:.2, pointRadius:3, borderWidth:1.2, borderDash:[2,3],
+        pointStyle:'rect', pointHoverRadius:5 }
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:false },
+        tooltip:{ mode:'index', intersect:false }
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11}, callback:v=>v+' วัน' }, min:0 }
+      }
+    }
+  });
+}
+
+// ─── IMPORT / EXPORT: DIST DONUT ─────────────────────────────────────────
+function buildDonut(id, dist) {
+  const labels = ['≤3 วัน','4–7 วัน','8–14 วัน','>14 วัน'];
+  const colors = ['#2DB892','#4A9EE8','#E8A020','#E07040'];
+  // populate external HTML legend
+  const legendEl = document.getElementById(id+'-legend');
+  if(legendEl) {
+    legendEl.innerHTML = labels.map((l,i)=>
+      `<span class="donut-legend-item">
+        <span class="ld" style="background:${colors[i]};border-radius:2px;flex-shrink:0"></span>
+        ${l}<span class="donut-legend-pct">${dist[i]}%</span>
+      </span>`
+    ).join('');
+  }
+  mkChart(id, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data:dist, backgroundColor:colors, borderWidth:0, hoverOffset:4 }]},
+    options: { responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ callbacks:{ label: c=>`${c.label}: ${c.parsed}%` } }
+      }
+    }
+  });
+}
+
+// ─── INTENSITY ───────────────────────────────────────────────────────────
+function buildIntensity(id, data, color) {
+  const gt7Ds = lineDs('>7 วัน', data.gt7, color);
+  gt7Ds.pointBackgroundColor = ptColors(data.gt7, INT_THR);
+  gt7Ds.pointBorderColor     = ptColors(data.gt7, INT_THR);
+  gt7Ds.pointRadius = 5;
+  mkChart(id, {
+    type: 'line',
+    data: { labels: M, datasets: [
+      gt7Ds,
+      lineDs('>14 วัน', data.gt14, '#E07040', [4,3])
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:true, position:'top',
+        labels:{ color:TICK, font:{size:10}, boxWidth:10 }},
+        tooltip:{ mode:'index', intersect:false }
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11}, callback:v=>v+'%' }, min:0, max:35 }
+      }
+    }
+  });
+}
+
+// ─── SIZE ────────────────────────────────────────────────────────────────
+function buildSize(id, mean20, mean40, med20, med40, color) {
+  mkChart(id, {
+    type: 'bar',
+    data: {
+      labels: ['ตู้ 20 ฟุต','ตู้ 40 ฟุต'],
+      datasets: [
+        barDs('Mean', [mean20,mean40], color.replace(')',',0.85)').replace('rgb','rgba')),
+        barDs('Median', [med20,med40], color.replace(')',',0.4)').replace('rgb','rgba'))
+      ]
+    },
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:true, position:'top',
+        labels:{ color:TICK, font:{size:10}, boxWidth:10 }},
+        tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+c.parsed.y+' วัน' }}
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11}, callback:v=>v+' วัน' }, min:0, max:10 }
+      }
+    }
+  });
+}
+
+// ─── STACKED ─────────────────────────────────────────────────────────────
+function buildStacked(id, data) {
+  const rows = [
+    stackedDs('≤3 วัน', data.map(r=>r[0]), '#2DB892'),
+    stackedDs('4–7 วัน', data.map(r=>r[1]), '#4A9EE8'),
+    stackedDs('8–14 วัน', data.map(r=>r[2]), '#E8A020'),
+    stackedDs('>14 วัน', data.map(r=>r[3]), '#E07040'),
+  ];
+  mkChart(id, {
+    type: 'bar',
+    data: { labels: M, datasets: rows },
+    options: { ...BASE_OPTS,
+      plugins: { legend:{ display:false },
+        tooltip:{ mode:'index', intersect:false,
+          callbacks:{ label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` }
+        }
+      },
+      scales: {
+        x: { stacked:true, grid:{display:false}, ticks:{color:TICK,font:{size:11}}, border:{display:false} },
+        y: { stacked:true, max:100, grid:{color:GRID}, ticks:{color:TICK,font:{size:11},callback:v=>v+'%'}, border:{display:false} }
+      }
+    }
+  });
+}
+
+// ─── WAREHOUSE: EXCESS ───────────────────────────────────────────────────
+function buildExcess() {
+  mkChart('c-wh-excess', {
+    type: 'bar',
+    data: { labels: M, datasets: [
+      { label:'Excess Days', data: COMB.excess,
+        backgroundColor: COMB.excess.map(v => v>=90000?'#E07040':v>=70000?'#E8A020':'rgba(74,158,232,0.6)'),
+        borderRadius: 4 }
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{display:false},
+        tooltip:{ callbacks:{ label:c=>`${c.parsed.y.toLocaleString()} container-days` }}
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, ticks:{ color:TICK, font:{size:11},
+          callback:v => v>=1000 ? (v/1000).toFixed(0)+'K' : v }}
+      }
+    }
+  });
+}
+
+// ─── WAREHOUSE: UTILIZATION ───────────────────────────────────────────────
+function buildUtil() {
+  mkChart('c-wh-util', {
+    type: 'bar',
+    data: { labels: M, datasets: [
+      { label:'Utilization',
+        data: COMB.util,
+        backgroundColor: COMB.util.map(v=>v>=60?'#E07040':v>=55?'#E8A020':'rgba(74,158,232,0.65)'),
+        borderRadius: 4 }
+    ]},
+    options: { ...BASE_OPTS,
+      plugins: { legend:{display:false},
+        tooltip:{ callbacks:{ label:c=>`${c.parsed.y.toFixed(1)}% (~${Math.round(c.parsed.y*200).toLocaleString()} TEU/วัน)` }}
+      },
+      scales: { ...BASE_OPTS.scales,
+        y: { ...BASE_OPTS.scales.y, min:40, max:70, ticks:{ color:TICK, font:{size:11}, callback:v=>v+'%' }}
+      }
+    }
+  });
+}
+
+// ─── INIT ALL ────────────────────────────────────────────────────────────
+function initAll() {
+  buildOverviewTrend('mean');
+  buildOverviewVol();
+  buildOverviewDist();
+  buildTrend('c-imp-trend', IMP, 'rgb(74,158,232)');
+  buildDonut('c-imp-dist', IMP.dist);
+  buildIntensity('c-imp-intensity', IMP, 'rgb(74,158,232)');
+  buildSize('c-imp-size', 5.03, 5.38, 4, 4, 'rgb(74,158,232)');
+  buildStacked('c-imp-stacked', IMP.stacked);
+  buildTrend('c-exp-trend', EXP, 'rgb(45,184,146)');
+  buildDonut('c-exp-dist', EXP.dist);
+  buildIntensity('c-exp-intensity', EXP, 'rgb(45,184,146)');
+  buildSize('c-exp-size', 6.60, 6.40, 5, 5, 'rgb(45,184,146)');
+  buildStacked('c-exp-stacked', EXP.stacked);
+  buildStacked('c-wh-stacked', COMB.stacked);
+  buildExcess();
+  buildUtil();
+}
+
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    // resize visible charts
+    setTimeout(() => Object.values(charts).forEach(c => { try { c.resize(); } catch(e){} }), 50);
+  });
+});
+
+// ─── OVERVIEW METRIC TOGGLE ───────────────────────────────────────────────
+document.querySelectorAll('#tog-overview .tog-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#tog-overview .tog-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    buildOverviewTrend(btn.dataset.metric);
+  });
+});
+
+// ─── START ───────────────────────────────────────────────────────────────
+initAll();
+</script>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="footer-row">
+    <span class="footer-tag">แหล่งข้อมูล</span>
+    <span class="footer-text">
+      <strong>ปริมาณเรือ สินค้า และตู้สินค้า ผ่านท่าเรือกรุงเทพ</strong>
+      จาก ระบบบัญชีข้อมูลการท่าเรือแห่งประเทศไทย <strong>(PAT Data Catalog)</strong>
+      · ข้อมูล FCL ขาเข้า-ขาออก ต.ค. 2568 – เม.ย. 2569 (ปีงบประมาณ 2569) · 426,216 รายการ
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

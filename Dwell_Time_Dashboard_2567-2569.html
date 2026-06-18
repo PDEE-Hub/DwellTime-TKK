@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAT Intelligence · Dwell Time Dashboard ทกท. 2567-2569 (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#060f1e; --bg2:#0a1628; --panel:#0f1f38; --card:#152540;
+  --border:rgba(59,130,246,.12); --border2:rgba(59,130,246,.22);
+  --text:#edf2fc; --text2:#b4cce8; --text3:#5a7a9a;
+  --teal:#14b8a6; --teal2:#2dd4bf;
+  --blue:#3b82f6; --blue2:#60a5fa;
+  --amber:#f59e0b; --amber2:#fbbf24;
+  --red:#ef4444; --red2:#f87171;
+  --green:#10b981; --green2:#34d399;
+  --g:#2DB892; --y:#CDB820; --o:#E07040; --r:#D84040;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+.wrap{max-width:1320px;margin:0 auto;padding:28px 24px 60px;}
+
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--border2);padding-bottom:18px;margin-bottom:8px;flex-wrap:wrap;gap:10px;}
+header .tag{font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--teal2);text-transform:uppercase;margin-bottom:8px;display:block;}
+header h1{font-size:26px;font-weight:700;margin:0 0 4px;}
+header .sub{font-size:12.5px;color:var(--text3);}
+.live-dot{color:var(--teal);font-size:12px;}
+.methodology-note{font-size:11.5px;color:var(--text3);margin:6px 0 22px;padding:10px 14px;background:rgba(255,255,255,.02);border-left:3px solid var(--blue);border-radius:6px;}
+.methodology-note b{color:var(--text2);}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+.btn{background:var(--card);border:1px solid var(--border2);color:var(--text2);padding:8px 16px;border-radius:20px;font-family:'Kanit',sans-serif;font-size:13px;cursor:pointer;transition:.15s;}
+.btn:hover{border-color:var(--teal);color:var(--text);}
+.btn.active{background:var(--teal);border-color:var(--teal);color:#06281f;font-weight:600;}
+
+.score-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.sc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
+.sc-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--status-color, var(--teal));}
+.sc-label{font-size:11.5px;color:var(--text3);letter-spacing:.04em;margin-bottom:8px;}
+.sc-val{font-size:26px;font-weight:700;font-family:'Kanit',monospace;letter-spacing:-.02em;line-height:1;margin-bottom:6px;}
+.sc-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block;margin-right:6px;}
+.sc-delta{font-size:12px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block;}
+.sc-delta.up{background:rgba(239,68,68,.15);color:var(--red2);}
+.sc-delta.down{background:rgba(16,185,129,.15);color:var(--green2);}
+.sc-note{font-size:11px;color:var(--text3);margin-top:6px;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:22px;}
+.panel-title{font-size:15px;font-weight:600;margin-bottom:4px;}
+.panel-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.chart-box{position:relative;height:360px;}
+.chart-box.small{height:300px;}
+
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;}
+@media (max-width:900px){.grid2{grid-template-columns:1fr;} .score-strip{grid-template-columns:repeat(2,1fr);}}
+
+.legend-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--text2);}
+.legend-row .ld{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+
+.dq-list{display:flex;flex-direction:column;gap:10px;}
+.dq-item{display:flex;gap:12px;padding:12px 14px;background:rgba(255,255,255,.02);border-left:3px solid var(--amber);border-radius:6px;}
+.dq-item.crit{border-left-color:var(--red);}
+.dq-item.good{border-left-color:var(--green);}
+.dq-icon{font-size:18px;}
+.dq-text b{color:var(--text);}
+.dq-text{font-size:13px;color:var(--text2);line-height:1.5;}
+
+.threshold-key{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--text3);margin-top:10px;}
+.threshold-key span{display:inline-flex;align-items:center;gap:5px;}
+.threshold-key .dot{width:8px;height:8px;border-radius:50%;}
+
+footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);}
+footer a{color:var(--teal2);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="tag">PAT Intelligence · Financial Narrative Support</span>
+      <h1>Dwell Time Dashboard — ท่าเรือกรุงเทพ (ทกท.) <span style="font-size:14px;color:var(--text3);font-weight:400;">v2</span></h1>
+      <div class="sub">ข้อมูลตู้สินค้า Import/Export ใน Yard · ก.ค. 2565 – เม.ย. 2569 (โฟกัสปีงบ 2567-2569) · <span class="live-dot">●</span> อัปเดตล่าสุด เม.ย. 2569</div>
+    </div>
+  </header>
+  <div class="methodology-note">
+    <b>v2 — แก้วิธีคำนวณ:</b> เปลี่ยนจากตัด record &gt;90 วันแบบหยาบ มาใช้ Segmentation 3 ชั้น (Express ≤1 วัน / <b>Normal 2-30 วัน = ฐาน KPI หลัก</b> / Anomaly &gt;30 วัน) ตามกฎใน SKILL_DwellTime_TKK.md พร้อมตรวจ batch-timestamp artifact แยกออกจาก anomaly จริง — รายละเอียดวิธีคิดทั้งหมดอยู่ใน <code>METHODOLOGY_DwellTime.md</code> ไฟล์เดียวกัน
+  </div>
+
+  <div class="controls">
+    <button class="btn active" data-range="all">ทั้งหมด (2565-2569)</button>
+    <button class="btn" data-range="fy67-69">FY2567-2569</button>
+    <button class="btn" data-range="recent12">12 เดือนล่าสุด</button>
+  </div>
+
+  <div class="score-strip" id="scoreStrip"></div>
+
+  <div class="panel">
+    <div class="panel-title">Dwell Time เฉลี่ยรายเดือน (Normal Segment) — Import vs Export</div>
+    <div class="panel-sub">คำนวณเฉพาะ Normal segment (2-30 วัน) ตามมาตรฐาน skill · เส้นทึบ = mean · เส้นประ = median · แถบเหลือง = ช่วงล่าสุด FY2568-69</div>
+    <div class="chart-box"><canvas id="trendChart"></canvas></div>
+    <div class="threshold-key">
+      <span><span class="dot" style="background:var(--g)"></span>Import ปลอดภัย ≤5.5d / Export ≤7.0d</span>
+      <span><span class="dot" style="background:var(--y)"></span>Import ⚠️ 5.5-6.5d / Export ⚠️ 7.0-8.0d</span>
+      <span><span class="dot" style="background:var(--r)"></span>Import 🔴 &gt;6.5d / Export 🔴 &gt;8.0d</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Segmentation รายเดือน — Express / Normal / Anomaly (%)</div>
+    <div class="panel-sub">% ของตู้ในแต่ละชั้น ต่อเดือน — Anomaly ที่สูงผิดปกติควรเช็ค batch artifact ก่อนสรุปว่าเป็นปัญหาจริง</div>
+    <div class="chart-box"><canvas id="segChart"></canvas></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title">เทียบ Baseline vs ช่วงล่าสุด (Normal Segment)</div>
+      <div class="panel-sub">Baseline = ก.ค.2565-ธ.ค.2567 · ล่าสุด = ม.ค.2568-เม.ย.2569</div>
+      <div class="chart-box small"><canvas id="compareChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Warehouse Intensity (% dwell &gt; 7 วัน)</div>
+      <div class="panel-sub">รวมทุก segment ที่ dwell&gt;7 วัน — ตัวขับเคลื่อนรายได้ Storage และสัญญาณ "คลังกลางกรุงเทพ"</div>
+      <div class="chart-box small"><canvas id="over7Chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">🔍 Data Quality & Anomaly Notes</div>
+    <div class="panel-sub">v2 — อัปเดตตามกฎ batch-detection ของ SKILL_DwellTime_TKK.md</div>
+    <div class="dq-list">
+      <div class="dq-item crit">
+        <div class="dq-icon">⚠️</div>
+        <div class="dq-text"><b>ก.พ. 2567 ข้อมูลไม่ครบเดือน</b> — มีข้อมูลแค่วันที่ 1-2 ก.พ. เท่านั้น เดือนนี้ถูกตัดออกจากกราฟ trend และค่าเฉลี่ยทั้งหมด</div>
+      </div>
+      <div class="dq-item">
+        <div class="dq-icon">📌</div>
+        <div class="dq-text"><b>ตรวจพบ batch-timestamp cluster หลายจุด</b> (เช่น 2026-01-31 08:05 = 438 ตู้, 2023-09-30 16:10 = 371 ตู้) — ใหญ่กว่าที่ skill เดิมระบุไว้ (2 จุด, 77 ตู้) เพราะ threshold การตรวจกว้างกว่า ควรให้ทีม yard operation ยืนยันว่าจุดไหนเป็น "system close-out artifact" จริง กับจุดไหนเป็น "ตู้ลงเรือพร้อมกันจริง" (เวลาตรงกันโดยธรรมชาติ ไม่ใช่ความผิดพลาด) — <b>ยังไม่ได้ตัดออกจากตัวเลขในแดชบอร์ดนี้ เพราะ batch ที่พบทั้งหมดอยู่ใน Anomaly tier (&gt;30 วัน) ซึ่งไม่ถูกใช้คำนวณ mean/median ของ Normal segment อยู่แล้ว</b></div>
+      </div>
+      <div class="dq-item good">
+        <div class="dq-icon">✅</div>
+        <div class="dq-text"><b>Row count รวมตรงกับ skill.md เป๊ะ</b> — ต.ค.2568-เม.ย.2569: Import 279,215 / Export 147,001 ตู้ ตรงกันทุกตัว ยืนยันว่าข้อมูลต้นทางสองชุดนี้เป็นไฟล์เดียวกัน ความต่างของผลลัพธ์ก่อนหน้านี้มาจากวิธีคำนวณ ไม่ใช่ข้อมูลผิด</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>แหล่งข้อมูล: Dwell Time raw export จากระบบ Yard · รวม 7 ไฟล์ Excel ครอบคลุม ก.ค.2565 – เม.ย.2569 · รวม ~2.79 ล้าน record</p>
+    <p>Methodology: Segmentation + threshold ตาม <code>SKILL_DwellTime_TKK.md</code> (ผู้ใช้เขียน) · รายละเอียดการคำนวณแบบเต็มดูที่ <code>METHODOLOGY_DwellTime.md</code></p>
+    <p>เอกสารนี้ใช้สนับสนุน narrative ใน Financial Dashboard (Fintrix) และ Monthly Report — ไม่ใช่เครื่องมือวิเคราะห์เชิงปฏิบัติการ (ดู skill เดิมสำหรับ ops analysis)</p>
+  </footer>
+
+</div>
+
+<script>
+const DATA = {"series": [{"ym": "2022-07", "partial": false, "imp_total": 40873, "imp_express_pct": 16.2, "imp_normal_n": 33946, "imp_mean": 5.34, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.75, "imp_batch_n": 0, "imp_over7_pct": 17.4, "exp_total": 21680, "exp_express_pct": 0.8, "exp_normal_n": 21488, "exp_mean": 6.16, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.01, "exp_batch_n": 18, "exp_over7_pct": 22.8}, {"ym": "2022-08", "partial": false, "imp_total": 44348, "imp_express_pct": 14.4, "imp_normal_n": 37480, "imp_mean": 5.47, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 1.04, "imp_batch_n": 0, "imp_over7_pct": 18.2, "exp_total": 20182, "exp_express_pct": 2.1, "exp_normal_n": 19525, "exp_mean": 5.17, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 227, "exp_over7_pct": 12.7}, {"ym": "2022-09", "partial": false, "imp_total": 37853, "imp_express_pct": 19.5, "imp_normal_n": 30091, "imp_mean": 5.07, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 1.03, "imp_batch_n": 0, "imp_over7_pct": 15.1, "exp_total": 21747, "exp_express_pct": 0.9, "exp_normal_n": 21554, "exp_mean": 6.08, "exp_median": 6.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.4}, {"ym": "2022-10", "partial": false, "imp_total": 35334, "imp_express_pct": 14.7, "imp_normal_n": 29816, "imp_mean": 5.51, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.89, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 20886, "exp_express_pct": 2.5, "exp_normal_n": 20366, "exp_mean": 5.34, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.4}, {"ym": "2022-11", "partial": false, "imp_total": 39572, "imp_express_pct": 17.1, "imp_normal_n": 32530, "imp_mean": 5.12, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.69, "imp_batch_n": 0, "imp_over7_pct": 15.2, "exp_total": 22476, "exp_express_pct": 1.6, "exp_normal_n": 22127, "exp_mean": 5.93, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.3}, {"ym": "2022-12", "partial": false, "imp_total": 36444, "imp_express_pct": 16.5, "imp_normal_n": 30244, "imp_mean": 5.23, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 15.8, "exp_total": 23264, "exp_express_pct": 1.2, "exp_normal_n": 22889, "exp_mean": 5.33, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 88, "exp_over7_pct": 14.8}, {"ym": "2023-01", "partial": false, "imp_total": 38391, "imp_express_pct": 16.3, "imp_normal_n": 31939, "imp_mean": 5.4, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 16.9, "exp_total": 16277, "exp_express_pct": 2.2, "exp_normal_n": 15926, "exp_mean": 5.64, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.2}, {"ym": "2023-02", "partial": false, "imp_total": 30124, "imp_express_pct": 15.9, "imp_normal_n": 25157, "imp_mean": 5.05, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.56, "imp_batch_n": 0, "imp_over7_pct": 14.8, "exp_total": 20814, "exp_express_pct": 3.4, "exp_normal_n": 20110, "exp_mean": 4.37, "exp_median": 4.0, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.2}, {"ym": "2023-03", "partial": false, "imp_total": 43507, "imp_express_pct": 18.1, "imp_normal_n": 35469, "imp_mean": 4.73, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 11.9, "exp_total": 27037, "exp_express_pct": 2.4, "exp_normal_n": 26381, "exp_mean": 4.73, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 9.4}, {"ym": "2023-04", "partial": false, "imp_total": 37564, "imp_express_pct": 15.2, "imp_normal_n": 31727, "imp_mean": 5.61, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 19.8, "exp_total": 22604, "exp_express_pct": 2.8, "exp_normal_n": 21964, "exp_mean": 4.8, "exp_median": 4.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 11.2}, {"ym": "2023-05", "partial": false, "imp_total": 41970, "imp_express_pct": 16.2, "imp_normal_n": 34940, "imp_mean": 5.4, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 17.4, "exp_total": 25302, "exp_express_pct": 3.0, "exp_normal_n": 24533, "exp_mean": 4.72, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 8.1}, {"ym": "2023-06", "partial": false, "imp_total": 39157, "imp_express_pct": 20.7, "imp_normal_n": 30859, "imp_mean": 5.13, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 25302, "exp_express_pct": 3.0, "exp_normal_n": 24533, "exp_mean": 4.72, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 8.1}, {"ym": "2023-07", "partial": false, "imp_total": 36294, "imp_express_pct": 22.8, "imp_normal_n": 27841, "imp_mean": 4.84, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.48, "imp_batch_n": 0, "imp_over7_pct": 12.7, "exp_total": 25952, "exp_express_pct": 1.9, "exp_normal_n": 25412, "exp_mean": 5.36, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 41, "exp_over7_pct": 14.3}, {"ym": "2023-08", "partial": false, "imp_total": 42399, "imp_express_pct": 17.2, "imp_normal_n": 34886, "imp_mean": 5.23, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.55, "imp_batch_n": 0, "imp_over7_pct": 16.2, "exp_total": 24512, "exp_express_pct": 1.3, "exp_normal_n": 24185, "exp_mean": 5.41, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 17.4}, {"ym": "2023-09", "partial": false, "imp_total": 36889, "imp_express_pct": 22.6, "imp_normal_n": 28350, "imp_mean": 4.79, "imp_median": 4.0, "imp_p90": 9, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 12.5, "exp_total": 22616, "exp_express_pct": 1.0, "exp_normal_n": 21902, "exp_mean": 5.77, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 493, "exp_over7_pct": 17.5}, {"ym": "2023-10", "partial": false, "imp_total": 38045, "imp_express_pct": 16.9, "imp_normal_n": 31535, "imp_mean": 4.9, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.18, "imp_batch_n": 0, "imp_over7_pct": 13.0, "exp_total": 24642, "exp_express_pct": 1.6, "exp_normal_n": 24237, "exp_mean": 5.15, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.4}, {"ym": "2023-11", "partial": false, "imp_total": 41880, "imp_express_pct": 17.9, "imp_normal_n": 34225, "imp_mean": 4.89, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.37, "imp_batch_n": 0, "imp_over7_pct": 13.3, "exp_total": 23977, "exp_express_pct": 1.3, "exp_normal_n": 23660, "exp_mean": 4.62, "exp_median": 4.0, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.2}, {"ym": "2023-12", "partial": false, "imp_total": 37743, "imp_express_pct": 14.9, "imp_normal_n": 32026, "imp_mean": 5.19, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.26, "imp_batch_n": 0, "imp_over7_pct": 16.0, "exp_total": 24640, "exp_express_pct": 1.5, "exp_normal_n": 23929, "exp_mean": 5.13, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 335, "exp_over7_pct": 12.0}, {"ym": "2024-01", "partial": false, "imp_total": 41299, "imp_express_pct": 15.6, "imp_normal_n": 34708, "imp_mean": 5.44, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 18.0, "exp_total": 20922, "exp_express_pct": 1.3, "exp_normal_n": 20652, "exp_mean": 5.98, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.7}, {"ym": "2024-02", "partial": false, "imp_total": 2749, "imp_express_pct": 22.1, "imp_normal_n": 2135, "imp_mean": 4.61, "imp_median": 3, "imp_p90": 9, "imp_anomaly_pct": 0.25, "imp_batch_n": 0, "imp_over7_pct": 11.9, "exp_total": 1339, "exp_express_pct": 0.1, "exp_normal_n": 1336, "exp_mean": 5.78, "exp_median": 6.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 19.9}, {"ym": "2024-03", "partial": false, "imp_total": 35533, "imp_express_pct": 21.6, "imp_normal_n": 27686, "imp_mean": 5.04, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.48, "imp_batch_n": 0, "imp_over7_pct": 13.8, "exp_total": 24918, "exp_express_pct": 1.9, "exp_normal_n": 24439, "exp_mean": 4.65, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.6}, {"ym": "2024-04", "partial": false, "imp_total": 39918, "imp_express_pct": 16.1, "imp_normal_n": 33396, "imp_mean": 5.29, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.25, "imp_batch_n": 0, "imp_over7_pct": 16.6, "exp_total": 20152, "exp_express_pct": 1.6, "exp_normal_n": 19791, "exp_mean": 5.55, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 28, "exp_over7_pct": 15.9}, {"ym": "2024-05", "partial": false, "imp_total": 42583, "imp_express_pct": 18.8, "imp_normal_n": 34404, "imp_mean": 5.26, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.43, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 23278, "exp_express_pct": 1.9, "exp_normal_n": 22839, "exp_mean": 5.78, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 18.8}, {"ym": "2024-06", "partial": false, "imp_total": 39174, "imp_express_pct": 19.9, "imp_normal_n": 31223, "imp_mean": 5.06, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.42, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 22296, "exp_express_pct": 1.6, "exp_normal_n": 21942, "exp_mean": 5.3, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.5}, {"ym": "2024-07", "partial": false, "imp_total": 41164, "imp_express_pct": 19.6, "imp_normal_n": 32916, "imp_mean": 4.99, "imp_median": 4.0, "imp_p90": 9, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 13.4, "exp_total": 23006, "exp_express_pct": 2.8, "exp_normal_n": 22369, "exp_mean": 5.12, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.5}, {"ym": "2024-08", "partial": false, "imp_total": 42107, "imp_express_pct": 16.7, "imp_normal_n": 34929, "imp_mean": 5.3, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.36, "imp_batch_n": 0, "imp_over7_pct": 16.4, "exp_total": 22150, "exp_express_pct": 2.4, "exp_normal_n": 21628, "exp_mean": 5.29, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 14.7}, {"ym": "2024-09", "partial": false, "imp_total": 36296, "imp_express_pct": 18.1, "imp_normal_n": 29580, "imp_mean": 5.02, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.39, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 21190, "exp_express_pct": 1.7, "exp_normal_n": 20798, "exp_mean": 5.27, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 40, "exp_over7_pct": 15.0}, {"ym": "2024-10", "partial": false, "imp_total": 41263, "imp_express_pct": 13.3, "imp_normal_n": 35589, "imp_mean": 5.23, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.45, "imp_batch_n": 0, "imp_over7_pct": 16.2, "exp_total": 22671, "exp_express_pct": 1.1, "exp_normal_n": 22431, "exp_mean": 5.43, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.1}, {"ym": "2024-11", "partial": false, "imp_total": 40882, "imp_express_pct": 18.1, "imp_normal_n": 33315, "imp_mean": 4.79, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 12.3, "exp_total": 22581, "exp_express_pct": 0.7, "exp_normal_n": 22430, "exp_mean": 5.88, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.1}, {"ym": "2024-12", "partial": false, "imp_total": 39256, "imp_express_pct": 15.6, "imp_normal_n": 32998, "imp_mean": 5.18, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 25973, "exp_express_pct": 0.7, "exp_normal_n": 25785, "exp_mean": 6.23, "exp_median": 5, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.3}, {"ym": "2025-01", "partial": false, "imp_total": 45169, "imp_express_pct": 12.8, "imp_normal_n": 39219, "imp_mean": 6.01, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.35, "imp_batch_n": 0, "imp_over7_pct": 24.0, "exp_total": 16517, "exp_express_pct": 1.0, "exp_normal_n": 16347, "exp_mean": 6.01, "exp_median": 6, "exp_p90": 9, "exp_anomaly_pct": 0.01, "exp_batch_n": 0, "exp_over7_pct": 24.1}, {"ym": "2025-02", "partial": false, "imp_total": 33747, "imp_express_pct": 14.2, "imp_normal_n": 28789, "imp_mean": 5.74, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 20.0, "exp_total": 21224, "exp_express_pct": 2.2, "exp_normal_n": 20763, "exp_mean": 5.3, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.7}, {"ym": "2025-03", "partial": false, "imp_total": 37916, "imp_express_pct": 18.0, "imp_normal_n": 30945, "imp_mean": 4.88, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 13.4, "exp_total": 24743, "exp_express_pct": 1.5, "exp_normal_n": 24361, "exp_mean": 5.39, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 14, "exp_over7_pct": 14.8}, {"ym": "2025-04", "partial": false, "imp_total": 41001, "imp_express_pct": 12.1, "imp_normal_n": 35889, "imp_mean": 6.13, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.37, "imp_batch_n": 0, "imp_over7_pct": 24.1, "exp_total": 20041, "exp_express_pct": 1.6, "exp_normal_n": 19714, "exp_mean": 5.74, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 20.4}, {"ym": "2025-05", "partial": false, "imp_total": 42767, "imp_express_pct": 15.5, "imp_normal_n": 35914, "imp_mean": 5.84, "imp_median": 5.0, "imp_p90": 11, "imp_anomaly_pct": 0.49, "imp_batch_n": 0, "imp_over7_pct": 20.3, "exp_total": 22525, "exp_express_pct": 1.6, "exp_normal_n": 22066, "exp_mean": 5.96, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 99, "exp_over7_pct": 23.1}, {"ym": "2025-06", "partial": false, "imp_total": 40398, "imp_express_pct": 16.7, "imp_normal_n": 33448, "imp_mean": 5.6, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 25315, "exp_express_pct": 1.4, "exp_normal_n": 24813, "exp_mean": 5.79, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 143, "exp_over7_pct": 21.2}, {"ym": "2025-07", "partial": false, "imp_total": 42052, "imp_express_pct": 15.4, "imp_normal_n": 35380, "imp_mean": 5.94, "imp_median": 5.0, "imp_p90": 12, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 20.9, "exp_total": 20110, "exp_express_pct": 1.7, "exp_normal_n": 19769, "exp_mean": 5.79, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 18.7}, {"ym": "2025-08", "partial": false, "imp_total": 40583, "imp_express_pct": 16.5, "imp_normal_n": 33731, "imp_mean": 5.72, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.43, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 24689, "exp_express_pct": 0.7, "exp_normal_n": 24106, "exp_mean": 6.66, "exp_median": 6.0, "exp_p90": 11, "exp_anomaly_pct": 0.0, "exp_batch_n": 416, "exp_over7_pct": 32.5}, {"ym": "2025-09", "partial": false, "imp_total": 38719, "imp_express_pct": 18.0, "imp_normal_n": 31569, "imp_mean": 5.28, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.49, "imp_batch_n": 0, "imp_over7_pct": 15.5, "exp_total": 21647, "exp_express_pct": 1.0, "exp_normal_n": 21423, "exp_mean": 6.3, "exp_median": 6, "exp_p90": 10, "exp_anomaly_pct": 0.01, "exp_batch_n": 0, "exp_over7_pct": 27.8}, {"ym": "2025-10", "partial": false, "imp_total": 37578, "imp_express_pct": 15.2, "imp_normal_n": 31712, "imp_mean": 5.64, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 18.5, "exp_total": 22662, "exp_express_pct": 1.7, "exp_normal_n": 22035, "exp_mean": 6.2, "exp_median": 6, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 249, "exp_over7_pct": 25.9}, {"ym": "2025-11", "partial": false, "imp_total": 36775, "imp_express_pct": 17.0, "imp_normal_n": 30364, "imp_mean": 5.24, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.39, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 22951, "exp_express_pct": 0.6, "exp_normal_n": 22802, "exp_mean": 5.96, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 21.0}, {"ym": "2025-12", "partial": false, "imp_total": 40903, "imp_express_pct": 15.0, "imp_normal_n": 34586, "imp_mean": 5.47, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 17.2, "exp_total": 21141, "exp_express_pct": 0.6, "exp_normal_n": 20951, "exp_mean": 6.18, "exp_median": 6, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 55, "exp_over7_pct": 25.0}, {"ym": "2026-01", "partial": false, "imp_total": 42919, "imp_express_pct": 11.5, "imp_normal_n": 37738, "imp_mean": 6.37, "imp_median": 5.0, "imp_p90": 12, "imp_anomaly_pct": 0.55, "imp_batch_n": 0, "imp_over7_pct": 27.3, "exp_total": 18477, "exp_express_pct": 1.6, "exp_normal_n": 17734, "exp_mean": 6.28, "exp_median": 5.0, "exp_p90": 11, "exp_anomaly_pct": 0.01, "exp_batch_n": 438, "exp_over7_pct": 25.0}, {"ym": "2026-02", "partial": false, "imp_total": 39968, "imp_express_pct": 15.3, "imp_normal_n": 33746, "imp_mean": 5.39, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.28, "imp_batch_n": 0, "imp_over7_pct": 16.7, "exp_total": 18504, "exp_express_pct": 1.2, "exp_normal_n": 17920, "exp_mean": 5.78, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.01, "exp_batch_n": 359, "exp_over7_pct": 18.4}, {"ym": "2026-03", "partial": false, "imp_total": 37014, "imp_express_pct": 15.3, "imp_normal_n": 31163, "imp_mean": 5.69, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.54, "imp_batch_n": 0, "imp_over7_pct": 20.1, "exp_total": 23043, "exp_express_pct": 1.7, "exp_normal_n": 22659, "exp_mean": 5.32, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 15.0}, {"ym": "2026-04", "partial": false, "imp_total": 44058, "imp_express_pct": 11.5, "imp_normal_n": 38853, "imp_mean": 6.05, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.36, "imp_batch_n": 0, "imp_over7_pct": 24.5, "exp_total": 20223, "exp_express_pct": 0.9, "exp_normal_n": 19970, "exp_mean": 5.82, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 63, "exp_over7_pct": 20.4}], "summary": {"baseline_label": "ก.ค.2565 – ธ.ค.2567", "recent_label": "ม.ค.2568 – เม.ย.2569", "import": {"baseline_mean": 5.16, "recent_mean": 5.71, "baseline_median": 4.0, "recent_median": 4.0, "baseline_n": 935940, "recent_n": 543046}, "export": {"baseline_mean": 5.33, "recent_mean": 5.9, "baseline_median": 5, "recent_median": 5, "baseline_n": 651161, "recent_n": 337433}}, "top_batch_events": {"import": [], "export": [["2026-01-31 08:05:00", 438], ["2023-09-30 16:10:00", 371], ["2026-02-11 23:55:00", 358], ["2025-08-18 19:00:00", 343], ["2023-12-29 17:00:00", 335]]}};
+
+Chart.defaults.font.family = "'Kanit', sans-serif";
+Chart.defaults.color = '#b4cce8';
+Chart.defaults.borderColor = 'rgba(59,130,246,.12)';
+
+const COLORS = { blue:'#3b82f6', blue2:'#60a5fa', teal:'#14b8a6', red:'#ef4444', red2:'#f87171', amber:'#f59e0b', g:'#2DB892', y:'#CDB820', o:'#E07040', r:'#D84040' };
+
+function monthLabel(ym){
+  const [y,m] = ym.split('-');
+  const names = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const beYear = parseInt(y) + 543;
+  return names[parseInt(m)] + ' ' + String(beYear).slice(2);
+}
+
+function filterSeries(range){
+  if(range === 'all') return DATA.series;
+  if(range === 'fy67-69') return DATA.series.filter(d => d.ym >= '2023-10');
+  if(range === 'recent12') return DATA.series.slice(-12);
+  return DATA.series;
+}
+
+function statusOf(val, dir){
+  // dir: 'import' or 'export'
+  if(val == null) return {color:COLORS.teal, label:''};
+  if(dir==='import'){
+    if(val > 6.5) return {color:COLORS.r, label:'🔴 อันตราย'};
+    if(val > 5.5) return {color:COLORS.y, label:'⚠️ พึงระวัง'};
+    return {color:COLORS.g, label:'🟢 ปลอดภัย'};
+  } else {
+    if(val > 8.0) return {color:COLORS.r, label:'🔴 อันตราย'};
+    if(val > 7.0) return {color:COLORS.y, label:'⚠️ พึงระวัง'};
+    return {color:COLORS.g, label:'🟢 ปลอดภัย'};
+  }
+}
+
+let trendChart, segChart, compareChart, over7Chart;
+
+function renderScoreStrip(){
+  const s = DATA.summary;
+  const impStat = statusOf(s.import.recent_mean, 'import');
+  const expStat = statusOf(s.export.recent_mean, 'export');
+  const cards = [
+    {label:'Import dwell เฉลี่ย (Normal, ล่าสุด)', val: s.import.recent_mean + ' วัน', base: s.import.baseline_mean, recent: s.import.recent_mean, note:'baseline ' + s.import.baseline_mean + ' วัน', stat: impStat},
+    {label:'Export dwell เฉลี่ย (Normal, ล่าสุด)', val: s.export.recent_mean + ' วัน', base: s.export.baseline_mean, recent: s.export.recent_mean, note:'baseline ' + s.export.baseline_mean + ' วัน', stat: expStat},
+    {label:'Import median (ล่าสุด)', val: s.import.recent_median + ' วัน', base: s.import.baseline_median, recent: s.import.recent_median, note:'baseline ' + s.import.baseline_median + ' วัน', stat:{color:COLORS.teal,label:''}},
+    {label:'Export median (ล่าสุด)', val: s.export.recent_median + ' วัน', base: s.export.baseline_median, recent: s.export.recent_median, note:'baseline ' + s.export.baseline_median + ' วัน', stat:{color:COLORS.teal,label:''}},
+  ];
+  const html = cards.map(c => {
+    const pct = ((c.recent - c.base) / c.base * 100);
+    const up = pct >= 0;
+    return `<div class="sc-card" style="--status-color:${c.stat.color}">
+      <div class="sc-label">${c.label}</div>
+      <div class="sc-val">${c.val}</div>
+      ${c.stat.label ? `<span class="sc-status" style="background:${c.stat.color}22;color:${c.stat.color}">${c.stat.label}</span>` : ''}
+      <span class="sc-delta ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(pct).toFixed(1)}%</span>
+      <div class="sc-note">${c.note}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('scoreStrip').innerHTML = html;
+}
+
+function renderTrend(range){
+  const d = filterSeries(range);
+  const labels = d.map(x => monthLabel(x.ym));
+  const ctx = document.getElementById('trendChart');
+  if(trendChart) trendChart.destroy();
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [
+      { label:'Import mean (Normal)', data:d.map(x=>x.imp_mean), borderColor:COLORS.blue, backgroundColor:'transparent', borderWidth:2, tension:.25, spanGaps:false, pointRadius:2 },
+      { label:'Import median', data:d.map(x=>x.imp_median), borderColor:COLORS.blue2, borderDash:[5,4], backgroundColor:'transparent', borderWidth:1.5, tension:.25, spanGaps:false, pointRadius:0 },
+      { label:'Export mean (Normal)', data:d.map(x=>x.exp_mean), borderColor:COLORS.red, backgroundColor:'transparent', borderWidth:2, tension:.25, spanGaps:false, pointRadius:2 },
+      { label:'Export median', data:d.map(x=>x.exp_median), borderColor:COLORS.red2, borderDash:[5,4], backgroundColor:'transparent', borderWidth:1.5, tension:.25, spanGaps:false, pointRadius:0 },
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{ legend:{position:'top', labels:{boxWidth:14}},
+        tooltip:{ callbacks:{ afterBody:(items)=>{
+          const idx = items[0].dataIndex; const row = d[idx];
+          let extra = [];
+          if(row.imp_batch_n>0) extra.push('Import batch artifact: '+row.imp_batch_n+' ตู้ (ใน Anomaly tier)');
+          if(row.exp_batch_n>0) extra.push('Export batch artifact: '+row.exp_batch_n+' ตู้ (ใน Anomaly tier)');
+          return extra;
+        }}}
+      },
+      scales:{ y:{ title:{display:true, text:'วัน'}, grid:{color:'rgba(59,130,246,.08)'} }, x:{ ticks:{maxRotation:60, minRotation:45} } }
+    }
+  });
+}
+
+function renderSeg(range){
+  const d = filterSeries(range);
+  const labels = d.map(x => monthLabel(x.ym));
+  const ctx = document.getElementById('segChart');
+  if(segChart) segChart.destroy();
+  // approximate Normal% = 100 - express% - anomaly%
+  const impNormalPct = d.map(x => x.imp_express_pct==null ? null : Math.round((100 - x.imp_express_pct - x.imp_anomaly_pct)*10)/10);
+  segChart = new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets:[
+      {label:'Import Express (≤1d)', data:d.map(x=>x.imp_express_pct), backgroundColor:'rgba(59,130,246,.85)', stack:'imp'},
+      {label:'Import Normal (2-30d)', data:impNormalPct, backgroundColor:'rgba(59,130,246,.35)', stack:'imp'},
+      {label:'Import Anomaly (>30d)', data:d.map(x=>x.imp_anomaly_pct), backgroundColor:COLORS.r, stack:'imp'},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}},
+      scales:{ x:{stacked:true, ticks:{maxRotation:60,minRotation:45}}, y:{stacked:true, title:{display:true,text:'% ของตู้ Import'}, max:100} } }
+  });
+}
+
+function renderCompare(){
+  const s = DATA.summary;
+  const ctx = document.getElementById('compareChart');
+  if(compareChart) compareChart.destroy();
+  compareChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['Import mean','Import median','Export mean','Export median'],
+      datasets:[
+        {label:DATA.summary.baseline_label, data:[s.import.baseline_mean, s.import.baseline_median, s.export.baseline_mean, s.export.baseline_median], backgroundColor:'rgba(59,130,246,.35)'},
+        {label:DATA.summary.recent_label, data:[s.import.recent_mean, s.import.recent_median, s.export.recent_mean, s.export.recent_median], backgroundColor:COLORS.amber},
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}}, scales:{y:{title:{display:true,text:'วัน'}}} }
+  });
+}
+
+function renderOver7(range){
+  const d = filterSeries(range);
+  const labels = d.map(x => monthLabel(x.ym));
+  const ctx = document.getElementById('over7Chart');
+  if(over7Chart) over7Chart.destroy();
+  over7Chart = new Chart(ctx, {
+    type:'line',
+    data:{ labels, datasets:[
+      {label:'Import >7d %', data:d.map(x=>x.imp_over7_pct), borderColor:COLORS.blue, backgroundColor:'rgba(59,130,246,.08)', fill:true, tension:.25, pointRadius:2},
+      {label:'Export >7d %', data:d.map(x=>x.exp_over7_pct), borderColor:COLORS.red, backgroundColor:'rgba(239,68,68,.08)', fill:true, tension:.25, pointRadius:2},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}},
+      scales:{ x:{ticks:{maxRotation:60,minRotation:45}}, y:{title:{display:true,text:'% ของตู้'}} } }
+  });
+}
+
+function renderAll(range){
+  renderTrend(range);
+  renderSeg(range);
+  renderOver7(range);
+}
+
+document.querySelectorAll('.controls .btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.controls .btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAll(btn.dataset.range);
+  });
+});
+
+renderScoreStrip();
+renderAll('all');
+renderCompare();
+</script>
+</body>
+</html>
