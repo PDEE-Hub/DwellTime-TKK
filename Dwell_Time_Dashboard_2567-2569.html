@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAT Intelligence · Dwell Time Dashboard ทกท. 2567-2569 (v2)</title>
+<title>PAT Intelligence · Dwell Time Dashboard ทกท. 2567-2569 (v4)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -60,6 +60,29 @@ header .sub{font-size:12.5px;color:var(--text3);}
 .legend-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--text2);}
 .legend-row .ld{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle;}
 
+.insight-card{background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.2);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;line-height:1.65;color:var(--text2);}
+.insight-card b{color:var(--text);}
+.insight-card .tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--teal2);text-transform:uppercase;margin-bottom:5px;}
+.insight-card.fin{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.22);}
+.insight-card.fin .tag{color:var(--amber2);}
+
+.impact-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+@media (max-width:900px){.impact-strip{grid-template-columns:repeat(2,1fr);}}
+.impact-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
+.impact-card .ic-label{font-size:11px;color:var(--text3);margin-bottom:6px;}
+.impact-card .ic-val{font-size:20px;font-weight:700;color:var(--amber2);font-family:'Kanit',monospace;}
+.impact-card .ic-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+@media (max-width:700px){.calc-grid{grid-template-columns:1fr;}}
+.calc-input label{display:block;font-size:12px;color:var(--text3);margin-bottom:6px;}
+.calc-input select, .calc-input input{width:100%;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Kanit',sans-serif;font-size:14px;}
+.calc-input select:focus, .calc-input input:focus{outline:none;border-color:var(--teal);}
+.calc-result{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.25);border-radius:10px;padding:18px 20px;}
+.calc-result .cr-total{font-size:28px;font-weight:700;color:var(--teal2);font-family:'Kanit',monospace;margin-bottom:10px;}
+.calc-result .cr-break{font-size:12.5px;color:var(--text2);line-height:1.7;}
+.calc-result .cr-break b{color:var(--text);}
+
 .dq-list{display:flex;flex-direction:column;gap:10px;}
 .dq-item{display:flex;gap:12px;padding:12px 14px;background:rgba(255,255,255,.02);border-left:3px solid var(--amber);border-radius:6px;}
 .dq-item.crit{border-left-color:var(--red);}
@@ -82,12 +105,12 @@ footer a{color:var(--teal2);text-decoration:none;}
   <header>
     <div>
       <span class="tag">PAT Intelligence · Financial Narrative Support</span>
-      <h1>Dwell Time Dashboard — ท่าเรือกรุงเทพ (ทกท.) <span style="font-size:14px;color:var(--text3);font-weight:400;">v2</span></h1>
+      <h1>Dwell Time Dashboard — ท่าเรือกรุงเทพ (ทกท.) <span style="font-size:14px;color:var(--text3);font-weight:400;">v4</span></h1>
       <div class="sub">ข้อมูลตู้สินค้า Import/Export ใน Yard · ก.ค. 2565 – เม.ย. 2569 (โฟกัสปีงบ 2567-2569) · <span class="live-dot">●</span> อัปเดตล่าสุด เม.ย. 2569</div>
     </div>
   </header>
   <div class="methodology-note">
-    <b>v2 — แก้วิธีคำนวณ:</b> เปลี่ยนจากตัด record &gt;90 วันแบบหยาบ มาใช้ Segmentation 3 ชั้น (Express ≤1 วัน / <b>Normal 2-30 วัน = ฐาน KPI หลัก</b> / Anomaly &gt;30 วัน) ตามกฎใน SKILL_DwellTime_TKK.md พร้อมตรวจ batch-timestamp artifact แยกออกจาก anomaly จริง — รายละเอียดวิธีคิดทั้งหมดอยู่ใน <code>METHODOLOGY_DwellTime.md</code> ไฟล์เดียวกัน
+    <b>v4 — เพิ่มการคำนวณตามขนาดตู้จริงและปีงบประมาณ:</b> ดึง <code>nominal_length</code> (ขนาดตู้จริง 20/40/45 ฟุต) จากไฟล์ raw มาคำนวณค่าภาระร่วมกับอัตราจริงจากหนังสือค่าภาระ ท่าเรือกรุงเทพ พ.ศ.2543 แทนการสมมติ 20 ฟุตทั้งหมด พร้อมเพิ่ม <b>เทียบฐานรายปีงบประมาณ</b>, <b>ผลกระทบต่อรายได้</b>, และ <b>ตัวคำนวณค่าภาระ Interactive</b> — ข้อมูลพื้นฐานยังเป็นชุดครบ 2,751,663 แถวจาก Google Drive (v3) รายละเอียดวิธีคิดทั้งหมดอยู่ใน <code>METHODOLOGY_DwellTime.md</code> ไฟล์เดียวกัน
   </div>
 
   <div class="controls">
@@ -95,12 +118,17 @@ footer a{color:var(--teal2);text-decoration:none;}
     <button class="btn" data-range="fy67-69">FY2567-2569</button>
     <button class="btn" data-range="recent12">12 เดือนล่าสุด</button>
   </div>
+  <div style="font-size:11.5px;color:var(--text3);margin:-12px 0 16px;">กดปุ่มช่วงเวลาด้านบนแล้ว ตัวเลขใน Score Card และกราฟด้านล่างจะอัปเดตตามช่วงที่เลือกทั้งหมด (เทียบกับ baseline ก.ค.65-ธ.ค.67 คงที่เสมอ)</div>
 
   <div class="score-strip" id="scoreStrip"></div>
 
   <div class="panel">
     <div class="panel-title">Dwell Time เฉลี่ยรายเดือน (Normal Segment) — Import vs Export</div>
     <div class="panel-sub">คำนวณเฉพาะ Normal segment (2-30 วัน) ตามมาตรฐาน skill · เส้นทึบ = mean · เส้นประ = median · แถบเหลือง = ช่วงล่าสุด FY2568-69</div>
+    <div class="insight-card">
+      <span class="tag">ประเด็นสำคัญ</span><br>
+      Import dwell time เฉลี่ยขยับจาก <b>5.20 วัน → 5.80 วัน</b> (+11.5%) ส่วน Export ขยับจาก <b>5.51 วัน → 6.15 วัน</b> (+11.6%) ทั้งสองทิศทางใกล้เคียงกันมาก บ่งชี้ว่าน่าจะเป็นปัจจัยระดับท่าเรือ (เช่น ความหนาแน่นลาน หรือกระบวนการผ่านพิธีการ) มากกว่าปัจจัยเฉพาะกลุ่มสินค้าใดกลุ่มหนึ่ง — ควรสอบถามทีม yard operation เพื่อยืนยันสาเหตุ
+    </div>
     <div class="chart-box"><canvas id="trendChart"></canvas></div>
     <div class="threshold-key">
       <span><span class="dot" style="background:var(--g)"></span>Import ปลอดภัย ≤5.5d / Export ≤7.0d</span>
@@ -112,6 +140,10 @@ footer a{color:var(--teal2);text-decoration:none;}
   <div class="panel">
     <div class="panel-title">Segmentation รายเดือน — Express / Normal / Anomaly (%)</div>
     <div class="panel-sub">% ของตู้ในแต่ละชั้น ต่อเดือน — Anomaly ที่สูงผิดปกติควรเช็ค batch artifact ก่อนสรุปว่าเป็นปัญหาจริง</div>
+    <div class="insight-card">
+      <span class="tag">ประเด็นสำคัญ</span><br>
+      ตู้ในกลุ่ม <b>Anomaly (ค้างเกิน 30 วัน)</b> ยังเป็นสัดส่วนน้อยทุกเดือน (ต่ำกว่า 2.5%) แต่มีทิศทางสูงขึ้นต่อเนื่องในปีล่าสุดเทียบ baseline — เป็นกลุ่มความเสี่ยงสูงสุดต่อค่าใช้จ่าย demurrage/storage ถึงปริมาณจะน้อยแต่ควรติดตามแยกจากแนวโน้มหลัก
+    </div>
     <div class="chart-box"><canvas id="segChart"></canvas></div>
   </div>
 
@@ -119,44 +151,124 @@ footer a{color:var(--teal2);text-decoration:none;}
     <div class="panel">
       <div class="panel-title">เทียบ Baseline vs ช่วงล่าสุด (Normal Segment)</div>
       <div class="panel-sub">Baseline = ก.ค.2565-ธ.ค.2567 · ล่าสุด = ม.ค.2568-เม.ย.2569</div>
+      <div class="insight-card">
+        <span class="tag">ประเด็นสำคัญ</span><br>
+        ทั้ง mean และ median ขยับขึ้นเล็กน้อยทุกตัว — ไม่ใช่การเปลี่ยนแปลงรุนแรง แต่สอดคล้องกันทั้ง Import/Export จึงน่าเชื่อว่าเป็นแนวโน้มจริง ไม่ใช่ความผันผวนรายเดือน
+      </div>
       <div class="chart-box small"><canvas id="compareChart"></canvas></div>
     </div>
     <div class="panel">
       <div class="panel-title">Warehouse Intensity (% dwell &gt; 7 วัน)</div>
       <div class="panel-sub">รวมทุก segment ที่ dwell&gt;7 วัน — ตัวขับเคลื่อนรายได้ Storage และสัญญาณ "คลังกลางกรุงเทพ"</div>
+      <div class="insight-card">
+        <span class="tag">ประเด็นสำคัญ</span><br>
+        % ตู้ค้างเกิน 7 วันคือจุดที่ค่าธรรมเนียมฝากตู้ขั้นบันไดเริ่มขยับ — ดูความเชื่อมโยงกับรายได้จริงในหัวข้อ "เชื่อมโยงการเงิน" ด้านล่าง
+      </div>
       <div class="chart-box small"><canvas id="over7Chart"></canvas></div>
     </div>
   </div>
 
   <div class="panel">
+    <div class="panel-title">เทียบฐานรายปีงบประมาณ — Dwell Time เฉลี่ย (Normal Segment)</div>
+    <div class="panel-sub">ปีงบประมาณ ต.ค.-ก.ย. (เลขปี พ.ศ. = ปีที่สิ้นสุด ก.ย.) · ตามรอบที่ฝ่ายการเงินใช้ติดตามรายได้</div>
+    <div class="insight-card">
+      <span class="tag">ประเด็นสำคัญ</span><br>
+      <b>ฐาน FY2566-2567 เฉลี่ยรวม: Import 5.18 วัน / Export 5.37 วัน</b> — FY2568 ขยับเป็น Import 5.70 วัน / Export 6.28 วัน และ FY2569 (มีข้อมูลถึง เม.ย.69 เท่านั้น) อยู่ที่ Import 5.72 วัน / Export 5.92 วัน ทิศทางขึ้นต่อเนื่อง 2 ปีติด ไม่ใช่ความผันผวนปีเดียว — อ่านวิธีนี้ง่ายกว่า: <b>"ปีฐานเป็นแบบนี้ ตอนนี้เป็นแบบนี้ ต่างกัน X วัน"</b> แทนการดูกราฟ mean/median รายเดือนที่ละเอียดเกินไป
+    </div>
+    <div class="chart-box"><canvas id="fyChart"></canvas></div>
+    <div class="panel-sub" style="margin-top:14px;">* FY2565 มีข้อมูลแค่ ก.ค.-ก.ย.65 (3 เดือน) และ FY2569 มีข้อมูลถึง เม.ย.69 (7 เดือน) — เป็นค่าเฉลี่ยจากเดือนที่มีข้อมูลจริงเท่านั้น ไม่ใช่ค่าทั้งปี</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">กระจายตัวจำนวนวันที่ตู้อยู่ในลาน — Baseline vs Recent</div>
+    <div class="panel-sub">% ของตู้ในแต่ละช่วงวัน (bucket) เทียบ Baseline (ก.ค.2565-ธ.ค.2567) กับ Recent (ม.ค.2568-เม.ย.2569)</div>
+    <div class="insight-card">
+      <span class="tag">ประเด็นสำคัญ</span><br>
+      <b>ตู้ Import ส่วนใหญ่อยู่ในลาน 2-3 วัน</b> (34.5% baseline → 31.0% recent) <b>ตู้ Export ส่วนใหญ่อยู่ 4-5 วัน</b> (37.8% baseline → 33.2% recent) — พฤติกรรมหลักไม่เปลี่ยน แต่ "หาง" ของกระจายตัวขยายออก: สัดส่วนตู้ค้างเกิน 30 วันเพิ่มขึ้นเกือบ 3 เท่าทั้ง Import (0.4%→1.4%) และ Export (0.3%→0.6%) แม้ฐานยังเล็ก นี่คือสัญญาณเริ่มต้นที่ควรติดตาม ไม่ใช่ตัวเลขที่น่าตกใจในตัวเอง
+    </div>
+    <div class="chart-box"><canvas id="histChart"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">ผลกระทบต่อรายได้จากตู้ค้างเพิ่มขึ้น — เทียบฐาน FY2566-2567</div>
+    <div class="panel-sub">คำนวณจากอัตราค่าภาระฝากตู้จริง (หนังสือค่าภาระ ท่าเรือกรุงเทพ พ.ศ.2543 ตู้มีสินค้า FCL) × <b>ขนาดตู้จริงของตู้แต่ละใบ</b> (nominal_length: 20/40/45 ฟุต จากไฟล์ raw) คูณกับจำนวนตู้จริงแต่ละปี</div>
+    <div class="impact-strip" id="impactStrip"></div>
+    <div class="insight-card">
+      <span class="tag">ประเด็นสำคัญ</span><br>
+      ค่าธรรมเนียมเฉลี่ยต่อตู้ (Export) พุ่งขึ้น <b>+76.5%</b> ในปี FY2569 ทั้งที่ dwell time เฉลี่ยขยับขึ้นแค่ +0.55 วัน — เพราะโครงสร้างค่าภาระเป็นขั้นบันได ตู้ส่วนน้อยที่ไหลเข้ากลุ่มค้างนาน (tail ที่ขยายตัวเกือบ 3 เท่าจากหัวข้อ "กระจายตัว" ด้านบน) ดึงค่าเฉลี่ยรายได้ต่อตู้ขึ้นแรงกว่าที่ตัวเลข dwell เฉลี่ยอย่างเดียวจะบอกได้<br><br>
+      <b>เรื่องขนาดตู้:</b> ตู้ Import มีสัดส่วนค้างที่ 20ฟุต:40ฟุต ≈ 53:47 และ Export ≈ 58:42 มาตลอดทุกปี (ไม่เปลี่ยนแปลงมาก) แปลว่าผลกระทบรายได้ที่เห็นนี้มาจาก<b>ตู้ค้างนานขึ้นจริง ไม่ใช่เพราะ mix ขนาดตู้เปลี่ยน</b> — ตัวเลขรวมยังเป็น<b>ค่าประมาณจากอัตราปี 2543</b> ไม่ใช่รายได้จริงที่บันทึกบัญชี เพราะยังไม่มีเล่มอัตราฉบับปรับปรุงล่าสุดมาเทียบ
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">เชื่อมโยงการเงิน — % ตู้ค้างเกิน 7 วัน vs รายได้ค่าภาระฝากตู้สินค้า</div>
+    <div class="panel-sub">รายได้จริงจาก Power BI_8 Months_69.xlsx (ทกท., ทุกบรรทัดที่มีคำว่า "ฝากตู้") เทียบ % ตู้ dwell&gt;7 วันรายเดือน ต.ค.2565-เม.ย.2569</div>
+    <div class="insight-card fin">
+      <span class="tag">ประเด็นสำคัญ — ตรงไปตรงมา</span><br>
+      Correlation ระหว่าง % ตู้ค้างเกิน 7 วัน กับรายได้ค่าฝากตู้ = <b>0.34</b> — ทิศทางสอดคล้องกันตามสมมติฐาน "Chain A" ใน skill doc แต่เป็น<b>ความสัมพันธ์ระดับปานกลาง ไม่ใช่ตัวขับเคลื่อนหลักเดี่ยวๆ</b> เพราะรายได้ค่าฝากตู้ยังขึ้นกับปัจจัยอื่นร่วมด้วย (mix FCL/LCL, ปริมาณตู้รวม, ส่วนลด/อัตราค่าธรรมเนียมที่ปรับเปลี่ยนรายงวด) ส่วน % ตู้ค้างเกิน 30 วัน มี correlation แค่ <b>-0.06</b> กับรายได้ — แทบไม่มีความสัมพันธ์ เพราะปริมาณยังน้อยเกินกว่าจะขยับรายได้รวมได้อย่างมีนัยสำคัญ
+      <br><br><b>คำแนะนำการใช้:</b> เหมาะเสนอเป็น "สัญญาณทิศทางสอดคล้องกัน สนับสนุนสมมติฐาน Chain A" ไม่เหมาะเสนอเป็น "หลักฐานว่า dwell time เป็นตัวขับเคลื่อนรายได้หลัก" เพราะจะเกินกว่าที่ข้อมูลสนับสนุนจริง
+    </div>
+    <div class="chart-box"><canvas id="finChart"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">🧮 ตัวคำนวณค่าภาระฝากตู้สินค้า (Interactive)</div>
+    <div class="panel-sub">อ้างอิงอัตราจากหนังสือค่าภาระ ท่าเรือกรุงเทพ พ.ศ.2543 (ตู้มีสินค้า FCL หน้า 18) · ฟรี 3 วันแรก จากนั้นคิดค่าภาระขั้นบันไดตามจำนวนวันที่เกินสิทธิ์ฟรี · ใช้อัตราเดียวกันทั้งนำเข้า-ส่งออก</div>
+    <div class="calc-grid">
+      <div class="calc-input">
+        <label>ขนาดตู้</label>
+        <select id="calcSize">
+          <option value="20">20 ฟุต</option>
+          <option value="40">40 ฟุต</option>
+          <option value="45">45 ฟุต</option>
+        </select>
+      </div>
+      <div class="calc-input">
+        <label>จำนวนตู้ (TEU)</label>
+        <input type="number" id="calcQty" value="100" min="1" step="1">
+      </div>
+      <div class="calc-input">
+        <label>ฝากกี่วัน (รวมทั้งหมด)</label>
+        <input type="number" id="calcDays" value="10" min="0" step="1">
+      </div>
+    </div>
+    <div class="calc-result" id="calcResult"></div>
+    <div class="panel-sub" style="margin-top:14px;">อัตราขั้นบันได (บาท/ตู้/วัน เฉพาะวันที่เกินสิทธิ์ฟรี): 20ฟุต 160/275/390 · 40ฟุต 320/550/780 · 45ฟุต 360/615/875 (ช่วง 1-7 / 8-14 / ≥15 วันที่เกินฟรี)</div>
+  </div>
+
+  <div class="panel">
     <div class="panel-title">🔍 Data Quality & Anomaly Notes</div>
-    <div class="panel-sub">v2 — อัปเดตตามกฎ batch-detection ของ SKILL_DwellTime_TKK.md</div>
+    <div class="panel-sub">v4 — ตรวจสอบครบทุก sheet ของไฟล์ raw ทั้ง 5 ไฟล์แล้ว</div>
     <div class="dq-list">
       <div class="dq-item crit">
         <div class="dq-icon">⚠️</div>
         <div class="dq-text"><b>ก.พ. 2567 ข้อมูลไม่ครบเดือน</b> — มีข้อมูลแค่วันที่ 1-2 ก.พ. เท่านั้น เดือนนี้ถูกตัดออกจากกราฟ trend และค่าเฉลี่ยทั้งหมด</div>
       </div>
+      <div class="dq-item crit">
+        <div class="dq-icon">⚠️</div>
+        <div class="dq-text"><b>มิ.ย. 2566 ไม่มีข้อมูล Export</b> — ตรวจพบว่า sheet "Jun2023" ในไฟล์ต้นฉบับ <code>DwellTimeJul2022-Feb2024_Export.xlsx</code> เป็นข้อมูลซ้ำของ sheet "May2023" ทั้งหมด (เลขแถว/ช่วงวันที่ตรงกันเป๊ะ) จึงตัดออกเพื่อไม่ให้ double-count เดือน พ.ค. — ผลคือเดือน มิ.ย. 2566 ฝั่ง Export เป็นช่องว่างจริงในข้อมูลต้นทาง ไม่สามารถสร้างใหม่ได้จากไฟล์ที่มีอยู่ (ฝั่ง Import เดือนนี้ปกติ ไม่กระทบ)</div>
+      </div>
       <div class="dq-item">
         <div class="dq-icon">📌</div>
-        <div class="dq-text"><b>ตรวจพบ batch-timestamp cluster หลายจุด</b> (เช่น 2026-01-31 08:05 = 438 ตู้, 2023-09-30 16:10 = 371 ตู้) — ใหญ่กว่าที่ skill เดิมระบุไว้ (2 จุด, 77 ตู้) เพราะ threshold การตรวจกว้างกว่า ควรให้ทีม yard operation ยืนยันว่าจุดไหนเป็น "system close-out artifact" จริง กับจุดไหนเป็น "ตู้ลงเรือพร้อมกันจริง" (เวลาตรงกันโดยธรรมชาติ ไม่ใช่ความผิดพลาด) — <b>ยังไม่ได้ตัดออกจากตัวเลขในแดชบอร์ดนี้ เพราะ batch ที่พบทั้งหมดอยู่ใน Anomaly tier (&gt;30 วัน) ซึ่งไม่ถูกใช้คำนวณ mean/median ของ Normal segment อยู่แล้ว</b></div>
+        <div class="dq-text"><b>Batch artifact ฝั่ง Export อ่านเป็น "จำนวนตู้ผิดปกติ" ตรงๆไม่ได้</b> — ตรวจพบว่า timestamp <code>time_out</code> ของฝั่ง Export ถูกบันทึกที่ความละเอียดหลักนาที (99.7% ตรงกับช่วง 5 นาทีเป๊ะ) ขณะที่ฝั่ง Import บันทึกละเอียดถึงระดับวินาที (มีแค่ 1.7% ที่ตรงวินาที :00) — ทำให้เกณฑ์เดิม "ตู้เกิน 5 ใบ ที่ time_out ตรงกันเป๊ะ = batch artifact" ติดเกือบทุกกลุ่มของฝั่ง Export โดยธรรมชาติ ไม่ใช่สัญญาณความผิดปกติจริง (น่าจะมาจากการบันทึกเวลายกตู้ขึ้นเรือเป็นช่วงเช็คพอยท์ ไม่ใช่ real-time) ตัวเลข exp_batch_n ในกราฟนี้จึงเป็นค่าอ้างอิงคร่าวๆเท่านั้น <b>ไม่กระทบความถูกต้องของค่า dwell แต่ละตู้ หรือ mean/median ของ Normal segment</b> เพราะ dwell คำนวณจาก time_in→time_out ของตู้นั้นจริง ไม่ใช่จากกลุ่ม batch</div>
       </div>
       <div class="dq-item good">
         <div class="dq-icon">✅</div>
-        <div class="dq-text"><b>Row count รวมตรงกับ skill.md เป๊ะ</b> — ต.ค.2568-เม.ย.2569: Import 279,215 / Export 147,001 ตู้ ตรงกันทุกตัว ยืนยันว่าข้อมูลต้นทางสองชุดนี้เป็นไฟล์เดียวกัน ความต่างของผลลัพธ์ก่อนหน้านี้มาจากวิธีคำนวณ ไม่ใช่ข้อมูลผิด</div>
+        <div class="dq-text"><b>Row count รวมตรงกับ skill.md</b> — รวม 5 ไฟล์ต้นฉบับ (อ่านครบทุก sheet) ได้ 2,751,663 แถว (หลังตัด duplicate sheet 1 จุด) ใกล้เคียงกับ ~2.79 ล้านที่ skill ระบุไว้มาก ยืนยันว่าข้อมูลชุดนี้สมบูรณ์</div>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>แหล่งข้อมูล: Dwell Time raw export จากระบบ Yard · รวม 7 ไฟล์ Excel ครอบคลุม ก.ค.2565 – เม.ย.2569 · รวม ~2.79 ล้าน record</p>
+    <p>แหล่งข้อมูล: Dwell Time raw export จากระบบ Yard (Google Drive ต้นฉบับ) · รวม 5 ไฟล์ Excel ครอบคลุม ก.ค.2565 – เม.ย.2569 · รวม 2,751,663 record (อ่านครบทุก sheet ของแต่ละไฟล์)</p>
     <p>Methodology: Segmentation + threshold ตาม <code>SKILL_DwellTime_TKK.md</code> (ผู้ใช้เขียน) · รายละเอียดการคำนวณแบบเต็มดูที่ <code>METHODOLOGY_DwellTime.md</code></p>
-    <p>เอกสารนี้ใช้สนับสนุน narrative ใน Financial Dashboard (Fintrix) และ Monthly Report — ไม่ใช่เครื่องมือวิเคราะห์เชิงปฏิบัติการ (ดู skill เดิมสำหรับ ops analysis)</p>
+    <p>รายได้ค่าฝากตู้อ้างอิงจาก <code>Power BI_8 Months_69.xlsx</code> (ทกท.) · เอกสารนี้ใช้สนับสนุน narrative ใน Financial Dashboard (Fintrix) และ Monthly Report — ไม่ใช่เครื่องมือวิเคราะห์เชิงปฏิบัติการ (ดู skill เดิมสำหรับ ops analysis)</p>
   </footer>
 
 </div>
 
 <script>
-const DATA = {"series": [{"ym": "2022-07", "partial": false, "imp_total": 40873, "imp_express_pct": 16.2, "imp_normal_n": 33946, "imp_mean": 5.34, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.75, "imp_batch_n": 0, "imp_over7_pct": 17.4, "exp_total": 21680, "exp_express_pct": 0.8, "exp_normal_n": 21488, "exp_mean": 6.16, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.01, "exp_batch_n": 18, "exp_over7_pct": 22.8}, {"ym": "2022-08", "partial": false, "imp_total": 44348, "imp_express_pct": 14.4, "imp_normal_n": 37480, "imp_mean": 5.47, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 1.04, "imp_batch_n": 0, "imp_over7_pct": 18.2, "exp_total": 20182, "exp_express_pct": 2.1, "exp_normal_n": 19525, "exp_mean": 5.17, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 227, "exp_over7_pct": 12.7}, {"ym": "2022-09", "partial": false, "imp_total": 37853, "imp_express_pct": 19.5, "imp_normal_n": 30091, "imp_mean": 5.07, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 1.03, "imp_batch_n": 0, "imp_over7_pct": 15.1, "exp_total": 21747, "exp_express_pct": 0.9, "exp_normal_n": 21554, "exp_mean": 6.08, "exp_median": 6.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.4}, {"ym": "2022-10", "partial": false, "imp_total": 35334, "imp_express_pct": 14.7, "imp_normal_n": 29816, "imp_mean": 5.51, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.89, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 20886, "exp_express_pct": 2.5, "exp_normal_n": 20366, "exp_mean": 5.34, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.4}, {"ym": "2022-11", "partial": false, "imp_total": 39572, "imp_express_pct": 17.1, "imp_normal_n": 32530, "imp_mean": 5.12, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.69, "imp_batch_n": 0, "imp_over7_pct": 15.2, "exp_total": 22476, "exp_express_pct": 1.6, "exp_normal_n": 22127, "exp_mean": 5.93, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.3}, {"ym": "2022-12", "partial": false, "imp_total": 36444, "imp_express_pct": 16.5, "imp_normal_n": 30244, "imp_mean": 5.23, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 15.8, "exp_total": 23264, "exp_express_pct": 1.2, "exp_normal_n": 22889, "exp_mean": 5.33, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 88, "exp_over7_pct": 14.8}, {"ym": "2023-01", "partial": false, "imp_total": 38391, "imp_express_pct": 16.3, "imp_normal_n": 31939, "imp_mean": 5.4, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 16.9, "exp_total": 16277, "exp_express_pct": 2.2, "exp_normal_n": 15926, "exp_mean": 5.64, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.2}, {"ym": "2023-02", "partial": false, "imp_total": 30124, "imp_express_pct": 15.9, "imp_normal_n": 25157, "imp_mean": 5.05, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.56, "imp_batch_n": 0, "imp_over7_pct": 14.8, "exp_total": 20814, "exp_express_pct": 3.4, "exp_normal_n": 20110, "exp_mean": 4.37, "exp_median": 4.0, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.2}, {"ym": "2023-03", "partial": false, "imp_total": 43507, "imp_express_pct": 18.1, "imp_normal_n": 35469, "imp_mean": 4.73, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 11.9, "exp_total": 27037, "exp_express_pct": 2.4, "exp_normal_n": 26381, "exp_mean": 4.73, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 9.4}, {"ym": "2023-04", "partial": false, "imp_total": 37564, "imp_express_pct": 15.2, "imp_normal_n": 31727, "imp_mean": 5.61, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 19.8, "exp_total": 22604, "exp_express_pct": 2.8, "exp_normal_n": 21964, "exp_mean": 4.8, "exp_median": 4.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 11.2}, {"ym": "2023-05", "partial": false, "imp_total": 41970, "imp_express_pct": 16.2, "imp_normal_n": 34940, "imp_mean": 5.4, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 17.4, "exp_total": 25302, "exp_express_pct": 3.0, "exp_normal_n": 24533, "exp_mean": 4.72, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 8.1}, {"ym": "2023-06", "partial": false, "imp_total": 39157, "imp_express_pct": 20.7, "imp_normal_n": 30859, "imp_mean": 5.13, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.52, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 25302, "exp_express_pct": 3.0, "exp_normal_n": 24533, "exp_mean": 4.72, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 8.1}, {"ym": "2023-07", "partial": false, "imp_total": 36294, "imp_express_pct": 22.8, "imp_normal_n": 27841, "imp_mean": 4.84, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.48, "imp_batch_n": 0, "imp_over7_pct": 12.7, "exp_total": 25952, "exp_express_pct": 1.9, "exp_normal_n": 25412, "exp_mean": 5.36, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 41, "exp_over7_pct": 14.3}, {"ym": "2023-08", "partial": false, "imp_total": 42399, "imp_express_pct": 17.2, "imp_normal_n": 34886, "imp_mean": 5.23, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.55, "imp_batch_n": 0, "imp_over7_pct": 16.2, "exp_total": 24512, "exp_express_pct": 1.3, "exp_normal_n": 24185, "exp_mean": 5.41, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 17.4}, {"ym": "2023-09", "partial": false, "imp_total": 36889, "imp_express_pct": 22.6, "imp_normal_n": 28350, "imp_mean": 4.79, "imp_median": 4.0, "imp_p90": 9, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 12.5, "exp_total": 22616, "exp_express_pct": 1.0, "exp_normal_n": 21902, "exp_mean": 5.77, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 493, "exp_over7_pct": 17.5}, {"ym": "2023-10", "partial": false, "imp_total": 38045, "imp_express_pct": 16.9, "imp_normal_n": 31535, "imp_mean": 4.9, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.18, "imp_batch_n": 0, "imp_over7_pct": 13.0, "exp_total": 24642, "exp_express_pct": 1.6, "exp_normal_n": 24237, "exp_mean": 5.15, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.4}, {"ym": "2023-11", "partial": false, "imp_total": 41880, "imp_express_pct": 17.9, "imp_normal_n": 34225, "imp_mean": 4.89, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.37, "imp_batch_n": 0, "imp_over7_pct": 13.3, "exp_total": 23977, "exp_express_pct": 1.3, "exp_normal_n": 23660, "exp_mean": 4.62, "exp_median": 4.0, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.2}, {"ym": "2023-12", "partial": false, "imp_total": 37743, "imp_express_pct": 14.9, "imp_normal_n": 32026, "imp_mean": 5.19, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.26, "imp_batch_n": 0, "imp_over7_pct": 16.0, "exp_total": 24640, "exp_express_pct": 1.5, "exp_normal_n": 23929, "exp_mean": 5.13, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 335, "exp_over7_pct": 12.0}, {"ym": "2024-01", "partial": false, "imp_total": 41299, "imp_express_pct": 15.6, "imp_normal_n": 34708, "imp_mean": 5.44, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 18.0, "exp_total": 20922, "exp_express_pct": 1.3, "exp_normal_n": 20652, "exp_mean": 5.98, "exp_median": 5.0, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.7}, {"ym": "2024-02", "partial": false, "imp_total": 2749, "imp_express_pct": 22.1, "imp_normal_n": 2135, "imp_mean": 4.61, "imp_median": 3, "imp_p90": 9, "imp_anomaly_pct": 0.25, "imp_batch_n": 0, "imp_over7_pct": 11.9, "exp_total": 1339, "exp_express_pct": 0.1, "exp_normal_n": 1336, "exp_mean": 5.78, "exp_median": 6.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 19.9}, {"ym": "2024-03", "partial": false, "imp_total": 35533, "imp_express_pct": 21.6, "imp_normal_n": 27686, "imp_mean": 5.04, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.48, "imp_batch_n": 0, "imp_over7_pct": 13.8, "exp_total": 24918, "exp_express_pct": 1.9, "exp_normal_n": 24439, "exp_mean": 4.65, "exp_median": 4, "exp_p90": 7, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 7.6}, {"ym": "2024-04", "partial": false, "imp_total": 39918, "imp_express_pct": 16.1, "imp_normal_n": 33396, "imp_mean": 5.29, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.25, "imp_batch_n": 0, "imp_over7_pct": 16.6, "exp_total": 20152, "exp_express_pct": 1.6, "exp_normal_n": 19791, "exp_mean": 5.55, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 28, "exp_over7_pct": 15.9}, {"ym": "2024-05", "partial": false, "imp_total": 42583, "imp_express_pct": 18.8, "imp_normal_n": 34404, "imp_mean": 5.26, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.43, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 23278, "exp_express_pct": 1.9, "exp_normal_n": 22839, "exp_mean": 5.78, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 18.8}, {"ym": "2024-06", "partial": false, "imp_total": 39174, "imp_express_pct": 19.9, "imp_normal_n": 31223, "imp_mean": 5.06, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.42, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 22296, "exp_express_pct": 1.6, "exp_normal_n": 21942, "exp_mean": 5.3, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.5}, {"ym": "2024-07", "partial": false, "imp_total": 41164, "imp_express_pct": 19.6, "imp_normal_n": 32916, "imp_mean": 4.99, "imp_median": 4.0, "imp_p90": 9, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 13.4, "exp_total": 23006, "exp_express_pct": 2.8, "exp_normal_n": 22369, "exp_mean": 5.12, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 12.5}, {"ym": "2024-08", "partial": false, "imp_total": 42107, "imp_express_pct": 16.7, "imp_normal_n": 34929, "imp_mean": 5.3, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.36, "imp_batch_n": 0, "imp_over7_pct": 16.4, "exp_total": 22150, "exp_express_pct": 2.4, "exp_normal_n": 21628, "exp_mean": 5.29, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 14.7}, {"ym": "2024-09", "partial": false, "imp_total": 36296, "imp_express_pct": 18.1, "imp_normal_n": 29580, "imp_mean": 5.02, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.39, "imp_batch_n": 0, "imp_over7_pct": 14.5, "exp_total": 21190, "exp_express_pct": 1.7, "exp_normal_n": 20798, "exp_mean": 5.27, "exp_median": 5.0, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 40, "exp_over7_pct": 15.0}, {"ym": "2024-10", "partial": false, "imp_total": 41263, "imp_express_pct": 13.3, "imp_normal_n": 35589, "imp_mean": 5.23, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.45, "imp_batch_n": 0, "imp_over7_pct": 16.2, "exp_total": 22671, "exp_express_pct": 1.1, "exp_normal_n": 22431, "exp_mean": 5.43, "exp_median": 5, "exp_p90": 8, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.1}, {"ym": "2024-11", "partial": false, "imp_total": 40882, "imp_express_pct": 18.1, "imp_normal_n": 33315, "imp_mean": 4.79, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 12.3, "exp_total": 22581, "exp_express_pct": 0.7, "exp_normal_n": 22430, "exp_mean": 5.88, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 20.1}, {"ym": "2024-12", "partial": false, "imp_total": 39256, "imp_express_pct": 15.6, "imp_normal_n": 32998, "imp_mean": 5.18, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.38, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 25973, "exp_express_pct": 0.7, "exp_normal_n": 25785, "exp_mean": 6.23, "exp_median": 5, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 24.3}, {"ym": "2025-01", "partial": false, "imp_total": 45169, "imp_express_pct": 12.8, "imp_normal_n": 39219, "imp_mean": 6.01, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.35, "imp_batch_n": 0, "imp_over7_pct": 24.0, "exp_total": 16517, "exp_express_pct": 1.0, "exp_normal_n": 16347, "exp_mean": 6.01, "exp_median": 6, "exp_p90": 9, "exp_anomaly_pct": 0.01, "exp_batch_n": 0, "exp_over7_pct": 24.1}, {"ym": "2025-02", "partial": false, "imp_total": 33747, "imp_express_pct": 14.2, "imp_normal_n": 28789, "imp_mean": 5.74, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.53, "imp_batch_n": 0, "imp_over7_pct": 20.0, "exp_total": 21224, "exp_express_pct": 2.2, "exp_normal_n": 20763, "exp_mean": 5.3, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 15.7}, {"ym": "2025-03", "partial": false, "imp_total": 37916, "imp_express_pct": 18.0, "imp_normal_n": 30945, "imp_mean": 4.88, "imp_median": 4, "imp_p90": 9, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 13.4, "exp_total": 24743, "exp_express_pct": 1.5, "exp_normal_n": 24361, "exp_mean": 5.39, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 14, "exp_over7_pct": 14.8}, {"ym": "2025-04", "partial": false, "imp_total": 41001, "imp_express_pct": 12.1, "imp_normal_n": 35889, "imp_mean": 6.13, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.37, "imp_batch_n": 0, "imp_over7_pct": 24.1, "exp_total": 20041, "exp_express_pct": 1.6, "exp_normal_n": 19714, "exp_mean": 5.74, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 20.4}, {"ym": "2025-05", "partial": false, "imp_total": 42767, "imp_express_pct": 15.5, "imp_normal_n": 35914, "imp_mean": 5.84, "imp_median": 5.0, "imp_p90": 11, "imp_anomaly_pct": 0.49, "imp_batch_n": 0, "imp_over7_pct": 20.3, "exp_total": 22525, "exp_express_pct": 1.6, "exp_normal_n": 22066, "exp_mean": 5.96, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 99, "exp_over7_pct": 23.1}, {"ym": "2025-06", "partial": false, "imp_total": 40398, "imp_express_pct": 16.7, "imp_normal_n": 33448, "imp_mean": 5.6, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 25315, "exp_express_pct": 1.4, "exp_normal_n": 24813, "exp_mean": 5.79, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 143, "exp_over7_pct": 21.2}, {"ym": "2025-07", "partial": false, "imp_total": 42052, "imp_express_pct": 15.4, "imp_normal_n": 35380, "imp_mean": 5.94, "imp_median": 5.0, "imp_p90": 12, "imp_anomaly_pct": 0.46, "imp_batch_n": 0, "imp_over7_pct": 20.9, "exp_total": 20110, "exp_express_pct": 1.7, "exp_normal_n": 19769, "exp_mean": 5.79, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 18.7}, {"ym": "2025-08", "partial": false, "imp_total": 40583, "imp_express_pct": 16.5, "imp_normal_n": 33731, "imp_mean": 5.72, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.43, "imp_batch_n": 0, "imp_over7_pct": 18.8, "exp_total": 24689, "exp_express_pct": 0.7, "exp_normal_n": 24106, "exp_mean": 6.66, "exp_median": 6.0, "exp_p90": 11, "exp_anomaly_pct": 0.0, "exp_batch_n": 416, "exp_over7_pct": 32.5}, {"ym": "2025-09", "partial": false, "imp_total": 38719, "imp_express_pct": 18.0, "imp_normal_n": 31569, "imp_mean": 5.28, "imp_median": 4, "imp_p90": 10, "imp_anomaly_pct": 0.49, "imp_batch_n": 0, "imp_over7_pct": 15.5, "exp_total": 21647, "exp_express_pct": 1.0, "exp_normal_n": 21423, "exp_mean": 6.3, "exp_median": 6, "exp_p90": 10, "exp_anomaly_pct": 0.01, "exp_batch_n": 0, "exp_over7_pct": 27.8}, {"ym": "2025-10", "partial": false, "imp_total": 37578, "imp_express_pct": 15.2, "imp_normal_n": 31712, "imp_mean": 5.64, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 18.5, "exp_total": 22662, "exp_express_pct": 1.7, "exp_normal_n": 22035, "exp_mean": 6.2, "exp_median": 6, "exp_p90": 10, "exp_anomaly_pct": 0.0, "exp_batch_n": 249, "exp_over7_pct": 25.9}, {"ym": "2025-11", "partial": false, "imp_total": 36775, "imp_express_pct": 17.0, "imp_normal_n": 30364, "imp_mean": 5.24, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.39, "imp_batch_n": 0, "imp_over7_pct": 15.7, "exp_total": 22951, "exp_express_pct": 0.6, "exp_normal_n": 22802, "exp_mean": 5.96, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 0, "exp_over7_pct": 21.0}, {"ym": "2025-12", "partial": false, "imp_total": 40903, "imp_express_pct": 15.0, "imp_normal_n": 34586, "imp_mean": 5.47, "imp_median": 4.0, "imp_p90": 11, "imp_anomaly_pct": 0.4, "imp_batch_n": 0, "imp_over7_pct": 17.2, "exp_total": 21141, "exp_express_pct": 0.6, "exp_normal_n": 20951, "exp_mean": 6.18, "exp_median": 6, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 55, "exp_over7_pct": 25.0}, {"ym": "2026-01", "partial": false, "imp_total": 42919, "imp_express_pct": 11.5, "imp_normal_n": 37738, "imp_mean": 6.37, "imp_median": 5.0, "imp_p90": 12, "imp_anomaly_pct": 0.55, "imp_batch_n": 0, "imp_over7_pct": 27.3, "exp_total": 18477, "exp_express_pct": 1.6, "exp_normal_n": 17734, "exp_mean": 6.28, "exp_median": 5.0, "exp_p90": 11, "exp_anomaly_pct": 0.01, "exp_batch_n": 438, "exp_over7_pct": 25.0}, {"ym": "2026-02", "partial": false, "imp_total": 39968, "imp_express_pct": 15.3, "imp_normal_n": 33746, "imp_mean": 5.39, "imp_median": 4.0, "imp_p90": 10, "imp_anomaly_pct": 0.28, "imp_batch_n": 0, "imp_over7_pct": 16.7, "exp_total": 18504, "exp_express_pct": 1.2, "exp_normal_n": 17920, "exp_mean": 5.78, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.01, "exp_batch_n": 359, "exp_over7_pct": 18.4}, {"ym": "2026-03", "partial": false, "imp_total": 37014, "imp_express_pct": 15.3, "imp_normal_n": 31163, "imp_mean": 5.69, "imp_median": 4, "imp_p90": 11, "imp_anomaly_pct": 0.54, "imp_batch_n": 0, "imp_over7_pct": 20.1, "exp_total": 23043, "exp_express_pct": 1.7, "exp_normal_n": 22659, "exp_mean": 5.32, "exp_median": 5, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 1, "exp_over7_pct": 15.0}, {"ym": "2026-04", "partial": false, "imp_total": 44058, "imp_express_pct": 11.5, "imp_normal_n": 38853, "imp_mean": 6.05, "imp_median": 5, "imp_p90": 11, "imp_anomaly_pct": 0.36, "imp_batch_n": 0, "imp_over7_pct": 24.5, "exp_total": 20223, "exp_express_pct": 0.9, "exp_normal_n": 19970, "exp_mean": 5.82, "exp_median": 5.0, "exp_p90": 9, "exp_anomaly_pct": 0.0, "exp_batch_n": 63, "exp_over7_pct": 20.4}], "summary": {"baseline_label": "ก.ค.2565 – ธ.ค.2567", "recent_label": "ม.ค.2568 – เม.ย.2569", "import": {"baseline_mean": 5.16, "recent_mean": 5.71, "baseline_median": 4.0, "recent_median": 4.0, "baseline_n": 935940, "recent_n": 543046}, "export": {"baseline_mean": 5.33, "recent_mean": 5.9, "baseline_median": 5, "recent_median": 5, "baseline_n": 651161, "recent_n": 337433}}, "top_batch_events": {"import": [], "export": [["2026-01-31 08:05:00", 438], ["2023-09-30 16:10:00", 371], ["2026-02-11 23:55:00", 358], ["2025-08-18 19:00:00", 343], ["2023-12-29 17:00:00", 335]]}};
+const DATA = {"series":[{"ym":"2022-07","partial":false,"imp_total":40878,"imp_express_pct":16.19,"imp_normal_n":33946,"imp_mean":5.34,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.75,"imp_batch_n":0,"imp_over7_pct":17.4,"exp_total":21680,"exp_express_pct":0.79,"exp_normal_n":21488,"exp_mean":6.16,"exp_median":5.0,"exp_p90":10.0,"exp_anomaly_pct":0.09,"exp_batch_n":18,"exp_over7_pct":22.9},{"ym":"2022-08","partial":false,"imp_total":44354,"imp_express_pct":14.45,"imp_normal_n":37480,"imp_mean":5.47,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":1.04,"imp_batch_n":0,"imp_over7_pct":18.17,"exp_total":20182,"exp_express_pct":2.13,"exp_normal_n":19525,"exp_mean":5.17,"exp_median":5.0,"exp_p90":8.0,"exp_anomaly_pct":1.13,"exp_batch_n":227,"exp_over7_pct":13.84},{"ym":"2022-09","partial":false,"imp_total":37865,"imp_express_pct":19.47,"imp_normal_n":30091,"imp_mean":5.07,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":1.02,"imp_batch_n":0,"imp_over7_pct":15.06,"exp_total":21747,"exp_express_pct":0.89,"exp_normal_n":21554,"exp_mean":6.08,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":24.45},{"ym":"2022-10","partial":false,"imp_total":35343,"imp_express_pct":14.72,"imp_normal_n":29816,"imp_mean":5.51,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.89,"imp_batch_n":0,"imp_over7_pct":18.82,"exp_total":20886,"exp_express_pct":2.49,"exp_normal_n":20366,"exp_mean":5.34,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":15.37},{"ym":"2022-11","partial":false,"imp_total":39580,"imp_express_pct":17.1,"imp_normal_n":32530,"imp_mean":5.12,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.69,"imp_batch_n":0,"imp_over7_pct":15.2,"exp_total":22476,"exp_express_pct":1.55,"exp_normal_n":22127,"exp_mean":5.93,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":20.3},{"ym":"2022-12","partial":false,"imp_total":36449,"imp_express_pct":16.49,"imp_normal_n":30244,"imp_mean":5.23,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.52,"imp_batch_n":0,"imp_over7_pct":15.75,"exp_total":23264,"exp_express_pct":1.23,"exp_normal_n":22889,"exp_mean":5.33,"exp_median":5.0,"exp_p90":8.0,"exp_anomaly_pct":0.38,"exp_batch_n":88,"exp_over7_pct":15.2},{"ym":"2023-01","partial":false,"imp_total":38400,"imp_express_pct":16.29,"imp_normal_n":31939,"imp_mean":5.4,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.52,"imp_batch_n":0,"imp_over7_pct":16.89,"exp_total":16277,"exp_express_pct":2.16,"exp_normal_n":15926,"exp_mean":5.64,"exp_median":5.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":20.19},{"ym":"2023-02","partial":false,"imp_total":30133,"imp_express_pct":15.92,"imp_normal_n":25157,"imp_mean":5.05,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.56,"imp_batch_n":0,"imp_over7_pct":14.84,"exp_total":20814,"exp_express_pct":3.38,"exp_normal_n":20110,"exp_mean":4.37,"exp_median":4.0,"exp_p90":7.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":7.18},{"ym":"2023-03","partial":false,"imp_total":43514,"imp_express_pct":18.09,"imp_normal_n":35469,"imp_mean":4.73,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.38,"imp_batch_n":0,"imp_over7_pct":11.88,"exp_total":27037,"exp_express_pct":2.43,"exp_normal_n":26381,"exp_mean":4.73,"exp_median":4.0,"exp_p90":7.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":9.38},{"ym":"2023-04","partial":false,"imp_total":37571,"imp_express_pct":15.15,"imp_normal_n":31727,"imp_mean":5.61,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.38,"imp_batch_n":0,"imp_over7_pct":19.83,"exp_total":22604,"exp_express_pct":2.83,"exp_normal_n":21964,"exp_mean":4.8,"exp_median":4.0,"exp_p90":8.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":11.23},{"ym":"2023-05","partial":false,"imp_total":41977,"imp_express_pct":16.22,"imp_normal_n":34940,"imp_mean":5.4,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.53,"imp_batch_n":0,"imp_over7_pct":17.37,"exp_total":25302,"exp_express_pct":3.04,"exp_normal_n":24533,"exp_mean":4.72,"exp_median":4.0,"exp_p90":7.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":8.14},{"ym":"2023-06","partial":false,"imp_total":39166,"imp_express_pct":20.67,"imp_normal_n":30859,"imp_mean":5.13,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.52,"imp_batch_n":0,"imp_over7_pct":14.45,"exp_total":null,"exp_express_pct":null,"exp_normal_n":null,"exp_mean":null,"exp_median":null,"exp_p90":null,"exp_anomaly_pct":null,"exp_batch_n":null,"exp_over7_pct":null,"exp_missing":true},{"ym":"2023-07","partial":false,"imp_total":36300,"imp_express_pct":22.81,"imp_normal_n":27841,"imp_mean":4.84,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.48,"imp_batch_n":0,"imp_over7_pct":12.71,"exp_total":25952,"exp_express_pct":1.92,"exp_normal_n":25412,"exp_mean":5.36,"exp_median":5.0,"exp_p90":8.0,"exp_anomaly_pct":0.16,"exp_batch_n":41,"exp_over7_pct":14.42},{"ym":"2023-08","partial":false,"imp_total":42411,"imp_express_pct":17.17,"imp_normal_n":34886,"imp_mean":5.23,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.55,"imp_batch_n":0,"imp_over7_pct":16.15,"exp_total":24512,"exp_express_pct":1.33,"exp_normal_n":24185,"exp_mean":5.41,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":17.4},{"ym":"2023-09","partial":false,"imp_total":36903,"imp_express_pct":22.61,"imp_normal_n":28350,"imp_mean":4.79,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.53,"imp_batch_n":0,"imp_over7_pct":12.54,"exp_total":22616,"exp_express_pct":0.98,"exp_normal_n":21902,"exp_mean":5.77,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":2.18,"exp_batch_n":493,"exp_over7_pct":19.65},{"ym":"2023-10","partial":false,"imp_total":38061,"imp_express_pct":16.92,"imp_normal_n":31535,"imp_mean":4.9,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.18,"imp_batch_n":0,"imp_over7_pct":13.0,"exp_total":24642,"exp_express_pct":1.64,"exp_normal_n":24237,"exp_mean":5.15,"exp_median":5.0,"exp_p90":8.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":12.41},{"ym":"2023-11","partial":false,"imp_total":41891,"imp_express_pct":17.9,"imp_normal_n":34225,"imp_mean":4.89,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.37,"imp_batch_n":0,"imp_over7_pct":13.31,"exp_total":23977,"exp_express_pct":1.32,"exp_normal_n":23660,"exp_mean":4.62,"exp_median":4.0,"exp_p90":7.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":7.2},{"ym":"2023-12","partial":false,"imp_total":37751,"imp_express_pct":14.88,"imp_normal_n":32026,"imp_mean":5.19,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.26,"imp_batch_n":0,"imp_over7_pct":15.97,"exp_total":24640,"exp_express_pct":1.53,"exp_normal_n":23929,"exp_mean":5.13,"exp_median":5.0,"exp_p90":8.0,"exp_anomaly_pct":1.36,"exp_batch_n":335,"exp_over7_pct":13.39},{"ym":"2024-01","partial":false,"imp_total":41307,"imp_express_pct":15.56,"imp_normal_n":34708,"imp_mean":5.44,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.4,"imp_batch_n":0,"imp_over7_pct":18.0,"exp_total":20922,"exp_express_pct":1.29,"exp_normal_n":20652,"exp_mean":5.98,"exp_median":5.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":24.72},{"ym":"2024-03","partial":false,"imp_total":30669,"imp_express_pct":13.47,"imp_normal_n":26538,"imp_mean":4.43,"imp_median":4.0,"imp_p90":8.0,"imp_anomaly_pct":0.0,"imp_batch_n":0,"imp_over7_pct":10.19,"exp_total":21612,"exp_express_pct":0.54,"exp_normal_n":21495,"exp_mean":4.87,"exp_median":5.0,"exp_p90":7.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":8.04},{"ym":"2024-04","partial":false,"imp_total":39879,"imp_express_pct":8.85,"imp_normal_n":36337,"imp_mean":5.45,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":18.76,"exp_total":20152,"exp_express_pct":0.57,"exp_normal_n":20024,"exp_mean":5.96,"exp_median":6.0,"exp_p90":9.0,"exp_anomaly_pct":0.07,"exp_batch_n":14,"exp_over7_pct":21.01},{"ym":"2024-05","partial":false,"imp_total":42547,"imp_express_pct":9.61,"imp_normal_n":38446,"imp_mean":5.38,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":17.59,"exp_total":23277,"exp_express_pct":0.47,"exp_normal_n":23167,"exp_mean":6.25,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":22.6},{"ym":"2024-06","partial":false,"imp_total":39170,"imp_express_pct":10.66,"imp_normal_n":34982,"imp_mean":5.22,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":16.44,"exp_total":22296,"exp_express_pct":0.37,"exp_normal_n":22213,"exp_mean":5.87,"exp_median":6.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":17.35},{"ym":"2024-07","partial":false,"imp_total":41163,"imp_express_pct":10.29,"imp_normal_n":36906,"imp_mean":5.19,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.05,"imp_batch_n":0,"imp_over7_pct":15.3,"exp_total":23006,"exp_express_pct":0.62,"exp_normal_n":22864,"exp_mean":5.67,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":17.41},{"ym":"2024-08","partial":false,"imp_total":42106,"imp_express_pct":8.78,"imp_normal_n":38400,"imp_mean":5.49,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.02,"imp_batch_n":0,"imp_over7_pct":18.33,"exp_total":22150,"exp_express_pct":0.68,"exp_normal_n":22000,"exp_mean":5.75,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":19.89},{"ym":"2024-09","partial":false,"imp_total":36296,"imp_express_pct":9.55,"imp_normal_n":32823,"imp_mean":5.13,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.02,"imp_batch_n":0,"imp_over7_pct":15.92,"exp_total":21190,"exp_express_pct":0.66,"exp_normal_n":21051,"exp_mean":5.69,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":18.72},{"ym":"2024-10","partial":false,"imp_total":41263,"imp_express_pct":7.22,"imp_normal_n":38278,"imp_mean":5.43,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.01,"imp_batch_n":0,"imp_over7_pct":17.67,"exp_total":22671,"exp_express_pct":0.41,"exp_normal_n":22578,"exp_mean":5.76,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":18.13},{"ym":"2024-11","partial":false,"imp_total":40882,"imp_express_pct":10.3,"imp_normal_n":36665,"imp_mean":4.89,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.02,"imp_batch_n":0,"imp_over7_pct":13.28,"exp_total":22581,"exp_express_pct":0.25,"exp_normal_n":22524,"exp_mean":6.22,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":23.01},{"ym":"2024-12","partial":false,"imp_total":39256,"imp_express_pct":8.93,"imp_normal_n":35740,"imp_mean":5.33,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":17.08,"exp_total":25973,"exp_express_pct":0.24,"exp_normal_n":25910,"exp_mean":6.57,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":27.42},{"ym":"2025-01","partial":false,"imp_total":45169,"imp_express_pct":6.99,"imp_normal_n":42008,"imp_mean":6.17,"imp_median":5.0,"imp_p90":12.0,"imp_anomaly_pct":0.01,"imp_batch_n":0,"imp_over7_pct":26.29,"exp_total":16517,"exp_express_pct":0.3,"exp_normal_n":16468,"exp_mean":6.33,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":27.9},{"ym":"2025-02","partial":false,"imp_total":33747,"imp_express_pct":7.47,"imp_normal_n":31216,"imp_mean":5.87,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":21.76,"exp_total":21224,"exp_express_pct":0.66,"exp_normal_n":21084,"exp_mean":5.59,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":19.06},{"ym":"2025-03","partial":false,"imp_total":37916,"imp_express_pct":9.04,"imp_normal_n":34453,"imp_mean":4.99,"imp_median":4.0,"imp_p90":9.0,"imp_anomaly_pct":0.09,"imp_batch_n":0,"imp_over7_pct":15.03,"exp_total":24743,"exp_express_pct":0.29,"exp_normal_n":24672,"exp_mean":5.72,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":18.12},{"ym":"2025-04","partial":false,"imp_total":41001,"imp_express_pct":6.47,"imp_normal_n":38329,"imp_mean":6.33,"imp_median":5.0,"imp_p90":12.0,"imp_anomaly_pct":0.05,"imp_batch_n":0,"imp_over7_pct":27.09,"exp_total":20041,"exp_express_pct":0.28,"exp_normal_n":19984,"exp_mean":6.14,"exp_median":6.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":1,"exp_over7_pct":24.87},{"ym":"2025-05","partial":false,"imp_total":42767,"imp_express_pct":8.12,"imp_normal_n":39283,"imp_mean":6.0,"imp_median":5.0,"imp_p90":11.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":22.56,"exp_total":22525,"exp_express_pct":0.41,"exp_normal_n":22432,"exp_mean":6.48,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":28.98},{"ym":"2025-06","partial":false,"imp_total":40398,"imp_express_pct":9.03,"imp_normal_n":36740,"imp_mean":5.79,"imp_median":5.0,"imp_p90":11.0,"imp_anomaly_pct":0.02,"imp_batch_n":0,"imp_over7_pct":20.83,"exp_total":25315,"exp_express_pct":0.23,"exp_normal_n":25258,"exp_mean":6.37,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":26.79},{"ym":"2025-07","partial":false,"imp_total":42051,"imp_express_pct":8.15,"imp_normal_n":38604,"imp_mean":6.12,"imp_median":5.0,"imp_p90":12.0,"imp_anomaly_pct":0.04,"imp_batch_n":0,"imp_over7_pct":23.12,"exp_total":20110,"exp_express_pct":0.44,"exp_normal_n":20022,"exp_mean":6.33,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":25.03},{"ym":"2025-08","partial":false,"imp_total":40583,"imp_express_pct":9.34,"imp_normal_n":36772,"imp_mean":5.89,"imp_median":5.0,"imp_p90":11.0,"imp_anomaly_pct":0.05,"imp_batch_n":0,"imp_over7_pct":20.84,"exp_total":24689,"exp_express_pct":0.21,"exp_normal_n":24637,"exp_mean":7.1,"exp_median":6.0,"exp_p90":11.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":38.67},{"ym":"2025-09","partial":false,"imp_total":35073,"imp_express_pct":10.23,"imp_normal_n":31475,"imp_mean":5.38,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.03,"imp_batch_n":0,"imp_over7_pct":16.99,"exp_total":19967,"exp_express_pct":0.44,"exp_normal_n":19880,"exp_mean":6.7,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":32.75},{"ym":"2025-10","partial":false,"imp_total":37578,"imp_express_pct":15.21,"imp_normal_n":31712,"imp_mean":5.64,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.4,"imp_batch_n":0,"imp_over7_pct":18.52,"exp_total":22662,"exp_express_pct":1.66,"exp_normal_n":22035,"exp_mean":6.2,"exp_median":6.0,"exp_p90":10.0,"exp_anomaly_pct":1.1,"exp_batch_n":249,"exp_over7_pct":27.03},{"ym":"2025-11","partial":false,"imp_total":36775,"imp_express_pct":17.05,"imp_normal_n":30364,"imp_mean":5.24,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.39,"imp_batch_n":0,"imp_over7_pct":15.69,"exp_total":22951,"exp_express_pct":0.65,"exp_normal_n":22802,"exp_mean":5.96,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.0,"exp_batch_n":0,"exp_over7_pct":20.95},{"ym":"2025-12","partial":false,"imp_total":40903,"imp_express_pct":15.04,"imp_normal_n":34586,"imp_mean":5.47,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.4,"imp_batch_n":0,"imp_over7_pct":17.17,"exp_total":21141,"exp_express_pct":0.64,"exp_normal_n":20951,"exp_mean":6.18,"exp_median":6.0,"exp_p90":9.0,"exp_anomaly_pct":0.26,"exp_batch_n":55,"exp_over7_pct":25.23},{"ym":"2026-01","partial":false,"imp_total":42919,"imp_express_pct":11.52,"imp_normal_n":37738,"imp_mean":6.37,"imp_median":5.0,"imp_p90":12.0,"imp_anomaly_pct":0.55,"imp_batch_n":0,"imp_over7_pct":27.34,"exp_total":18477,"exp_express_pct":1.65,"exp_normal_n":17734,"exp_mean":6.28,"exp_median":5.0,"exp_p90":11.0,"exp_anomaly_pct":2.38,"exp_batch_n":438,"exp_over7_pct":27.36},{"ym":"2026-02","partial":false,"imp_total":39968,"imp_express_pct":15.29,"imp_normal_n":33746,"imp_mean":5.39,"imp_median":4.0,"imp_p90":10.0,"imp_anomaly_pct":0.28,"imp_batch_n":0,"imp_over7_pct":16.66,"exp_total":18504,"exp_express_pct":1.21,"exp_normal_n":17920,"exp_mean":5.78,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":1.95,"exp_batch_n":359,"exp_over7_pct":20.37},{"ym":"2026-03","partial":false,"imp_total":37014,"imp_express_pct":15.27,"imp_normal_n":31163,"imp_mean":5.69,"imp_median":4.0,"imp_p90":11.0,"imp_anomaly_pct":0.54,"imp_batch_n":0,"imp_over7_pct":20.13,"exp_total":23043,"exp_express_pct":1.66,"exp_normal_n":22659,"exp_mean":5.32,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.01,"exp_batch_n":1,"exp_over7_pct":14.97},{"ym":"2026-04","partial":false,"imp_total":44058,"imp_express_pct":11.45,"imp_normal_n":38853,"imp_mean":6.05,"imp_median":5.0,"imp_p90":11.0,"imp_anomaly_pct":0.36,"imp_batch_n":0,"imp_over7_pct":24.46,"exp_total":20223,"exp_express_pct":0.94,"exp_normal_n":19970,"exp_mean":5.82,"exp_median":5.0,"exp_p90":9.0,"exp_anomaly_pct":0.31,"exp_batch_n":63,"exp_over7_pct":20.71}],"summary":{"baseline_label":"ก.ค.2565 – ธ.ค.2567","recent_label":"ม.ค.2568 – เม.ย.2569","import":{"baseline_mean":5.2,"recent_mean":5.8,"baseline_median":4.0,"recent_median":4.0,"baseline_n":962884,"recent_n":567042},"export":{"baseline_mean":5.51,"recent_mean":6.15,"baseline_median":5.0,"recent_median":6.0,"baseline_n":624666,"recent_n":338508}},"top_batch_events":{"import":[["2025-12-29 09:28:10.417000",16],["2022-10-30 06:00:00",13],["2023-11-27 10:22:42.907000",7],["2023-07-01 14:25:00",6]],"export":[["2024-03-15 05:00:00",747],["2024-03-29 15:50:00",731],["2023-09-04 17:00:00",726],["2025-06-30 18:50:00",725],["2023-09-13 13:50:00",689]]},"histogram":{"import":{"baseline":{"0-1":14.64,"2-3":34.54,"4-5":23.64,"6-7":11.33,"8-10":8.18,"11-15":5.18,"16-20":1.42,"21-30":0.7,"31-60":0.27,"61-90":0.05,">90":0.05},"recent":{"0-1":10.91,"2-3":30.95,"4-5":23.92,"6-7":13.12,"8-10":10.36,"11-15":7.29,"16-20":2.0,"21-30":1.25,"31-60":0.17,"61-90":0.02,">90":0.01}},"export":{"baseline":{"0-1":1.35,"2-3":20.4,"4-5":37.83,"6-7":23.73,"8-10":11.64,"11-15":4.14,"16-20":0.59,"21-30":0.14,"31-60":0.19,"61-90":0.0,">90":0.0},"recent":{"0-1":0.72,"2-3":14.92,"4-5":33.21,"6-7":26.22,"8-10":17.26,"11-15":5.98,"16-20":1.11,"21-30":0.24,"31-60":0.2,"61-90":0.0,">90":0.14}}},"histogram_labels":["0-1","2-3","4-5","6-7","8-10","11-15","16-20","21-30","31-60","61-90",">90"],"financial_link":{"months":["2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04"],"over7_pct":[17.5,17.1,15.5,17.9,11.7,10.9,16.6,13.9,13.4,16.6,15.2,12.8,11.1,14.9,20.3,9.3,19.5,19.4,16.8,16.1,18.9,17.0,17.8,16.7,21.2,26.7,20.7,16.3,26.4,24.8,23.1,23.7,27.6,22.7,21.7,17.7,19.9,27.3,17.8,18.2,23.3],"storage_revenue_mb":[27.44,22.21,18.95,44.65,0.15,17.66,21.95,22.84,26.43,10.11,12.06,21.69,25.75,6.85,28.57,10.5,22.36,20.96,17.35,19.66,33.67,-1.25,28.61,26.04,8.38,34.45,15.07,8.4,19.42,22.91,22.81,25.06,27.18,22.0,25.07,18.77,22.15,23.08,17.76,18.58,21.73],"corr_over7":0.34,"corr_over30":-0.06},"fy_breakdown":{"import":{"2565":{"n":123097,"months_n":3,"partial":true,"mean":5.31,"median":4.0,"avg_fee_actual":899.5},"2566":{"n":457747,"months_n":12,"partial":false,"mean":5.18,"median":4.0,"avg_fee_actual":659.0},"2567":{"n":430840,"months_n":11,"partial":true,"mean":5.18,"median":4.0,"avg_fee_actual":588.4},"2568":{"n":480106,"months_n":12,"partial":false,"mean":5.7,"median":4.0,"avg_fee_actual":736.2},"2569":{"n":279215,"months_n":7,"partial":true,"mean":5.72,"median":4.0,"avg_fee_actual":796.1},"baseline_66_67":{"n":888587,"mean":5.18,"median":4.0,"avg_fee_actual":624.8}},"export":{"2565":{"n":63609,"months_n":3,"partial":true,"mean":5.82,"median":5.0,"avg_fee_actual":873.4},"2566":{"n":251740,"months_n":11,"partial":true,"mean":5.21,"median":5.0,"avg_fee_actual":579.0},"2567":{"n":247864,"months_n":11,"partial":true,"mean":5.53,"median":5.0,"avg_fee_actual":619.0},"2568":{"n":266356,"months_n":12,"partial":false,"mean":6.28,"median":6.0,"avg_fee_actual":770.9},"2569":{"n":147001,"months_n":7,"partial":true,"mean":5.92,"median":5.0,"avg_fee_actual":1056.6},"baseline_66_67":{"n":499604,"mean":5.37,"median":5.0,"avg_fee_actual":598.8}}},"revenue_impact":{"import":{"2568":{"dwell_delta":0.52,"fee_pct_change":17.8,"incremental_revenue_actual_mix":53483808,"n":480106},"2569":{"dwell_delta":0.54,"fee_pct_change":27.4,"incremental_revenue_actual_mix":47829530,"n":279215}},"export":{"2568":{"dwell_delta":0.91,"fee_pct_change":28.7,"incremental_revenue_actual_mix":45839868,"n":266356},"2569":{"dwell_delta":0.55,"fee_pct_change":76.5,"incremental_revenue_actual_mix":67297058,"n":147001}}},"range_stats":{"all":{"import":{"mean":5.8,"median":4.0},"export":{"mean":6.15,"median":6.0}},"fy67-69":{"import":{"mean":5.52,"median":4.0},"export":{"mean":5.92,"median":5.0}},"recent12":{"import":{"mean":5.78,"median":4.0},"export":{"mean":6.22,"median":6.0}}},"tariff":{"free_days":3,"rates":{"20":[160,275,390],"40":[320,550,780],"45":[360,615,875]},"tier_days":[7,7,null],"source":"หนังสือค่าภาระ ท่าเรือกรุงเทพ พ.ศ.2543 (ตู้มีสินค้า FCL, หน้า 18)"},"size_mix":{"import":{"2565":{"20":53.7,"40":46.2,"45":0.1},"2566":{"20":53.2,"40":46.7,"45":0.1},"2567":{"20":53.1,"40":46.8,"45":0.1},"2568":{"20":53.1,"40":46.8,"45":0.1},"2569":{"20":52.4,"40":47.5,"45":0.1},"baseline_66_67":{"20":53.2,"40":46.8,"45":0.1}},"export":{"2565":{"20":56.3,"40":43.7,"45":0.0},"2566":{"20":57.6,"40":42.4,"45":0.0},"2567":{"20":58.5,"40":41.5,"45":0.0},"2568":{"20":58.7,"40":41.3,"45":0.0},"2569":{"20":56.6,"40":43.4,"45":0.0},"baseline_66_67":{"20":58.0,"40":42.0,"45":0.0}}}};
 
 Chart.defaults.font.family = "'Kanit', sans-serif";
 Chart.defaults.color = '#b4cce8';
@@ -192,17 +304,26 @@ function statusOf(val, dir){
   }
 }
 
-let trendChart, segChart, compareChart, over7Chart;
+let trendChart, segChart, compareChart, over7Chart, histChart, finChart;
 
-function renderScoreStrip(){
+const RANGE_NOTE = {all:'ม.ค.68-เม.ย.69', 'fy67-69':'ต.ค.66-เม.ย.69 (ตามปุ่มที่เลือก)', recent12:'12 เดือนล่าสุด'};
+
+function renderScoreStrip(range){
+  range = range || 'all';
   const s = DATA.summary;
-  const impStat = statusOf(s.import.recent_mean, 'import');
-  const expStat = statusOf(s.export.recent_mean, 'export');
+  const rs = DATA.range_stats[range];
+  const impRecentMean = rs.import.mean, impRecentMedian = rs.import.median;
+  const expRecentMean = rs.export.mean, expRecentMedian = rs.export.median;
+  const impStat = statusOf(impRecentMean, 'import');
+  const expStat = statusOf(expRecentMean, 'export');
+  const impMode = Object.entries(DATA.histogram.import.recent).sort((a,b)=>b[1]-a[1])[0][0];
+  const expMode = Object.entries(DATA.histogram.export.recent).sort((a,b)=>b[1]-a[1])[0][0];
+  const rangeTxt = RANGE_NOTE[range];
   const cards = [
-    {label:'Import dwell เฉลี่ย (Normal, ล่าสุด)', val: s.import.recent_mean + ' วัน', base: s.import.baseline_mean, recent: s.import.recent_mean, note:'baseline ' + s.import.baseline_mean + ' วัน', stat: impStat},
-    {label:'Export dwell เฉลี่ย (Normal, ล่าสุด)', val: s.export.recent_mean + ' วัน', base: s.export.baseline_mean, recent: s.export.recent_mean, note:'baseline ' + s.export.baseline_mean + ' วัน', stat: expStat},
-    {label:'Import median (ล่าสุด)', val: s.import.recent_median + ' วัน', base: s.import.baseline_median, recent: s.import.recent_median, note:'baseline ' + s.import.baseline_median + ' วัน', stat:{color:COLORS.teal,label:''}},
-    {label:'Export median (ล่าสุด)', val: s.export.recent_median + ' วัน', base: s.export.baseline_median, recent: s.export.recent_median, note:'baseline ' + s.export.baseline_median + ' วัน', stat:{color:COLORS.teal,label:''}},
+    {label:'Import dwell เฉลี่ย ('+rangeTxt+')', val: impRecentMean + ' วัน', base: s.import.baseline_mean, recent: impRecentMean, note:'เทียบ baseline ก.ค.65-ธ.ค.67 = ' + s.import.baseline_mean + ' วัน', stat: impStat},
+    {label:'Export dwell เฉลี่ย ('+rangeTxt+')', val: expRecentMean + ' วัน', base: s.export.baseline_mean, recent: expRecentMean, note:'เทียบ baseline ก.ค.65-ธ.ค.67 = ' + s.export.baseline_mean + ' วัน', stat: expStat},
+    {label:'Import median ('+rangeTxt+')', val: impRecentMedian + ' วัน', base: s.import.baseline_median, recent: impRecentMedian, note:'baseline ' + s.import.baseline_median + ' วัน · ส่วนใหญ่อยู่ '+impMode+' วัน', stat:{color:COLORS.teal,label:''}},
+    {label:'Export median ('+rangeTxt+')', val: expRecentMedian + ' วัน', base: s.export.baseline_median, recent: expRecentMedian, note:'baseline ' + s.export.baseline_median + ' วัน · ส่วนใหญ่อยู่ '+expMode+' วัน', stat:{color:COLORS.teal,label:''}},
   ];
   const html = cards.map(c => {
     const pct = ((c.recent - c.base) / c.base * 100);
@@ -238,8 +359,9 @@ function renderTrend(range){
         tooltip:{ callbacks:{ afterBody:(items)=>{
           const idx = items[0].dataIndex; const row = d[idx];
           let extra = [];
+          if(row.exp_missing) extra.push('Export: ไม่มีข้อมูลเดือนนี้ (ดู Data Quality note)');
           if(row.imp_batch_n>0) extra.push('Import batch artifact: '+row.imp_batch_n+' ตู้ (ใน Anomaly tier)');
-          if(row.exp_batch_n>0) extra.push('Export batch artifact: '+row.exp_batch_n+' ตู้ (ใน Anomaly tier)');
+          if(row.exp_batch_n>0) extra.push('Export batch artifact (อ้างอิงคร่าวๆ): '+row.exp_batch_n+' ตู้');
           return extra;
         }}}
       },
@@ -300,7 +422,122 @@ function renderOver7(range){
   });
 }
 
+function renderHistogram(){
+  const labels = DATA.histogram_labels;
+  const ctx = document.getElementById('histChart');
+  if(histChart) histChart.destroy();
+  const h = DATA.histogram;
+  histChart = new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets:[
+      {label:'Import Baseline', data:labels.map(l=>h.import.baseline[l]), backgroundColor:'rgba(59,130,246,.85)'},
+      {label:'Import Recent', data:labels.map(l=>h.import.recent[l]), backgroundColor:'rgba(59,130,246,.35)'},
+      {label:'Export Baseline', data:labels.map(l=>h.export.baseline[l]), backgroundColor:COLORS.r},
+      {label:'Export Recent', data:labels.map(l=>h.export.recent[l]), backgroundColor:'rgba(239,68,68,.4)'},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}},
+      scales:{ x:{title:{display:true,text:'ช่วงวันที่ตู้อยู่ในลาน'}}, y:{title:{display:true,text:'% ของตู้'}} } }
+  });
+}
+
+function renderFinancial(){
+  const f = DATA.financial_link;
+  const labels = f.months.map(monthLabel);
+  const ctx = document.getElementById('finChart');
+  if(finChart) finChart.destroy();
+  finChart = new Chart(ctx, {
+    data:{ labels, datasets:[
+      {type:'bar', label:'รายได้ค่าฝากตู้ (ล้านบาท)', data:f.storage_revenue_mb, backgroundColor:'rgba(245,158,11,.55)', yAxisID:'y'},
+      {type:'line', label:'% ตู้ค้างเกิน 7 วัน', data:f.over7_pct, borderColor:COLORS.teal, backgroundColor:'transparent', borderWidth:2, tension:.25, pointRadius:2, yAxisID:'y1'},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'top'}, tooltip:{mode:'index', intersect:false} },
+      scales:{
+        x:{ticks:{maxRotation:60,minRotation:45}},
+        y:{ position:'left', title:{display:true,text:'ล้านบาท'} },
+        y1:{ position:'right', title:{display:true,text:'% ตู้ค้าง >7 วัน'}, grid:{drawOnChartArea:false} },
+      } }
+  });
+}
+
+let fyChart;
+function renderFYBreakdown(){
+  const fb = DATA.fy_breakdown;
+  const fyKeys = ['2565','2566','2567','baseline_66_67','2568','2569'];
+  const labels = ['2565*','2566','2567','เฉลี่ย 66-67 (ฐาน)','2568','2569*'];
+  const ctx = document.getElementById('fyChart');
+  if(fyChart) fyChart.destroy();
+  fyChart = new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets:[
+      {label:'Import mean', data: fyKeys.map(k=>fb.import[k].mean), backgroundColor:COLORS.blue},
+      {label:'Export mean', data: fyKeys.map(k=>fb.export[k].mean), backgroundColor:COLORS.red},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'},
+      tooltip:{ callbacks:{ afterBody:(items)=>{
+        const idx = items[0].dataIndex; const k = fyKeys[idx];
+        return ['Import median: '+fb.import[k].median+' วัน · n='+fb.import[k].n.toLocaleString(),
+                'Export median: '+fb.export[k].median+' วัน · n='+fb.export[k].n.toLocaleString()];
+      }}}},
+      scales:{ y:{title:{display:true,text:'วัน (mean, Normal segment)'}} } }
+  });
+}
+
+function renderImpactStrip(){
+  const ri = DATA.revenue_impact;
+  const fb = DATA.fy_breakdown;
+  const cards = [
+    {label:'Import FY2568 vs ฐาน', val: (ri.import['2568'].fee_pct_change>=0?'+':'')+ri.import['2568'].fee_pct_change+'%', sub:'+'+ri.import['2568'].dwell_delta+' วัน · ~'+(ri.import['2568'].incremental_revenue_actual_mix/1e6).toFixed(1)+' ล้านบาท*'},
+    {label:'Import FY2569 vs ฐาน (7 เดือน)', val: (ri.import['2569'].fee_pct_change>=0?'+':'')+ri.import['2569'].fee_pct_change+'%', sub:'+'+ri.import['2569'].dwell_delta+' วัน · ~'+(ri.import['2569'].incremental_revenue_actual_mix/1e6).toFixed(1)+' ล้านบาท*'},
+    {label:'Export FY2568 vs ฐาน', val: (ri.export['2568'].fee_pct_change>=0?'+':'')+ri.export['2568'].fee_pct_change+'%', sub:'+'+ri.export['2568'].dwell_delta+' วัน · ~'+(ri.export['2568'].incremental_revenue_actual_mix/1e6).toFixed(1)+' ล้านบาท*'},
+    {label:'Export FY2569 vs ฐาน (7 เดือน)', val: (ri.export['2569'].fee_pct_change>=0?'+':'')+ri.export['2569'].fee_pct_change+'%', sub:'+'+ri.export['2569'].dwell_delta+' วัน · ~'+(ri.export['2569'].incremental_revenue_actual_mix/1e6).toFixed(1)+' ล้านบาท*'},
+  ];
+  document.getElementById('impactStrip').innerHTML = cards.map(c=>`
+    <div class="impact-card">
+      <div class="ic-label">${c.label}</div>
+      <div class="ic-val">${c.val}</div>
+      <div class="ic-sub">ค่าธรรมเนียมเฉลี่ย/ตู้ ${c.sub}</div>
+    </div>`).join('');
+}
+
+function calcFee(size, qty, days){
+  const rates = DATA.tariff.rates[size];
+  const free = DATA.tariff.free_days;
+  const overstay = Math.max(days - free, 0);
+  const b1 = Math.min(overstay, 7);
+  const b2 = Math.min(Math.max(overstay-7,0), 7);
+  const b3 = Math.max(overstay-14, 0);
+  const breakdown = [
+    {label:'1-7 วันที่เกินฟรี', days:b1, rate:rates[0], amt:b1*rates[0]},
+    {label:'8-14 วันที่เกินฟรี', days:b2, rate:rates[1], amt:b2*rates[1]},
+    {label:'≥15 วันที่เกินฟรี', days:b3, rate:rates[2], amt:b3*rates[2]},
+  ];
+  const perContainer = breakdown.reduce((s,x)=>s+x.amt,0);
+  return { perContainer, total: perContainer*qty, breakdown, overstay, free };
+}
+
+function renderCalculator(){
+  function update(){
+    const size = document.getElementById('calcSize').value;
+    const qty = Math.max(parseInt(document.getElementById('calcQty').value)||0, 0);
+    const days = Math.max(parseInt(document.getElementById('calcDays').value)||0, 0);
+    const r = calcFee(size, qty, days);
+    let html = `<div class="cr-total">${r.total.toLocaleString()} บาท</div>`;
+    html += `<div class="cr-break">ตู้ ${qty.toLocaleString()} ใบ × ${days} วัน (ฟรี ${r.free} วันแรก ${r.overstay>0? 'เกินฟรี '+r.overstay+' วัน':'ยังอยู่ในสิทธิ์ฟรี ไม่มีค่าใช้จ่าย'}) = <b>${r.perContainer.toLocaleString()} บาท/ตู้</b><br>`;
+    if(r.overstay>0){
+      r.breakdown.filter(x=>x.days>0).forEach(x=>{
+        html += `&nbsp;&nbsp;• ${x.label}: ${x.days} วัน × ${x.rate.toLocaleString()} บาท = ${x.amt.toLocaleString()} บาท/ตู้<br>`;
+      });
+    }
+    html += `</div>`;
+    document.getElementById('calcResult').innerHTML = html;
+  }
+  ['calcSize','calcQty','calcDays'].forEach(id=>document.getElementById(id).addEventListener('input', update));
+  update();
+}
+
 function renderAll(range){
+  renderScoreStrip(range);
   renderTrend(range);
   renderSeg(range);
   renderOver7(range);
@@ -314,9 +551,13 @@ document.querySelectorAll('.controls .btn').forEach(btn=>{
   });
 });
 
-renderScoreStrip();
 renderAll('all');
 renderCompare();
+renderHistogram();
+renderFinancial();
+renderFYBreakdown();
+renderImpactStrip();
+renderCalculator();
 </script>
 </body>
 </html>
