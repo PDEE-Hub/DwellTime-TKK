@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ข้อมูลที่ควรขอเพิ่ม — Roadmap ยกระดับ Dwell Time × Revenue Infoboardgraphic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060f1e; --bg2:#0a1628; --panel:#0f1f38; --card:#152540;
+  --border:rgba(59,130,246,.12); --border2:rgba(59,130,246,.22);
+  --text:#edf2fc; --text2:#b4cce8; --text3:#5a7a9a;
+  --teal:#14b8a6; --teal2:#2dd4bf;
+  --amber:#f59e0b; --amber2:#fbbf24;
+  --red:#ef4444; --red2:#f87171;
+  --green:#10b981; --green2:#34d399;
+  --gray:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 24px 60px;}
+
+header{border-bottom:1px solid var(--border2);padding-bottom:18px;margin-bottom:18px;}
+header .tag{font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--teal2);text-transform:uppercase;margin-bottom:8px;display:block;}
+header h1{font-size:26px;font-weight:700;margin:0 0 6px;line-height:1.35;}
+header .sub{font-size:14px;color:var(--text2);}
+header .meta{font-size:11.5px;color:var(--text3);margin-top:10px;}
+header .meta code{color:var(--teal2);}
+
+.exec-summary{background:linear-gradient(135deg, rgba(20,184,166,.14), rgba(59,130,246,.07));border:1px solid rgba(20,184,166,.3);border-radius:16px;padding:22px 26px;margin-bottom:28px;}
+.exec-summary .es-title{font-size:12px;font-weight:600;color:var(--teal2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.exec-summary p{font-size:14.5px;line-height:1.85;color:var(--text2);margin-bottom:10px;}
+.exec-summary p:last-child{margin-bottom:0;}
+.exec-summary b{color:var(--text);}
+
+.section-head{margin:40px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--border2);}
+.section-head.first{margin-top:24px;}
+.section-head .sh-row{display:flex;align-items:center;gap:10px;}
+.section-head .sh-num{display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;width:28px;height:28px;border-radius:50%;flex-shrink:0;color:#06281f;}
+.section-head.tier1 .sh-num{background:var(--green);}
+.section-head.tier2 .sh-num{background:var(--amber);}
+.section-head.tier3 .sh-num{background:var(--gray);color:#0a0f1a;}
+.section-head .sh-title{font-size:20px;font-weight:700;color:var(--text);}
+.section-head .sh-sub{font-size:13px;color:var(--text3);margin-top:5px;margin-left:38px;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:22px;}
+.panel p{font-size:14px;line-height:1.85;color:var(--text2);margin-bottom:12px;}
+.panel p:last-child{margin-bottom:0;}
+.panel b{color:var(--text);}
+.panel code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--teal2);}
+
+.need-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:18px 20px;margin-bottom:14px;border-left:4px solid var(--gray);}
+.need-card:last-child{margin-bottom:0;}
+.need-card.t1{border-left-color:var(--green);}
+.need-card.t2{border-left-color:var(--amber);}
+.need-card.t3{border-left-color:var(--gray);}
+.need-card .nc-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.need-card .nc-title{font-size:15px;font-weight:700;color:var(--text);}
+.need-card .nc-badge{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:20px;flex-shrink:0;}
+.need-card.t1 .nc-badge{background:rgba(16,185,129,.15);color:var(--green2);}
+.need-card.t2 .nc-badge{background:rgba(245,158,11,.15);color:var(--amber2);}
+.need-card.t3 .nc-badge{background:rgba(107,114,128,.2);color:var(--text2);}
+.need-card .nc-row{display:flex;gap:8px;font-size:13px;line-height:1.7;margin:5px 0;color:var(--text2);}
+.need-card .nc-row .nc-k{flex-shrink:0;color:var(--text3);width:110px;}
+.need-card b{color:var(--text);}
+.need-card code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--teal2);}
+
+.callout{border-radius:10px;padding:14px 18px;font-size:13.5px;line-height:1.75;margin:14px 0;}
+.callout.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);color:var(--text2);}
+.callout.ok b{color:var(--green2);}
+.callout.info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);color:var(--text2);}
+.callout.info b{color:#93c5fd;}
+.callout .tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;opacity:.85;}
+
+.roi-hero{background:linear-gradient(135deg, rgba(20,184,166,.16), rgba(59,130,246,.08));border:1px solid rgba(20,184,166,.35);border-radius:16px;padding:24px 26px;margin-bottom:22px;}
+.roi-hero .rh-tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal2);margin-bottom:10px;}
+.roi-hero .rh-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.roi-hero .rh-text{font-size:14px;line-height:1.8;color:var(--text2);}
+.roi-hero .rh-text b{color:var(--text);}
+
+table.dtab{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;}
+table.dtab th{text-align:left;font-weight:600;color:var(--text3);padding:8px 10px;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border2);}
+table.dtab td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);color:var(--text2);vertical-align:top;}
+table.dtab td b{color:var(--text);}
+table.dtab tr:last-child td{border-bottom:none;}
+
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:1.8;}
+footer a{color:var(--teal2);text-decoration:none;}
+footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
+footer code{color:var(--teal2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="tag">PAT Intelligence · Data Enhancement Roadmap</span>
+    <h1>ข้อมูลที่ควรขอเพิ่ม — ยกระดับ Dwell Time × Revenue Infoboardgraphic</h1>
+    <div class="sub">รายการข้อมูลที่ <b style="color:var(--text);">ยังไม่มีในชุดข้อมูลปัจจุบัน</b> แต่ถ้าได้มาจะปิดข้อจำกัดที่ระบุไว้ใน <code>REPORT_Methodology_Verification.html</code> และยกระดับความน่าเชื่อถือของรายงานจาก "ประมาณการที่สมเหตุสมผล" ไปเป็น "ยืนยันได้ด้วยข้อมูลจริง"</div>
+    <div class="meta">Prepared by กทท. Planning Division · จัดทำ 23 มิถุนายน 2569 · ต่อเนื่องจาก <code>REPORT_Methodology_Verification.html</code> และ <code>METHODOLOGY_DwellTime.md</code> (Part B research agenda)</div>
+  </header>
+
+  <div class="exec-summary">
+    <div class="es-title">สรุปสำหรับผู้บริหาร</div>
+    <p>แบ่งความต้องการข้อมูลเป็น <b>3 ระดับตามความยากในการได้มา</b> ไม่ใช่ตามความสำคัญ — ของบางตัวได้ง่าย (อยู่ในมือกองอื่นในองค์กรแล้ว) แต่ของที่ <b>ROI สูงสุด</b> ต้องขอข้ามหน่วยงาน เพราะปิดจุดอ่อนที่สุดของรายงานทั้งชุดตอนนี้คือ "ตัวเลขรายได้เป็นค่าประมาณ ไม่ใช่ของจริง"</p>
+    <p>ไม่มีรายการใดจำเป็นต้องทำทันที — งานปัจจุบันใช้งานได้และตรวจสอบย้อนกลับได้ครบตามที่มี เอกสารนี้คือ <b>wishlist สำหรับรอบทำงานถัดไป</b> เผื่อมีโอกาสขอข้อมูลเพิ่ม</p>
+  </div>
+
+  <!-- TIER 1 -->
+  <div class="section-head first tier1">
+    <div class="sh-row"><span class="sh-num">1</span><span class="sh-title">ได้ง่าย — น่าจะมีอยู่ในมือกองอื่นแล้ว</span></div>
+    <div class="sh-sub">ไม่ต้องขอข้ามองค์กร แค่ขอข้ามแผนก/กอง</div>
+  </div>
+  <div class="panel">
+    <div class="need-card t1">
+      <div class="nc-head"><span class="nc-title">ทะเบียนรถ / ผู้ขนส่ง (Transporter ID)</span><span class="nc-badge">ได้ง่าย</span></div>
+      <div class="nc-row"><span class="nc-k">ใช้ปิด</span>ข้อจำกัด #5 ใน Methodology Report — Section 6 "ตู้วน" ปัจจุบันพิสูจน์ได้แค่ระดับ<b>เลขตู้</b> ไม่ใช่ระดับ<b>รถ/ผู้ประกอบการ</b></div>
+      <div class="nc-row"><span class="nc-k">ยกระดับเป็น</span>จัดอันดับได้ว่าผู้ประกอบการรายไหน "บริหารตู้เปล่าเก่งสุด" จริง ไม่ใช่อนุมานจาก pattern เฉลี่ยทั้งระบบ</div>
+      <div class="nc-row"><span class="nc-k">แหล่งที่เป็นไปได้</span>ระบบ gate scan ของ ทกท. เอง (มักมีทะเบียนรถ/บริษัทขนส่งติด log การเข้า-ออกอยู่แล้ว)</div>
+    </div>
+    <div class="need-card t1">
+      <div class="nc-head"><span class="nc-title">Customs Clearance Timestamp</span><span class="nc-badge">ได้ง่าย</span></div>
+      <div class="nc-row"><span class="nc-k">ใช้ปิด</span>คำถามที่ Section 1-2 ตอบไม่ได้ตอนนี้ — "ตู้ค้างนานเพราะรอพิธีการ" หรือ "พิธีการเสร็จแล้วแต่ลูกค้าไม่มารับ" คนละสาเหตุ คนละทางแก้</div>
+      <div class="nc-row"><span class="nc-k">ยกระดับเป็น</span>แยก dwell time เป็น 2 ช่วงย่อย (รอพิธีการ vs รอลูกค้า) ทำให้ recommendation เจาะจงขึ้นมาก</div>
+      <div class="nc-row"><span class="nc-k">แหล่งที่เป็นไปได้</span>ระบบศุลกากร (กรมศุลกากร) หรือ TOS เองถ้ามี flag สถานะอยู่แล้ว</div>
+    </div>
+  </div>
+
+  <!-- TIER 2 -->
+  <div class="section-head tier2">
+    <div class="sh-row"><span class="sh-num">2</span><span class="sh-title">ต้องขอข้ามหน่วยงาน — แต่คุ้มมาก</span></div>
+    <div class="sh-sub">ใช้เวลาประสานงานนานขึ้น แต่ปิดจุดอ่อนใหญ่สุดของรายงาน</div>
+  </div>
+  <div class="panel">
+    <div class="need-card t2">
+      <div class="nc-head"><span class="nc-title">Revenue / GL จริงระดับเดือนต่อตู้</span><span class="nc-badge">ROI สูงสุด</span></div>
+      <div class="nc-row"><span class="nc-k">ใช้ปิด</span>ข้อจำกัด #1 ใน Methodology Report — ตัวเลขรายได้ทั้งชุด (+99.3 ล้าน FY68, +115 ล้าน FY69) เป็น<b>ค่าประมาณจากอัตราค่าภาระตามหนังสือ พ.ศ.2543</b> ไม่ใช่รายได้จริงที่บันทึกบัญชี</div>
+      <div class="nc-row"><span class="nc-k">ยกระดับเป็น</span>เปลี่ยนรายงานจาก "น่าเชื่อ" เป็น "ยืนยันได้" — ถ้าตัวเลขจริงตรงกับค่าประมาณ ยืนยัน methodology ทั้งหมด ถ้าไม่ตรง จะเจอช่องว่างที่ต้องอธิบาย (เช่น discount/ส่วนลดที่ไม่ได้อยู่ในหนังสืออัตรา)</div>
+      <div class="nc-row"><span class="nc-k">แหล่งที่เป็นไปได้</span>ฝ่ายการเงิน/บัญชี — Power BI GL export ที่ใช้อยู่แล้วใน <code>Financial Dashboard repo/BKP_Workspace.html</code> อาจมีรายละเอียดระดับนี้อยู่แล้ว แค่ยังไม่ได้ join กับข้อมูล dwell</div>
+    </div>
+    <div class="need-card t2">
+      <div class="nc-head"><span class="nc-title">Vessel Schedule (ตารางเรือ)</span><span class="nc-badge">ปานกลาง</span></div>
+      <div class="nc-row"><span class="nc-k">ใช้ปิด</span>ข้อจำกัด #4 — ข้อมูลชั่วโมง/วันฝั่ง Export ไม่น่าเชื่อถือตอนนี้เพราะ 99.8% เป็น batch event ที่ถูกกรองออก</div>
+      <div class="nc-row"><span class="nc-k">ยกระดับเป็น</span>ผูก Export dwell กับรอบเรือจริง แทนการอนุมานจาก batch pattern — ตอบได้ว่า "ตู้ค้างเพราะรอเรือเที่ยวต่อไป" จริงหรือไม่ ไม่ใช่แค่สมมติฐาน</div>
+      <div class="nc-row"><span class="nc-k">แหล่งที่เป็นไปได้</span>ฝ่ายปฏิบัติการเรือ/สายเดินเรือ</div>
+    </div>
+  </div>
+
+  <!-- TIER 3 -->
+  <div class="section-head tier3">
+    <div class="sh-row"><span class="sh-num">3</span><span class="sh-title">เชิงคุณภาพ — ไม่ใช่ข้อมูลตัวเลข</span></div>
+    <div class="sh-sub">ต้องอาศัยคนยืนยัน ไม่สามารถดึงจากระบบได้</div>
+  </div>
+  <div class="panel">
+    <div class="need-card t3">
+      <div class="nc-head"><span class="nc-title">ยืนยัน Batch Event ที่ยังค้างคาใจ</span><span class="nc-badge">เชิงคุณภาพ</span></div>
+      <div class="nc-row"><span class="nc-k">สถานะปัจจุบัน</span>เจอ cluster ตู้จำนวนมากที่ <code>time_out</code> ตรงกันเป๊ะถึงวินาที 2 จุดใหญ่ใน Anomaly tier (>30 วัน) — เช่น 2026-01-31 08:05 (438 ตู้), 2023-09-30 16:10 (371 ตู้)</div>
+      <div class="nc-row"><span class="nc-k">ทำไมต้องยืนยัน</span>ยังสรุปไม่ได้ว่าเป็น <b>system close-out artifact</b> (ไม่ใช่ dwell จริง) หรือ <b>เรือเที่ยวใหญ่ที่ขนตู้พร้อมกันจริง</b> — สองกรณีนี้ตีความ Anomaly คนละแบบ</div>
+      <div class="nc-row"><span class="nc-k">ใครยืนยันได้</span>ทีม yard operation ที่ดูแลระบบ gate scan / TOS หน้างาน — ไม่กระทบ KPI หลักตอนนี้ (อยู่นอก Normal segment อยู่แล้ว) แต่กระทบความแม่นยำของ Anomaly tier โดยตรง</div>
+    </div>
+  </div>
+
+  <!-- ROI RECOMMENDATION -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">★</span><span class="sh-title">คำแนะนำ — ถ้าเลือกทำได้แค่ 1 อย่างก่อน</span></div>
+  </div>
+  <div class="roi-hero">
+    <div class="rh-tag">ROI สูงสุด</div>
+    <div class="rh-title">Revenue / GL จริงระดับเดือนต่อตู้</div>
+    <div class="rh-text">เพราะตัวเลขรายได้เป็น<b>หัวใจของ Infoboardgraphic ทั้งฉบับ</b> (ตอบคำถามตั้งต้น "ทำไมรายได้เพิ่มขึ้น") แต่ปัจจุบันคำนวณจากอัตราค่าภาระตามหนังสือ พ.ศ.2543 เท่านั้น — มีโอกาสสูงที่ฝ่ายการเงินมีข้อมูล GL ระดับนี้อยู่แล้วในมือ (เห็นได้จาก <code>Financial Dashboard repo</code> ที่ใช้ Power BI GL export อยู่แล้ว) จึงเป็นรายการที่ <b>ขอได้ง่ายที่สุดในกลุ่ม ROI สูง</b> และเปลี่ยนสถานะรายงานจาก "ประมาณการที่สมเหตุสมผล" เป็น "ยืนยันได้ด้วยตัวเลขจริง" ได้ทันทีที่ได้ข้อมูล</div>
+  </div>
+
+  <table class="dtab">
+    <tr><th>ลำดับ</th><th>รายการ</th><th>ระดับ</th><th>ปิดข้อจำกัด</th></tr>
+    <tr><td>1</td><td><b>Revenue/GL จริงต่อตู้</b></td><td>ต้องขอข้ามหน่วยงาน</td><td>#1 (รายได้เป็นค่าประมาณ)</td></tr>
+    <tr><td>2</td><td>ทะเบียนรถ/ผู้ขนส่ง</td><td>ได้ง่าย</td><td>#5 (พิสูจน์ได้แค่ระดับเลขตู้)</td></tr>
+    <tr><td>3</td><td>Customs clearance timestamp</td><td>ได้ง่าย</td><td>แยกสาเหตุ dwell (รอพิธีการ vs รอลูกค้า)</td></tr>
+    <tr><td>4</td><td>Vessel schedule</td><td>ต้องขอข้ามหน่วยงาน</td><td>#4 (ข้อมูล Export hour/day ไม่น่าเชื่อถือ)</td></tr>
+    <tr><td>5</td><td>ยืนยัน batch event กับ yard operation</td><td>เชิงคุณภาพ</td><td>ความแม่นยำของ Anomaly tier</td></tr>
+  </table>
+
+  <div class="callout info"><span class="tag">ข้อควรระวัง</span>รายการในเอกสารนี้คือ <b>โอกาสยกระดับ</b> ไม่ใช่ปัญหาที่ทำให้งานปัจจุบันใช้ไม่ได้ — <code>infographic_dwell_revenue.html</code> และ <code>REPORT_Methodology_Verification.html</code> ตรวจสอบย้อนกลับได้ครบตามข้อมูลที่มีอยู่แล้ว เอกสารนี้ใช้ตอนวางแผนรอบทำงานถัดไปเท่านั้น</div>
+
+  <footer>
+    <span class="fcat">เอกสารที่เกี่ยวข้อง</span>
+    <code>REPORT_Methodology_Verification.html</code> — รายการข้อจำกัด #1-#6 ที่อ้างถึงในเอกสารนี้<br>
+    <code>METHODOLOGY_DwellTime.md</code> — Part B research agenda (ที่มาของแนวคิด customs/vessel/consignee data)<br>
+    <code>REPORT_DwellTime_Infoboardgraphic.md</code> — สรุปงานหลักทั้งหมด
+
+    <span class="fcat">อัปเดตล่าสุด</span>
+    23 มิถุนายน 2569
+  </footer>
+
+</div>
+</body>
+</html>
