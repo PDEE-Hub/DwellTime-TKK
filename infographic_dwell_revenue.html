@@ -32,7 +32,7 @@ header .meta a{color:var(--teal2);text-decoration:none;}
 
 .hero-banner{background:linear-gradient(135deg, rgba(20,184,166,.14), rgba(59,130,246,.07));border:1px solid rgba(20,184,166,.3);border-radius:16px;padding:26px 28px;margin-bottom:30px;}
 .hero-banner .hb-title{font-size:12px;font-weight:600;color:var(--teal2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
-.hero-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+.hero-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
 @media (max-width:800px){.hero-row{grid-template-columns:repeat(2,1fr);}}
 .hero-stat{background:rgba(255,255,255,.03);border-radius:10px;padding:14px 16px;}
 .hero-stat .hs-val{font-size:22px;font-weight:700;font-family:'Kanit',monospace;line-height:1.1;margin-bottom:4px;}
@@ -194,8 +194,9 @@ footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
 
   <header>
     <span class="tag">PAT Intelligence · Infoboardgraphic</span>
-    <h1>ทำไมรายได้ ทกท. เพิ่มขึ้น? — และมีต้นทุนสูงแค่ไหน</h1>
-    <div class="sub">เรื่องเดียว ตอบ 5 คำถาม: ตู้ค้างนานขึ้นจริงไหม → ค้างนานแค่ไหน → ได้รายได้เพิ่มเท่าไร → เสียต้นทุนเพิ่มไหม → ตู้เข้า-ออกแบบไหน</div>
+    <span class="tag" style="color:var(--amber);">🚧 อยู่ระหว่างดำเนินการ — เนื้อหาเพียง 60%</span>
+    <h1>ทำไมรายได้ ทกท. เพิ่มขึ้น?</h1>
+    <div class="sub">เรื่องเดียว ตอบ 4 คำถาม: ตู้ค้างนานขึ้นจริงไหม → ค้างนานแค่ไหน → ได้รายได้เพิ่มเท่าไร → ตู้เข้า-ออกแบบไหน</div>
     <div class="meta">ข้อมูลจริงทั้งหมด ไม่มีตัวเลขสมมติ · อ้างอิงจาก <code>Dwell_Time_Dashboard_2567-2569.html</code> (ฉบับเต็ม รายละเอียดเชิงลึก) · เวอร์ชันนี้คือสรุปภาพสำหรับผู้บริหาร</div>
   </header>
 
@@ -205,10 +206,9 @@ footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
       <div class="hero-stat up"><div class="hs-val">+10%</div><div class="hs-label">ตู้ค้างนานขึ้นจากปีฐาน (~ครึ่งวัน/ตู้)</div></div>
       <div class="hero-stat gain"><div class="hs-val">~115 ล.</div><div class="hs-label">รายได้ค่าฝากเพิ่ม (7 เดือน FY2569)</div></div>
       <div class="hero-stat warn"><div class="hs-val">5.3×</div><div class="hs-label">ตู้ Export ค้าง&gt;30วัน เทียบปีฐาน</div></div>
-      <div class="hero-stat flat"><div class="hs-val">-20%</div><div class="hs-label">ค่าซ่อมบำรุง (8 เดือน, YoY) — ลดลง</div></div>
     </div>
     <div class="hb-text">
-      ตู้สินค้าอยู่ในลานนานขึ้นทั้งนำเข้า-ส่งออก ทำให้เก็บค่าภาระฝากตู้ได้เพิ่มขึ้นจริง ~115 ล้านบาทในช่วง 7 เดือนแรกของปีงบ 2569 (ถ้าทั้งปีจะอยู่ราว <b>197 ล้านบาท</b>) ฝั่ง Export มีกลุ่มตู้ค้างเกิน 30 วันที่น่าเป็นห่วงเป็นพิเศษ ขณะที่ฝั่งต้นทุน (ค่าซ่อมบำรุง+ค่าพลังงาน ซึ่งเป็นข้อมูลจริงที่ตรวจสอบได้) <b>ไม่ได้เพิ่มขึ้นตามตู้ค้าง</b> ในภาพรวม 8 เดือนที่ผ่านมา — แต่มีจุดผิดปกติเฉพาะเดือนเดียวที่เชื่อมโยงกับช่วงตู้ค้างสูงที่ต้องติดตาม
+      ตู้สินค้าอยู่ในลานนานขึ้นทั้งนำเข้า-ส่งออก ทำให้เก็บค่าภาระฝากตู้ได้เพิ่มขึ้นจริง ~115 ล้านบาทในช่วง 7 เดือนแรกของปีงบ 2569 (ถ้าทั้งปีจะอยู่ราว <b>197 ล้านบาท</b>) ฝั่ง Export มีกลุ่มตู้ค้างเกิน 30 วันที่น่าเป็นห่วงเป็นพิเศษ
     </div>
   </div>
 
@@ -294,66 +294,6 @@ footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
     </div>
   </div>
 
-  <!-- SECTION 4 -->
-  <div class="section-head">
-    <div class="sh-row"><span class="sh-num">4</span><span class="sh-title">ต้นทุนที่เพิ่มตาม — The Cost</span></div>
-    <div class="sh-sub">ได้รายได้เพิ่ม แต่ต้นทุนเพิ่มไปกี่บาท?</div>
-  </div>
-
-  <div class="panel">
-    <div class="cost-group-label">✅ รายได้เพิ่ม (จากส่วนที่ 3)</div>
-    <div class="cost-grid">
-      <div class="cost-card gain" style="border-left-color:var(--teal);">
-        <div class="cc2-cap">ค่าภาระฝากตู้เพิ่ม</div>
-        <div class="cc2-val">+115 ล้าน</div>
-        <div class="cc2-desc">7-8 เดือนแรก FY2569</div>
-      </div>
-    </div>
-
-    <div class="cost-group-label">⚠️ ต้นทุนที่มีข้อมูลจริง (8 เดือน YoY, จาก Financial Dashboard)</div>
-    <div class="cost-grid">
-      <div class="cost-card good">
-        <div class="cc2-cap">ค่าซ่อมแซมและบำรุงรักษา</div>
-        <div class="cc2-val">335.6 ล. (-20.3%)</div>
-        <div class="cc2-desc">ลดลงเมื่อเทียบปีก่อนหน้า</div>
-      </div>
-      <div class="cost-card good">
-        <div class="cc2-cap">ค่าพลังงาน/น้ำมัน</div>
-        <div class="cc2-val">144.9 ล. (-2.7%)</div>
-        <div class="cc2-desc">ลดลงเมื่อเทียบปีก่อนหน้า</div>
-      </div>
-      <div class="cost-card tbd">
-        <div class="cc2-cap">ค่าแรงงานลาน</div>
-        <div class="cc2-val">ไม่มีข้อมูลแยก</div>
-        <div class="cc2-desc">TBD</div>
-      </div>
-      <div class="cost-card tbd">
-        <div class="cc2-cap">ค่าทำความสะอาดตู้</div>
-        <div class="cc2-val">ไม่มีข้อมูลแยก</div>
-        <div class="cc2-desc">TBD</div>
-      </div>
-    </div>
-    <div class="callout ok">
-      <span class="tag">ผลลัพธ์ — ในภาพรวม 8 เดือน ต้นทุนไม่ได้เพิ่มตามตู้ค้าง</span>
-      ทั้งค่าซ่อมบำรุงและค่าพลังงาน <b>ลดลง</b>เมื่อเทียบปีก่อนหน้า (8 เดือนเทียบ 8 เดือน) แม้ตู้จะค้างนานขึ้น — ข้อมูลนี้ไม่สนับสนุนสมมติฐาน "ตู้ค้างนาน → ซ่อมเพิ่ม" ในภาพรวม แต่ยังไม่รวมค่าแรงงานและค่าทำความสะอาดที่ไม่มีข้อมูลแยก จึงยังสรุปภาพรวมต้นทุนทั้งหมดไม่ได้ 100%
-    </div>
-    <div class="callout crisis">
-      <span class="tag">แต่มีจุดเดียวที่ต้องจับตา — ก.พ. 2569</span>
-      ค่าซ่อมแซมเดือน ก.พ.2569 พุ่งขึ้นเป็น <b>118.0 ล้านบาท</b> (ปกติเฉลี่ย ~47 ล้านบาท/เดือน คือสูงขึ้น ~2.5 เท่า) ตามรายงานการเงินของ ทกท. เชื่อมโยงกับช่วงตู้ค้างสูงผิดปกติในเดือน ม.ค.2569 ก่อนหน้า (ห่างกัน 1 เดือน) — รูปแบบเดียวกันถูกพบซ้ำอีกครั้งช่วง เม.ย.→พ.ค.2569 จุดนี้สนับสนุนว่าความเชื่อมโยง "ตู้ค้างนาน → ซ่อมเพิ่ม" มีอยู่จริงในบางช่วง แม้แนวโน้มรวม 8 เดือนจะลดลงก็ตาม
-    </div>
-
-    <div class="info-box">
-      <div class="ib-title">🔗 มองรวม 3 มุม — ตู้ค้าง (1) × รายได้ (3) × ต้นทุน (4) ไปทิศทางเดียวกันหรือไม่</div>
-      <div class="chart-box" style="height:230px;"><canvas id="linkChart"></canvas></div>
-      <div class="ib-text">
-        <b>สัมพันธ์กันแค่ 2 ใน 3:</b> ตู้ค้างนาน (+10.2-10.4%) กับรายได้ค่าฝาก (+27.4% ถึง +76.5%) ไปทิศทางเดียวกันชัดเจน — สมเหตุสมผลเพราะรายได้คำนวณจากวันค้างตรงๆ ตามสูตรขั้นบันได (ดูส่วนที่ 3) แต่<b>ต้นทุนไปคนละทิศ</b>: ค่าซ่อมบำรุงและค่าพลังงานกลับ<b>ลดลง</b> (-20.3%, -2.7%) ในช่วงเวลาเดียวกันที่ตู้ค้างนานขึ้นและรายได้เพิ่มขึ้น จึง<b>ไม่สนับสนุนว่าทั้ง 3 มุมเพิ่มขึ้นไปด้วยกัน</b>ในภาพรวม — ยกเว้นจุด anomaly เฉพาะเดือน (ก.พ. และ เม.ย.→พ.ค. 2569) ที่ค่าซ่อมพุ่งขึ้นตามหลังเดือนตู้ค้างสูงผิดปกติ 1 เดือน ซึ่งบอกว่าความเชื่อมโยงอาจมีอยู่จริงแบบ lag เฉพาะช่วงที่ตู้ค้างพุ่งรุนแรง ไม่ใช่ในแนวโน้มปกติ
-      </div>
-      <div class="ib-caveat">
-        <b>ข้อจำกัด:</b> ช่วงเวลาเทียบไม่ตรงกัน 100% — ตู้ค้าง/รายได้เทียบ FY2569 (7 เดือน) กับฐาน FY2566-2567 (เฉลี่ย 3 ปี) ส่วนต้นทุนเทียบ YoY 8 เดือน (ปีก่อนหน้าเทียบปีปัจจุบัน) เพราะเป็นช่วงเวลาที่มีข้อมูลจริงของแต่ละชุดต่างกัน ไม่ใช่ period เดียวกันเป๊ะ
-      </div>
-    </div>
-  </div>
-
   <!-- SECTION 5 -->
   <div class="section-head">
     <div class="sh-row"><span class="sh-num">5</span><span class="sh-title">ตู้เข้า-ออกวันไหนบ้าง — Operational Pattern</span></div>
@@ -361,7 +301,7 @@ footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
   </div>
 
   <div class="panel">
-    <div class="panel-sub" style="font-size:12px;color:var(--text3);margin-bottom:14px;">คำนวณจาก raw data จริง 2.78 ล้านแถว (Normal segment) — ไม่ใช่ตัวเลขตัวอย่าง · Import และ Export มีพฤติกรรมต่างกันมาก จึงแยกอธิบายคนละแบบ</div>
+    <div class="panel-sub" style="font-size:12px;color:var(--text3);margin-bottom:14px;">คำนวณจาก raw data จริง 2.78 ล้านแถว (Normal segment) — ไม่ใช่ตัวเลขตัวอย่าง · เน้น Import เพราะเป็นฝั่งที่ขับเคลื่อนรายได้ที่เพิ่มขึ้นจริง</div>
 
     <div class="cat-block" data-cat="import">
       <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">Import — ตู้ออกทีละใบ มี pattern วันเข้า→วันออกจริง</div>
@@ -395,161 +335,18 @@ footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
       </div>
     </div>
 
-    <div class="cat-block" data-cat="export">
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">Export — ตู้ออกเป็นล็อตใหญ่ตามรอบเรือ ไม่ใช่ pattern รายวัน</div>
-      <div style="font-size:12.5px;color:var(--text3);margin-bottom:10px;">99.8% ของตู้ Export "ออก" พร้อมกันเป็นล็อต (หลายร้อยใบ สแกนเวลาเดียวกันถึงวินาที) ตามรอบเรือเข้าเทียบท่า ไม่ใช่ลูกค้ามารับเองทีละใบแบบ Import</div>
-      <div class="compare-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
-        <div class="cmp-card base"><div class="cc-label">ตู้ที่ออกแบบล็อต</div><div class="cc-row"><b>99.8%</b></div></div>
-        <div class="cmp-card base"><div class="cc-label">ขนาดล็อตเฉลี่ย</div><div class="cc-row"><b>~203 ตู้</b></div><div class="cc-delta" style="color:var(--text3);">มัธยฐาน 211 ตู้</div></div>
-        <div class="cmp-card base"><div class="cc-label">ล็อตใหญ่สุด (7 เดือน FY69)</div><div class="cc-row"><b>725 ตู้</b></div><div class="cc-delta" style="color:var(--text3);">30 มิ.ย.2568 (จันทร์)</div></div>
-        <div class="cmp-card base"><div class="cc-label">สัดส่วนล็อตขนาด &gt;100 ตู้</div><div class="cc-row"><b>75%</b></div></div>
-      </div>
-      <div class="chart-box" style="height:180px;max-width:640px;margin:18px auto;"><canvas id="exportBatchChart"></canvas></div>
-      <div class="callout ok">
-        <span class="tag">ไม่มีวันใดวันหนึ่งที่ "ขึ้นเรือ" บ่อยกว่าวันอื่นชัดเจน</span>
-        ปริมาณตู้ที่ออกแบบล็อตกระจายค่อนข้างสม่ำเสมอทุกวันในสัปดาห์ (12.9%-15.2% ต่อวัน ไม่มีวันไหนเด่นผิดปกติ) ต่างจาก Import ที่มี pattern วันเข้า-ออกชัดเจน — เพราะ Export ขึ้นอยู่กับ<b>ตารางเรือ</b> ไม่ใช่พฤติกรรมลูกค้ารายวัน การจะลดตู้ Export ค้างนานต้องดูที่ "รอบเรือและการจองที่ก่อนเรือมา" มากกว่าวันในสัปดาห์
-      </div>
-    </div>
-
-    <div class="cat-block" data-cat="import">
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">ไม่ใช่แค่ "วันไหน" — "ช่วงเวลาไหน" ก็มีผลด้วย (Import)</div>
-      <div style="font-size:12.5px;color:var(--text3);margin-bottom:14px;"><b style="color:var(--text2);">% ของตู้ Import ทั้งหมด</b> แยกตามช่วงเวลาที่ถูกรับออกจากลาน (ล่าสุด FY2569, n=279,215 ใบ — คำนวณจาก raw data ทั้งหมด ไม่ใช่ตัวอย่าง)</div>
-
-      <div class="pattern-row">
-        <div class="chart-box" style="height:220px;margin:0;"><canvas id="hourChart"></canvas></div>
-        <div class="pattern-side">
-          <div class="callout crisis">
-            <span class="tag">เคอร์ฟิวรถบรรทุก — เห็นรอยทั้งเช้าและเย็น แต่ไม่ใช่ตัวขับเคลื่อนหลัก</span>
-            <ul class="callout-list">
-              <li><span class="cl-label">ดึก-เช้ามืด (00-05) — ช่วงที่ตู้ออกมากที่สุด</span> <span class="cl-pct">33.8%</span></li>
-              <li><span class="cl-label">เคอร์ฟิวเช้า (06-09) — แทบไม่มีตู้ออก</span> <span class="cl-pct">0.9%</span></li>
-              <li><span class="cl-label">กลางวัน (09-16) — ปกติ มากที่สุด</span> <span class="cl-pct">38.1%</span></li>
-              <li><span class="cl-label">เคอร์ฟิวเย็น (16-20) — ลดลงชัดเจน</span> <span class="cl-pct">11.1%</span></li>
-              <li><span class="cl-label">หลังเคอร์ฟิวปลด (20-24) — เด้งกลับ</span> <span class="cl-pct">16.1%</span></li>
-            </ul>
-            <div class="callout-conclude">รวมแล้ว <b>72% ของตู้ Import หลีกเคอร์ฟิวไปอยู่ช่วงดึก-เช้ามืดหรือกลางวันอยู่แล้ว</b> มีแค่ ~27% ที่ตกอยู่ในช่วงเคอร์ฟิวเย็น+หลังปลด ซึ่งเป็นกลุ่มที่ dwell เฉลี่ยขยับขึ้น (5.86→6.22 วัน ดูกราฟชั่วโมงก่อนหน้า) — เคอร์ฟิวจึง<b>มีผลจริงกับตู้ส่วนน้อย</b> ไม่ใช่สาเหตุหลักของภาพรวม</div>
-          </div>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6;">หมายเหตุ (ไม่เกี่ยวกับเคอร์ฟิว): ตัวเลข 08:00 ที่ SKILL_DwellTime_TKK.md เดิมเคยอ้างว่าผิดปกติ (dwell 7.49 วัน) ตรวจซ้ำด้วยข้อมูลครบแล้วไม่จริง เป็นค่าปกติ ~5.5 วัน เหมือนชั่วโมงข้างเคียง</div>
-    </div>
-
-    <div class="cat-block" data-cat="export">
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">ไม่ใช่แค่ "วันไหน" — "ช่วงเวลาไหน" ก็มีผลด้วย (Export)</div>
-      <div style="font-size:12.5px;color:var(--text3);margin-bottom:14px;"><b style="color:var(--text2);">% ของตู้ Export ทั้งหมด</b> แยกตามช่วงเวลาที่ <b style="color:var(--text2);">เข้า</b>ลานด้วยรถบรรทุก (time_in — ฝั่งที่รถบรรทุกเกี่ยวข้องจริง ไม่ใช่ตอนโหลดขึ้นเรือ) ล่าสุด FY2569, n=147,001 ใบ</div>
-
-      <div class="pattern-row">
-        <div class="chart-box" style="height:220px;margin:0;"><canvas id="exportHourChart"></canvas></div>
-        <div class="pattern-side">
-          <div class="callout crisis">
-            <span class="tag">Export เห็นรอยเคอร์ฟิวชัดกว่า Import มาก</span>
-            <ul class="callout-list">
-              <li><span class="cl-label">ดึก-เช้ามืด (00-05)</span> <span class="cl-pct">24.7%</span></li>
-              <li><span class="cl-label">เคอร์ฟิวเช้า (06-09) — แทบไม่มีตู้เข้า</span> <span class="cl-pct">3.8%</span></li>
-              <li><span class="cl-label">กลางวัน (09-16)</span> <span class="cl-pct">31.5%</span></li>
-              <li><span class="cl-label">เคอร์ฟิวเย็น (16-20) — ลดลง</span> <span class="cl-pct">12.7%</span></li>
-              <li><span class="cl-label">หลังเคอร์ฟิวปลด (20-24) — พุ่งสูงสุด</span> <span class="cl-pct">27.2%</span></li>
-            </ul>
-            <div class="callout-conclude">ฝั่ง Export ช่วง "หลังเคอร์ฟิวปลด" (20-24) มีตู้เข้ามากถึง <b>27.2%</b> — มากกว่า Import เกือบ 2 เท่า (16.1%) เพราะผู้ส่งออกมี<b>deadline เรือ</b>ต้องรีบนำตู้มาส่งทันทีที่วิ่งได้ ขณะที่ผู้รับ Import เลือกเวลาได้ยืดหยุ่นกว่า (กระจายไปดึก-เช้ามืดได้) — เป็นหลักฐาน<b>ที่ชัดกว่า</b>ฝั่ง Import ว่าเคอร์ฟิวกระทบพฤติกรรมรถบรรทุกจริง</div>
-          </div>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6;">ตรวจสอบเพิ่ม: เวลาที่ตู้ Export ถูก<b>โหลดขึ้นเรือ</b> (time_out) ไม่มี pattern แบบนี้เลย (สูงสุดช่วง 05:00-06:00, ต่ำสุดช่วง 18:00-21:00) เพราะเป็นตารางเรือ/เครน ไม่ใช่รถบรรทุก — ยืนยันว่า pattern เคอร์ฟิวที่เห็นเกิดจากฝั่ง "รถบรรทุก" เท่านั้น ไม่ใช่ความบังเอิญของเวลาทั่วไป</div>
-    </div>
-
-  </div>
-
-  <!-- SECTION 6 -->
-  <div class="section-head">
-    <div class="sh-row"><span class="sh-num">6</span><span class="sh-title">ตู้วน — จาก Import สู่ Export</span></div>
-    <div class="sh-sub">ตู้เปล่าที่เพิ่งออกจาก Import ถูกนำไปใช้ส่งออกจากท่าเดียวกันจริงแค่ไหน?</div>
-  </div>
-
-  <div class="panel">
-    <div class="panel-sub" style="font-size:12px;color:var(--text3);margin-bottom:6px;">จับคู่ <b style="color:var(--text2);">เลขตู้ (container id) เดียวกันจริง</b> ระหว่างตอนออกจากฝั่ง Import กับตอนเข้าฝั่ง Export — เลขตู้เป็น ID ตายตัวต่อกล่องจริงตามมาตรฐาน ISO 6346 ไม่ใช่การสุ่มซ้ำ จึงเป็นหลักฐานตรงของการใช้กล่องเดิมซ้ำ ไม่ใช่การอนุมานจาก pattern เฉยๆ</div>
-    <div class="panel-sub" style="font-size:11.5px;color:var(--text3);margin-bottom:18px;">วิเคราะห์จากตู้ Import-ออก 1,773,754 ใบ จับคู่กับ Export-เข้า 1,003,211 ใบ ทั่วข้อมูลจริง 2.78 ล้านแถว (ก.ค.2565-เม.ย.2569) เงื่อนไข: Export เข้าภายใน 0-21 วันหลัง Import ออก ที่ท่าเดียวกัน · เลือกคู่ที่ใกล้ที่สุดต่อตู้</div>
-
-    <div class="reposition-hero">
-      <div class="reposition-stats">
-        <div class="rp-stat"><div class="rp-val">20.7%</div><div class="rp-label">ของตู้ Import ที่ออก มีเลขตู้เดียวกันกลับมาเป็น Export ภายใน 21 วัน (กรอบตัดที่ใช้นับ ไม่ใช่จุดที่ตู้มากที่สุด — ดูกราฟด้านล่าง)</div></div>
-        <div class="rp-stat"><div class="rp-val">366,542</div><div class="rp-label">คู่ตู้ที่จับคู่ได้จริง (ทั่วทั้งช่วงข้อมูล 45 เดือน)</div></div>
-        <div class="rp-stat"><div class="rp-val">8.8 วัน</div><div class="rp-label">ระยะเวลาวนกลับมา (มัธยฐาน) — ตรงกับจุดที่มีตู้มากที่สุดจริงๆ (สัปดาห์แรก)</div></div>
-        <div class="rp-stat"><div class="rp-val">18-23%</div><div class="rp-label">อัตราเดียวกันนี้คงที่ทุกปีงบประมาณ FY2566-2569 — ไม่ใช่ปรากฏการณ์ชั่วคราว (ดูกราฟด้านล่าง)</div></div>
-      </div>
-    </div>
-
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin:20px 0 4px;">อัตราตู้วนแยกตามปีงบประมาณ — ย้อนไปถึงปีฐานด้วย</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">% ของตู้ Import ที่ออกในปีนั้น แล้วมีเลขตู้เดียวกันกลับมาเป็น Export ภายใน 21 วัน — คำนวณจาก raw data ทั้งหมดแยกตามปีงบประมาณของวันที่ตู้ออก (time_out)</div>
-    <div class="pattern-row">
-      <div class="chart-box" style="height:220px;margin:0;"><canvas id="repositionByYearChart"></canvas></div>
-      <div class="pattern-side">
-        <div class="callout info">
-          <span class="tag">มีมาตั้งแต่ปีฐานแล้ว ไม่ใช่ของใหม่</span>
-          <ul class="callout-list">
-            <li><span class="cl-label">FY2566 (ปีฐาน)</span> <span class="cl-pct">19.9%</span></li>
-            <li><span class="cl-label">FY2567 (ปีฐาน) — สูงสุดในรอบ 4 ปี</span> <span class="cl-pct">23.2%</span></li>
-            <li><span class="cl-label">FY2568</span> <span class="cl-pct">21.7%</span></li>
-            <li><span class="cl-label">FY2569 (7 เดือน)</span> <span class="cl-pct">19.1%</span></li>
-          </ul>
-          <div class="callout-conclude">อัตราตู้วนอยู่ในช่วง <b>18-23%</b> มาตลอด 4 ปีงบประมาณ ไม่มีปีไหนต่ำหรือสูงผิดปกติ — แม้แต่ปีฐาน FY2566-67 ที่ใช้เทียบเรื่อง dwell time ก็มีอัตราตู้วนเท่าๆกับปีล่าสุด (FY2567 สูงสุดด้วยซ้ำ) <span style="color:var(--text3);">(ตัวเลข FY2569 ปรับ censoring แล้ว — ตู้ที่ออกใน 21 วันสุดท้ายของข้อมูลตัดออก เพราะยังไม่มีเวลาให้เห็นคู่ที่ตรงกัน)</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">21 วัน คือกรอบตัด ไม่ใช่จุดที่ตู้วนมากที่สุด</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">สัดส่วนตู้ที่จับคู่ได้ (n=366,542) แยกตามว่ากลับมาภายในสัปดาห์ไหน — เพื่อให้เห็นว่าตู้ส่วนใหญ่ไม่ได้รอจนใกล้ 21 วัน</div>
-    <div class="pattern-row">
-      <div class="chart-box" style="height:200px;margin:0;"><canvas id="repoWeekChart"></canvas></div>
-      <div class="pattern-side">
-        <div class="callout ok">
-          <span class="tag">21 วันคือ "กรอบที่ครอบคลุมพอ" ไม่ใช่ "จุดเด่น"</span>
-          <ul class="callout-list">
-            <li><span class="cl-label">สัปดาห์ 1 (วัน 0-7)</span> <span class="cl-pct">36.9%</span></li>
-            <li><span class="cl-label">สัปดาห์ 2 (วัน 8-14)</span> <span class="cl-pct">38.4%</span></li>
-            <li><span class="cl-label">สัปดาห์ 3 (วัน 15-21)</span> <span class="cl-pct">24.7%</span></li>
-          </ul>
-          <div class="callout-conclude">วันเดียวที่มีตู้มากที่สุดจริงๆคือ<b>วันที่ 6-8</b> (สัปดาห์แรก) ไม่ใช่วันที่ 21 — ภายใน 14 วัน (2 สัปดาห์) จับได้แล้ว <b>80%</b> ของตู้วนทั้งหมด เหลือแค่ 20% ที่ต้องรอจนถึงสัปดาห์ที่ 3 เราเลือก 21 วันเป็นกรอบตัดเพื่อให้ครอบคลุมส่วนหางนี้ด้วย ไม่ใช่เพราะ 21 วันเป็นจุดที่ตู้วนมากที่สุด</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">เปรียบเทียบวันในสัปดาห์ — ตู้ที่จับคู่ได้เท่านั้น (n=366,542)</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">วันที่ตู้ <span style="color:#3b82f6;">ออกจาก Import</span> เทียบกับวันที่ตู้เดียวกัน <span style="color:#f59e0b;">เข้า Export</span></div>
-    <div class="chart-box" style="height:280px;"><canvas id="repositionDowChart"></canvas></div>
-
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">คู่วันที่เจอบ่อยที่สุด</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">วันออก Import × วันเข้า Export มีคู่ที่เป็นไปได้ทั้งหมด <b style="color:var(--text2);">7×7 = 49 คู่</b> แต่ละ % ด้านล่างคำนวณจากฐานเดียวกันเสมอคือตู้ที่จับคู่ได้ทั้งหมด <b style="color:var(--text2);">366,542 ตู้</b> — ถ้าตู้กระจายเท่ากันทุกคู่ (ไม่มี pattern เลย) แต่ละคู่จะได้แค่ <b style="color:var(--text2);">100% ÷ 49 = 2.04%</b> เส้นประในแถบด้านล่างคือจุดนี้ ใช้เทียบว่าคู่นั้นเด่นกว่าค่าเฉลี่ยกี่เท่า</div>
-    <div class="combo-legend"><span style="display:inline-block;width:14px;height:0;border-top:1px dashed rgba(255,255,255,.5);"></span> เส้นประ = ค่าเฉลี่ยถ้ากระจายเท่ากันทุกคู่ (2.04%)</div>
-    <div class="combo-list" id="comboList"></div>
-    <div style="font-size:11.5px;color:var(--text3);margin:8px 0 0;">รวม Top 5 ที่แสดงด้านบน = 18.6% ของตู้ทั้งหมด (Top 10 = 35.8%) — ที่เหลืออีก 39 คู่ กระจายกันอยู่ในอีก ~64% ที่เหลือ เฉลี่ยคู่ละไม่ถึง 2%</div>
-
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">ระยะเวลาที่วนกลับมา (วัน)</div>
-    <div class="chart-box" style="height:240px;"><canvas id="gapDaysChart"></canvas></div>
-
-    <div class="info-box">
-      <div class="ib-title">💡 ความเชื่อมโยงที่เจอ — สรุปสำหรับผู้บริหาร</div>
-      <div class="ib-text">
-        1 ใน 5 ของตู้ Import ที่ปล่อยออกจากท่า ถูกนำมาใช้ส่งออกจากท่าเดียวกันซ้ำภายในไม่ถึง 3 สัปดาห์ — ตัวเลขนี้<b>คงที่ตลอด 45 เดือน</b> ไม่ใช่เหตุการณ์ผิดปกติช่วงใดช่วงหนึ่ง สะท้อนว่าผู้ประกอบการขนส่ง/เจ้าของตู้มีการ<b>บริหารตู้เปล่าอย่างเป็นระบบ</b> เพื่อลดต้นทุนเที่ยวรถเปล่า (empty-leg) และอาจรวมถึงค่าเช่าตู้ (container leasing cost) ไปด้วย<br><br>
-        รูปแบบวันที่เจอบ่อยสุดคือ <b>ตู้ออก Import วันพุธ/อังคาร แล้วกลับเข้ามาเป็น Export วันศุกร์</b> — สอดคล้องกับจังหวะที่ผู้ส่งออกใช้เวลา 2-3 วันบรรจุสินค้าก่อนนำมาที่ท่าในช่วงปลายสัปดาห์ ส่วนตู้ที่ใช้เวลานานกว่านั้น (ส่วนใหญ่ 7-21 วัน) น่าจะถูกพักไว้รอคำสั่งซื้อหรือจองพื้นที่เรือก่อนนำมาใช้ใหม่
-      </div>
-      <div class="ib-caveat">
-        <b>ข้อจำกัด:</b> การจับคู่นี้ยืนยันแค่ว่า "เลขตู้เดียวกันออก Import แล้วกลับมาเป็น Export ในกรอบเวลานี้" — ไม่ได้พิสูจน์ว่าเป็น "รถบรรทุกคันเดียวกัน" หรือ "ผู้ประกอบการรายเดียวกัน" ดำเนินการ (ไม่มีข้อมูลผู้ขนส่ง/ทะเบียนรถในชุดข้อมูลนี้) สัดส่วน 79.3% ที่เหลือคือตู้ที่ไม่พบการวนกลับมาใช้ที่ท่านี้ภายใน 21 วัน อาจถูกส่งไปใช้ที่ท่า/เมืองอื่น หรือพักนานกว่า 21 วัน
-      </div>
-    </div>
   </div>
 
   <footer>
     <span class="fcat">แหล่งข้อมูล</span>
     Section 1-3: ข้อมูล Dwell Time 2.78 ล้านแถว (Google Drive, ก.ค.2565-เม.ย.2569) ตามที่ใช้ใน <code>Dwell_Time_Dashboard_2567-2569.html</code> และ <code>dwell_dashboard_data_v2.json</code><br>
-    Section 4: <code>Financial Dashboard repo/BKP_Workspace.html</code> และ <code>Report_ทกท_2569-05.html</code> (Power BI GL export, FY2568-2569 8 เดือน)<br>
-    Section 5: คำนวณใหม่จาก raw Excel ต้นทาง 5 ไฟล์ (2.78 ล้านแถว) ตามนิยาม segmentation ใน <code>METHODOLOGY_DwellTime.md</code><br>
-    Section 6: จับคู่เลขตู้ (container id) จริงระหว่าง Import-ออก กับ Export-เข้า จาก raw Excel ต้นทางเดียวกัน 2.78 ล้านแถว — เงื่อนไข Export เข้าภายใน 0-21 วันหลัง Import ออก เลือกคู่ที่ใกล้ที่สุดต่อตู้
+    Section 5: คำนวณใหม่จาก raw Excel ต้นทาง 5 ไฟล์ (2.78 ล้านแถว) ตามนิยาม segmentation ใน <code>METHODOLOGY_DwellTime.md</code>
 
     <span class="fcat">ข้อจำกัด/Caveat</span>
     • รายได้ที่อ้างถึงเป็นค่าประมาณจากอัตราค่าภาระตามหนังสือ พ.ศ.2543 ไม่ใช่รายได้จริงที่บันทึกบัญชี (ดูกราฟเชื่อมโยงรายได้จริงในไฟล์ dashboard ฉบับเต็ม)<br>
     • FY2569 มีข้อมูลเพียง 7-8 เดือน (ขึ้นกับชุดข้อมูล) การ extrapolate เป็นรายปีเป็นค่าประมาณ ไม่ใช่ตัวเลขจริงทั้งปี<br>
-    • ค่าซ่อมบำรุง/พลังงานใน Section 4 ยังไม่รวมค่าแรงงานลานและค่าทำความสะอาด ซึ่งไม่มีข้อมูลแยกให้วิเคราะห์ ณ ขณะนี้<br>
     • ตัวเลข "5.3 เท่า" (Export ค้าง&gt;30วัน) คำนวณจากตาราง distribution matrix จริงในไฟล์ dashboard ฉบับเต็ม โดยเทียบฐานถ่วงน้ำหนักตามจำนวนตู้ปี 2566+2567
+    • เนื้อหาส่วน "ต้นทุนที่เพิ่มตาม" และ "ตู้วน — จาก Import สู่ Export" อยู่ระหว่างดำเนินการ ยังไม่นำมาแสดงในฉบับนี้
 
     <span class="fcat">อัปเดตล่าสุด</span>
     20 มิถุนายน 2569 · ดูรายละเอียดเชิงลึกทุก panel ได้ใน <code>Dwell_Time_Dashboard_2567-2569.html</code>
@@ -746,215 +543,6 @@ function buildEntryExitMatrix(){
   });
 }
 buildEntryExitMatrix();
-
-// % ของตู้ที่ "ออก" (Import time_out) / "เข้า" (Export time_in) แยกตาม 5 ช่วงเวลา — คำนวณจาก raw Excel จริงทั้งหมด (279,215 / 147,001 ใบ ตรงกับฐานที่ใช้ทั้งไฟล์)
-// แบ่งช่วงตามเรื่องเคอร์ฟิวรถบรรทุก 10 ล้อขึ้นไป กรอบทั่วไปของ กทม. (06:00-09:00, 16:00-20:00)
-const HOUR_PHASE_LABELS = ['ดึก-เช้ามืด\n00-05','เคอร์ฟิวเช้า\n06-09','กลางวัน\n09-16','เคอร์ฟิวเย็น\n16-20','หลังเคอร์ฟิวปลด\n20-24'];
-const HOUR_PHASE_COLORS = ['#14b8a6','#ef4444','#14b8a6','#f59e0b','#fb923c'];
-const IMPORT_HOUR_PCT = [33.75, 0.93, 38.09, 11.14, 16.10]; // Import time_out (รับตู้ออกด้วยรถบรรทุก)
-const EXPORT_HOUR_PCT = [24.69, 3.84, 31.50, 12.72, 27.24]; // Export time_in (นำตู้เข้าด้วยรถบรรทุก)
-
-function buildHourPctChart(canvasId, values, label){
-  new Chart(document.getElementById(canvasId), {
-    type:'bar',
-    data:{
-      labels: HOUR_PHASE_LABELS,
-      datasets:[{label, data: values, backgroundColor: HOUR_PHASE_COLORS, borderRadius:6}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ทั้งหมด`}}
-      },
-      scales:{
-        x:{ticks:{color:'#b4cce8',font:{size:10}}},
-        y:{min:0,max:42,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
-      }
-    }
-  });
-}
-buildHourPctChart('hourChart', IMPORT_HOUR_PCT, '% ของตู้ Import ที่ออก');
-buildHourPctChart('exportHourChart', EXPORT_HOUR_PCT, '% ของตู้ Export ที่เข้า');
-
-function buildExportBatchChart(){
-  new Chart(document.getElementById('exportBatchChart'), {
-    type:'bar',
-    data:{
-      labels: DOW_DAYS,
-      datasets:[{label:'% ของปริมาณตู้ที่ออกแบบล็อต', data: EXPORT_BATCH_DOW, backgroundColor:'#f59e0b'}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        title:{display:true,text:'Export — ปริมาณตู้ที่ออกแบบล็อต แยกตามวันในสัปดาห์ (%) · ใกล้เคียงกันทุกวัน',color:'#edf2fc',font:{size:12.5}},
-        tooltip:{callbacks:{label:(item)=>`${item.label}: ${item.parsed.y}% ของตู้ที่ออกแบบล็อตทั้งหมด`}}
-      },
-      scales:{
-        x:{ticks:{color:'#b4cce8'}},
-        y:{min:0,max:18,ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}}
-      }
-    }
-  });
-}
-buildExportBatchChart();
-
-function buildLinkChart(){
-  const labels = ['ตู้ค้าง — Import','ตู้ค้าง — Export','รายได้ค่าฝาก — Import','รายได้ค่าฝาก — Export','ค่าซ่อมบำรุง','ค่าพลังงาน/น้ำมัน'];
-  const values = [10.4, 10.2, 27.4, 76.5, -20.3, -2.7];
-  const colors = ['#f59e0b','#f59e0b','#14b8a6','#14b8a6','#10b981','#10b981'];
-  new Chart(document.getElementById('linkChart'), {
-    type:'bar',
-    data:{ labels, datasets:[{label:'% เปลี่ยนแปลง', data: values, backgroundColor: colors, borderRadius:4}] },
-    options:{
-      indexAxis:'y', responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        title:{display:true,text:'% เปลี่ยนแปลง — ตู้ค้าง/รายได้ (FY69 7m vs ฐาน) vs ต้นทุน (8m YoY)',color:'#edf2fc',font:{size:12}},
-        tooltip:{callbacks:{label:(item)=>`${item.parsed.x>0?'+':''}${item.parsed.x}%`}}
-      },
-      scales:{
-        x:{ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.06)'}},
-        y:{ticks:{color:'#b4cce8',font:{size:11}}}
-      }
-    }
-  });
-}
-buildLinkChart();
-
-// Container-reposition match (real container id join, Import-exit -> Export-entry within 21 days), n=366,542 matched pairs
-const REPOSITION = {
-  imp_exit_dow: [13.5,18.7,19.9,19.0,17.8,8.5,2.7],
-  exp_entry_dow: [11.0,16.4,18.1,17.1,18.7,13.8,4.9],
-  gap_buckets: ['0-1','1-2','2-3','3-5','5-7','7-10','10-14','14-21'],
-  gap_pct: [0.35,3.70,6.17,13.10,13.59,19.66,18.75,24.68],
-  top_combos: [
-    {from:'พุธ', to:'ศุกร์', pct:4.1},
-    {from:'อังคาร', to:'ศุกร์', pct:3.9},
-    {from:'พฤหัส', to:'พุธ', pct:3.6},
-    {from:'ศุกร์', to:'พุธ', pct:3.5},
-    {from:'อังคาร', to:'พฤหัส', pct:3.5}
-  ]
-};
-
-// อัตราตู้วน (Import-ออก → Export-เข้า เลขตู้เดียวกัน ภายใน 21 วัน) แยกตามปีงบประมาณ — คำนวณจาก raw data ทั้งหมด 2.78 ล้านแถวจริง ไม่ใช่ตัวอย่าง
-// FY2569 ปรับ censoring (ตัด 21 วันสุดท้ายของข้อมูลออกจากฐาน เพราะตู้ที่ออกใกล้ปลายข้อมูลยังไม่มีเวลาให้เห็นคู่ที่ตรงกัน)
-const REPO_YEAR_LABELS = ['FY2566\n(ปีฐาน)','FY2567\n(ปีฐาน)','FY2568','FY2569\n(7 เดือน)'];
-const REPO_YEAR_PCT = [19.9, 23.2, 21.7, 19.1];
-const REPO_YEAR_COLORS = ['#6b7280','#6b7280','#14b8a6','#2dd4bf'];
-
-function buildRepositionByYearChart(){
-  new Chart(document.getElementById('repositionByYearChart'), {
-    type:'bar',
-    data:{
-      labels: REPO_YEAR_LABELS,
-      datasets:[{label:'% ตู้วน', data: REPO_YEAR_PCT, backgroundColor: REPO_YEAR_COLORS, borderRadius:6}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ Import ที่ออกปีนั้น`}}
-      },
-      scales:{
-        x:{ticks:{color:'#b4cce8',font:{size:10.5}}},
-        y:{min:0,max:28,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
-      }
-    }
-  });
-}
-buildRepositionByYearChart();
-
-// สัดส่วนตู้วน (จาก 366,542 คู่ที่จับคู่ได้) แยกตามสัปดาห์ที่กลับมา — คำนวณจาก gap_days จริงทุกคู่ ไม่ใช่ตัวอย่าง
-// แสดงว่าจุดสูงสุดจริงคือสัปดาห์แรก (วัน 6-8) ไม่ใช่วันที่ 21 ซึ่งเป็นแค่กรอบตัดที่เลือกใช้
-const REPO_WEEK_LABELS = ['สัปดาห์ 1\n(วัน 0-7)','สัปดาห์ 2\n(วัน 8-14)','สัปดาห์ 3\n(วัน 15-21)'];
-const REPO_WEEK_PCT = [36.9, 38.4, 24.7];
-const REPO_WEEK_COLORS = ['#14b8a6','#2dd4bf','#6b7280'];
-
-function buildRepoWeekChart(){
-  new Chart(document.getElementById('repoWeekChart'), {
-    type:'bar',
-    data:{
-      labels: REPO_WEEK_LABELS,
-      datasets:[{label:'% ของตู้วนทั้งหมด', data: REPO_WEEK_PCT, backgroundColor: REPO_WEEK_COLORS, borderRadius:6}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ที่วนกลับมาทั้งหมด (366,542 คู่)`}}
-      },
-      scales:{
-        x:{ticks:{color:'#b4cce8',font:{size:11}}},
-        y:{min:0,max:45,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
-      }
-    }
-  });
-}
-buildRepoWeekChart();
-
-function buildRepositionDowChart(){
-  new Chart(document.getElementById('repositionDowChart'), {
-    type:'bar',
-    data:{
-      labels: DOW_DAYS,
-      datasets:[
-        {label:'ออก Import', data: REPOSITION.imp_exit_dow, backgroundColor:'#3b82f6'},
-        {label:'เข้า Export', data: REPOSITION.exp_entry_dow, backgroundColor:'#f59e0b'}
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{labels:{color:'#b4cce8',font:{size:11}}},
-        tooltip:{callbacks:{label:(item)=>`${item.dataset.label} วัน${item.label}: ${item.parsed.y}% ของตู้ที่จับคู่ได้`}}
-      },
-      scales:{x:{ticks:{color:'#b4cce8'}}, y:{ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'},title:{display:true,text:'% ของตู้ที่จับคู่ได้',color:'#5a7a9a',font:{size:11}}}}
-    }
-  });
-}
-buildRepositionDowChart();
-
-function buildGapDaysChart(){
-  new Chart(document.getElementById('gapDaysChart'), {
-    type:'bar',
-    data:{
-      labels: REPOSITION.gap_buckets.map(b=>b+' วัน'),
-      datasets:[{label:'% ของตู้ที่จับคู่ได้', data: REPOSITION.gap_pct, backgroundColor:'#14b8a6'}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:(item)=>`ใช้เวลาวนกลับมา ${item.label}: ${item.parsed.y}%`}}
-      },
-      scales:{x:{ticks:{color:'#b4cce8'}}, y:{ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}}}
-    }
-  });
-}
-buildGapDaysChart();
-
-const COMBO_AVG_PCT = 100/49; // 2.04% — ถ้าตู้กระจายเท่ากันทุกคู่ใน 49 คู่ที่เป็นไปได้
-function buildComboList(){
-  const el = document.getElementById('comboList');
-  const trackMax = 5; // headroom เหนือค่าสูงสุด 4.1% เพื่อให้เห็นเส้นเฉลี่ยชัด
-  const avgLeft = (COMBO_AVG_PCT/trackMax*100).toFixed(1);
-  el.innerHTML = REPOSITION.top_combos.map((c,i)=>`
-    <div class="combo-row">
-      <span class="combo-rank">${i+1}</span>
-      <div style="flex:1;">
-        <div class="combo-path">ออก Import <b>${c.from}</b> → เข้า Export <b>${c.to}</b></div>
-        <div class="combo-track">
-          <div class="combo-bar" style="width:${(c.pct/trackMax*100).toFixed(1)}%;"></div>
-          <div class="combo-avg-line" style="left:${avgLeft}%;"></div>
-        </div>
-      </div>
-      <span class="combo-pct">${c.pct}% <span class="combo-mult">(×${(c.pct/COMBO_AVG_PCT).toFixed(1)})</span></span>
-    </div>
-  `).join('');
-}
-buildComboList();
 
 function setCategory(cat){
   document.querySelectorAll('#catToggle .toggle-btn').forEach(b=>b.classList.toggle('active', b.dataset.cat===cat));
