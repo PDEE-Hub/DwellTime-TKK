@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วิธีคิด ที่มาข้อมูล และการตรวจสอบ — Dwell Time × Revenue Infoboardgraphic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060f1e; --bg2:#0a1628; --panel:#0f1f38; --card:#152540;
+  --border:rgba(59,130,246,.12); --border2:rgba(59,130,246,.22);
+  --text:#edf2fc; --text2:#b4cce8; --text3:#5a7a9a;
+  --teal:#14b8a6; --teal2:#2dd4bf;
+  --amber:#f59e0b; --amber2:#fbbf24;
+  --red:#ef4444; --red2:#f87171;
+  --green:#10b981; --green2:#34d399;
+  --gray:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 24px 60px;}
+
+header{border-bottom:1px solid var(--border2);padding-bottom:18px;margin-bottom:18px;}
+header .tag{font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--teal2);text-transform:uppercase;margin-bottom:8px;display:block;}
+header h1{font-size:26px;font-weight:700;margin:0 0 6px;line-height:1.35;}
+header .sub{font-size:14px;color:var(--text2);}
+header .meta{font-size:11.5px;color:var(--text3);margin-top:10px;}
+header .meta code{color:var(--teal2);}
+
+.section-head{margin:40px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--border2);}
+.section-head.first{margin-top:24px;}
+.section-head .sh-row{display:flex;align-items:center;}
+.section-head .sh-num{display:inline-flex;align-items:center;justify-content:center;background:var(--teal);color:#06281f;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:50%;margin-right:12px;flex-shrink:0;}
+.section-head .sh-title{font-size:20px;font-weight:700;color:var(--text);}
+.section-head .sh-sub{font-size:13px;color:var(--text3);margin-top:5px;margin-left:40px;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:22px;}
+.panel p{font-size:14px;line-height:1.85;color:var(--text2);margin-bottom:12px;}
+.panel p:last-child{margin-bottom:0;}
+.panel b{color:var(--text);}
+.panel code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--teal2);}
+
+.exec-summary{background:linear-gradient(135deg, rgba(20,184,166,.14), rgba(59,130,246,.07));border:1px solid rgba(20,184,166,.3);border-radius:16px;padding:22px 26px;margin-bottom:28px;}
+.exec-summary .es-title{font-size:12px;font-weight:600;color:var(--teal2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.exec-summary p{font-size:14.5px;line-height:1.85;color:var(--text2);margin-bottom:10px;}
+.exec-summary p:last-child{margin-bottom:0;}
+.exec-summary b{color:var(--text);}
+
+table.dtab{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;}
+table.dtab th{text-align:left;font-weight:600;color:var(--text3);padding:8px 10px;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border2);}
+table.dtab td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);color:var(--text2);vertical-align:top;}
+table.dtab td b, table.dtab td code{color:var(--text);}
+table.dtab tr:last-child td{border-bottom:none;}
+
+.step-list{list-style:none;margin:14px 0;padding:0;counter-reset:step;}
+.step-list li{counter-increment:step;position:relative;padding:4px 0 16px 38px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+.step-list li:last-child{padding-bottom:4px;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:2px;width:24px;height:24px;border-radius:50%;background:var(--card);border:1px solid var(--teal);color:var(--teal2);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.step-list li b{color:var(--text);}
+.step-list li code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--amber2);}
+
+.worked-example{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:18px 20px;margin:16px 0;}
+.worked-example .we-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber2);margin-bottom:12px;}
+.we-row{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;}
+.we-row:last-child{border-bottom:none;}
+.we-row .we-k{color:var(--text3);flex-shrink:0;}
+.we-row .we-v{color:var(--text);font-family:'Kanit',monospace;text-align:right;}
+.we-arrow{text-align:center;color:var(--teal2);font-size:13px;margin:8px 0;font-weight:600;}
+
+.callout{border-radius:10px;padding:14px 18px;font-size:13.5px;line-height:1.75;margin:14px 0;}
+.callout.info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);color:var(--text2);}
+.callout.info b{color:#93c5fd;}
+.callout.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);color:var(--text2);}
+.callout.ok b{color:var(--green2);}
+.callout.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--text2);}
+.callout.warn b{color:var(--amber2);}
+.callout.crisis{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--text2);}
+.callout.crisis b{color:var(--red2);}
+.callout .tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;opacity:.85;}
+
+.formula-box{background:rgba(255,255,255,.02);border:1px dashed var(--border2);border-radius:10px;padding:14px 18px;font-size:12.5px;color:var(--text2);line-height:1.85;margin:14px 0;font-family:'Kanit',monospace;}
+.formula-box .fl{color:var(--text3);font-family:'Kanit',sans-serif;}
+
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media (max-width:760px){.tier-grid{grid-template-columns:1fr;}}
+.tier-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;border-top:3px solid var(--gray);}
+.tier-card.express{border-top-color:var(--green);}
+.tier-card.normal{border-top-color:var(--teal);}
+.tier-card.anomaly{border-top-color:var(--red);}
+.tier-card .tc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.tier-card .tc-range{font-size:12px;color:var(--text3);font-family:'Kanit',monospace;margin-bottom:8px;}
+.tier-card .tc-use{font-size:12px;color:var(--text2);line-height:1.6;}
+
+.fileref{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.02);border-radius:8px;padding:10px 14px;margin:6px 0;font-size:12.5px;}
+.fileref .fr-name{color:var(--teal2);font-family:'Kanit',monospace;font-weight:600;}
+.fileref .fr-meta{color:var(--text3);}
+
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:1.8;}
+footer a{color:var(--teal2);text-decoration:none;}
+footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
+footer code{color:var(--teal2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="tag">PAT Intelligence · Methodology &amp; Verification Report</span>
+    <h1>วิธีคิด ที่มาของข้อมูล และการตรวจสอบย้อนกลับ<br>Dwell Time × Revenue Infoboardgraphic — ทกท.</h1>
+    <div class="sub">เอกสารนี้อธิบาย <b style="color:var(--text);">แนวคิด, หลักการคำนวณ, และวิธีตรวจสอบตัวเลขทุกตัวกลับไปยังไฟล์ Excel ต้นทาง</b> — เขียนสำหรับผู้ที่ต้องการยืนยันความถูกต้องของ <code>infographic_dwell_revenue.html</code> โดยไม่ต้องเชื่อตัวเลขที่แสดงเฉยๆ</div>
+    <div class="meta">Prepared by กทท. Planning Division · จัดทำ 23 มิถุนายน 2569 · อ้างอิงไฟล์ทำงานจริง <code>infographic_dwell_revenue.html</code>, <code>REPORT_DwellTime_Infoboardgraphic.md</code>, <code>METHODOLOGY_DwellTime.md</code></div>
+  </header>
+
+  <div class="exec-summary">
+    <div class="es-title">สรุปสำหรับผู้บริหาร</div>
+    <p>Infoboardgraphic ฉบับนี้ตอบคำถาม "ทำไมรายได้ ทกท. เพิ่มขึ้น" โดยใช้ข้อมูลจริง <b>2.78 ล้านแถว</b> จากระบบ TOS (Terminal Operating System) ของท่าเรือกรุงเทพ ครอบคลุม <b>ก.ค.2565 – เม.ย.2569 (45 เดือน)</b> ไม่มีตัวเลขสมมติหรือประมาณการลอยๆ — ทุกจุดคำนวณจากไฟล์ Excel ดิบ 5 ไฟล์ที่สามารถเปิดตรวจสอบย้อนกลับได้ทุกแถว</p>
+    <p>หลักการสำคัญที่สุดคือ <b>การแบ่งกลุ่มตู้ 3 ชั้น</b> (Express / Normal / Anomaly) ก่อนคำนวณค่าเฉลี่ยใดๆ — เพื่อไม่ให้ตู้ที่ค้างผิดปกติ (บางใบค้างกว่า 1,000 วัน) หรือตู้ที่ผ่านเร็วมาก ดึงตัวเลขให้บิดเบือน และ <b>การจับคู่เลขตู้จริง (container ID ตายตัวตาม ISO 6346)</b> ระหว่าง Import-Export เพื่อพิสูจน์การใช้ตู้ซ้ำโดยไม่ต้องอนุมาน</p>
+    <p>เอกสารนี้มี <b>Section 5 — วิธีตรวจสอบ</b> ที่ให้ขั้นตอนทำซ้ำได้จริงพร้อมตัวอย่างตู้จริง 1 ใบที่ดึงมาจากไฟล์ต้นทางตรงๆ สำหรับผู้ที่ต้องการเปิด Excel เทียบเองทีละแถว</div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-head first">
+    <div class="sh-row"><span class="sh-num">1</span><span class="sh-title">แนวคิดและเป้าหมาย</span></div>
+    <div class="sh-sub">ทำไมต้องวิเคราะห์ Dwell Time เพื่ออธิบายรายได้</div>
+  </div>
+  <div class="panel">
+    <p>โจทย์ตั้งต้นคือคำถามของฝ่ายบริหาร: <b>"รายได้ ทกท. เพิ่มขึ้น เพราะปริมาณตู้เพิ่ม หรือเพราะเหตุผลอื่น?"</b> สมมติฐานที่ตรวจสอบคือ — รายได้ค่าฝากตู้ (storage/demurrage) เพิ่มขึ้นเพราะ <b>ตู้ค้างอยู่ในลานนานขึ้น</b> ไม่ใช่เพราะปริมาณตู้เข้า-ออกเพิ่ม เนื่องจากอัตราค่าภาระเป็นแบบขั้นบันได (ยิ่งค้างนาน ยิ่งจ่ายแพงต่อวัน)</p>
+    <p>เอกสารนี้จึงต้องตอบให้ครบ 6 เรื่องตามลำดับเหตุผล: <b>(1)</b> ตู้ค้างนานขึ้นจริงไหม <b>(2)</b> ค้างนานแค่ไหน กลุ่มไหนบ้าง <b>(3)</b> รายได้เพิ่มเท่าไรจากผลนี้ <b>(4)</b> มีต้นทุนแฝงเพิ่มไหม (ซ่อมบำรุง/พลังงาน) <b>(5)</b> ตู้เข้า-ออกมีรูปแบบวัน/เวลาอย่างไร <b>(6)</b> มีการบริหารตู้เปล่าเชื่อม Import-Export หรือไม่ (ตู้วน)</p>
+    <p>กลุ่มผู้อ่านเป้าหมายคือผู้บริหารและทีมปฏิบัติการที่ไม่ใช่ data analyst — ใช้หลัก <b>"เข้าใจภาพรวมได้ใน 1 นาที ก่อนลงรายละเอียด"</b> จึงออกแบบเป็น standalone HTML แบบ scroll เดียว ไม่มี backend ไม่ต้องติดตั้งอะไรเพิ่ม เปิดได้ทุกเบราว์เซอร์</p>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">2</span><span class="sh-title">ที่มาของข้อมูล — ไฟล์ต้นทางทั้งหมด</span></div>
+    <div class="sh-sub">ทุกตัวเลขสืบกลับไปได้ถึงไฟล์ Excel ดิบจากระบบ TOS</div>
+  </div>
+  <div class="panel">
+    <p>ข้อมูล Dwell Time มาจากระบบ TOS ของท่าเรือกรุงเทพโดยตรง ส่งออกเป็นไฟล์ Excel <b>5 ไฟล์ ครอบคลุม 45 เดือน (ก.ค.2565 – เม.ย.2569)</b> รวม <b>2.78 ล้านแถว</b> แต่ละไฟล์แยกเป็นหลาย sheet ตามเดือน (จุดที่พลาดง่ายที่สุดตอนประมวลผลคืออ่านแค่ sheet แรกแล้วคิดว่าครบ — ต้อง loop ทุก sheet ในทุกไฟล์เสมอ):</p>
+
+    <div class="fileref"><span class="fr-name">DwellTimeJul2022-Feb2024_Import.xlsx</span><span class="fr-meta">ก.ค.2565 – ก.พ.2567 · 20 sheet (เดือนละ 1) · category = IMPRT</span></div>
+    <div class="fileref"><span class="fr-name">DwellTimeJul2022-Feb2024_Export.xlsx</span><span class="fr-meta">ก.ค.2565 – ก.พ.2567 · 20 sheet · category = EXPRT</span></div>
+    <div class="fileref"><span class="fr-name">DwellImportMarch2024_September2025.xlsx</span><span class="fr-meta">มี.ค.2567 – ก.ย.2568 · 19 sheet · category = IMPRT</span></div>
+    <div class="fileref"><span class="fr-name">DwellExportMarch2024_September2025.xlsx</span><span class="fr-meta">มี.ค.2567 – ก.ย.2568 · 19 sheet · category = EXPRT</span></div>
+    <div class="fileref"><span class="fr-name">DwellImport_Export_Octorber2025_April2026.xlsx</span><span class="fr-meta">ต.ค.2568 – เม.ย.2569 · 14 sheet สลับ Import/Export ต่อเดือน · มีทั้ง 2 category ในไฟล์เดียว</span></div>
+
+    <p style="margin-top:16px;">คอลัมน์ดิบที่ใช้จริงมีเท่านี้ใน sheet ทุกชุด — ไม่มีคอลัมน์อื่นที่ใช้ในรายงานนี้นอกจาก 5 ตัวนี้:</p>
+    <table class="dtab">
+      <tr><th>คอลัมน์</th><th>ความหมาย</th><th>ใช้ทำอะไร</th></tr>
+      <tr><td><code>id</code></td><td>เลขตู้ (container number) ตามมาตรฐาน ISO 6346 — ตายตัวต่อกล่องจริง</td><td>Section 6 (จับคู่ตู้วน), spot-check รายตู้</td></tr>
+      <tr><td><code>category</code></td><td><code>IMPRT</code> หรือ <code>EXPRT</code></td><td>แยกฝั่ง Import/Export ทุกการคำนวณ</td></tr>
+      <tr><td><code>time_in</code></td><td>เวลาตู้เข้าลาน (timestamp ระดับ ms)</td><td>วิเคราะห์วัน/ชั่วโมงที่ตู้เข้า, จุดเริ่ม dwell</td></tr>
+      <tr><td><code>time_out</code></td><td>เวลาตู้ออกจากลาน</td><td>ตรวจ batch artifact, จุดสิ้นสุด dwell, จุดเริ่มจับคู่ตู้วน</td></tr>
+      <tr><td><code>dwell</code></td><td>จำนวนวันที่ตู้ค้าง — <b>คำนวณมาแล้วในระบบ TOS</b> ไม่ได้คำนวณเอง</td><td>ฐานของ KPI ทุกตัวใน Section 1-2</td></tr>
+    </table>
+    <div class="callout info"><span class="tag">หมายเหตุสำคัญ</span><code>dwell</code> เป็นค่าที่ระบบ TOS คำนวณมาให้แล้ว (ไม่ใช่ <code>time_out − time_in</code> ที่คำนวณเอง) รายงานนี้ <b>เชื่อค่า dwell ของระบบ</b> และใช้ <code>time_in/time_out</code> เฉพาะตอนวิเคราะห์มิติวัน/เวลา และตอนจับคู่ตู้วนใน Section 6 เท่านั้น</div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">3</span><span class="sh-title">หลักการคำนวณ — 3 กฎหลักที่ใช้ก่อนตัวเลขทุกตัว</span></div>
+    <div class="sh-sub">ทำไมต้องกรองก่อนเฉลี่ย ไม่ใช่เอาทุกแถวมาเฉลี่ยตรงๆ</div>
+  </div>
+  <div class="panel">
+    <p><b>กฎที่ 1 — Segmentation 3 ชั้น</b> (ใช้ก่อนคำนวณ KPI หลักทุกครั้ง) เหตุผล: ถ้าเฉลี่ยทุกแถวตรงๆ ตู้ Express (เยอะและเร็ว) จะดึงค่าเฉลี่ยลง ส่วนตู้ Anomaly (น้อยแต่ค้างยาวมาก บางใบ 1,000+ วัน) จะดึงค่าเฉลี่ยขึ้น ทำให้ตัวเลขไม่สะท้อนพฤติกรรมตู้ส่วนใหญ่จริง:</p>
+    <div class="tier-grid">
+      <div class="tier-card express"><div class="tc-name">Express</div><div class="tc-range">dwell ≤ 1 วัน</div><div class="tc-use">แยกดูเป็น best-practice signal เท่านั้น ไม่รวมในค่าเฉลี่ย KPI หลัก</div></div>
+      <div class="tier-card normal"><div class="tc-name">Normal</div><div class="tc-range">dwell 2–30 วัน</div><div class="tc-use">✅ ใช้เป็นฐานคำนวณ mean/median/p90 ของ KPI หลักเสมอ — นี่คือกลุ่มที่ตัวเลขใน Section 1-3 อ้างถึง</div></div>
+      <div class="tier-card anomaly"><div class="tc-name">Anomaly</div><div class="tc-range">dwell &gt; 30 วัน</div><div class="tc-use">แยกวิเคราะห์ต่างหาก ไม่ปนกับค่าเฉลี่ยหลัก (ดู Section 2 ของ infographic สำหรับตัวเลขกลุ่มนี้)</div></div>
+    </div>
+
+    <p><b>กฎที่ 2 — Batch-artifact filter</b> เหตุผล: ตู้หลายร้อยใบที่ <code>time_out</code> ตรงกันเป๊ะถึงระดับวินาที ไม่ใช่ตู้ที่ "ค้าง" จริง แต่เป็น event ปิดระบบ/สแกนพร้อมกันทั้งล็อตตอนขึ้นเรือ (พบเฉลี่ย ~203 ตู้/ล็อต ใหญ่สุด 960 ตู้) — ถ้าไม่กรองออก จะปนเข้าไปในการวิเคราะห์ระดับวัน/ชั่วโมงและทำให้ตีความผิด:</p>
+    <div class="formula-box"><span class="fl"># ตรวจหา batch event</span><br>suspicious = df.groupby('time_out').size()<br>suspicious = suspicious[suspicious &gt; 5]&nbsp;<span class="fl"># ตู้ &gt;5 ใบ time_out ตรงกันเป๊ะ = batch ไม่ใช่ dwell จริง</span></div>
+
+    <p><b>กฎที่ 3 — แบ่งช่วงเวลา Baseline vs Recent</b> เพื่อเทียบ "ก่อน" กับ "หลัง" อย่างเป็นธรรม:</p>
+    <table class="dtab">
+      <tr><th>ช่วง</th><th>นิยาม</th><th>หมายเหตุ</th></tr>
+      <tr><td><b>Baseline</b></td><td>ก.ค.2565 – ธ.ค.2567</td><td>ก่อนที่ฝ่ายการเงินสังเกตเห็น margin/ค่าซ่อมเปลี่ยน</td></tr>
+      <tr><td><b>Recent</b></td><td>ม.ค.2568 – เม.ย.2569</td><td>ช่วงที่เห็น pattern เปลี่ยน</td></tr>
+      <tr><td>ตัดออก</td><td>ก.พ.2567</td><td>ข้อมูลไม่ครบเดือน (มีแค่ 1-2 วันแรก) — ตัดออกจากทั้งสองช่วง ไม่ปนเข้าไหนเลย</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">4</span><span class="sh-title">หลักการ Section 6 — การจับคู่ "ตู้วน" Import → Export</span></div>
+    <div class="sh-sub">วิธีพิสูจน์ว่าตู้ใบเดิมถูกนำมาใช้ส่งออกซ้ำ โดยไม่ต้องอนุมาน</div>
+  </div>
+  <div class="panel">
+    <p>หัวใจของ Section 6 คือใช้ <b><code>id</code> (เลขตู้) เป็นตัวจับคู่ตรง</b> — เพราะเลขตู้คอนเทนเนอร์เป็น ID ตายตัวต่อกล่องจริงตามมาตรฐานสากล ISO 6346 (4 ตัวอักษร + เลขเช็คดิจิต) จึงเป็น<b>หลักฐานตรง</b>ว่ากล่องเดียวกันถูกใช้ซ้ำ ไม่ใช่การอนุมานจาก pattern</p>
+    <p><b>ขั้นตอนจับคู่:</b></p>
+    <ol class="step-list">
+      <li>นำ event ฝั่ง <b>Import ที่ <code>time_out</code></b> (ตู้ออกจากลาน หลังผ่านพิธีการแล้ว) มาเทียบกับ event ฝั่ง <b>Export ที่ <code>time_in</code></b> (ตู้กลับเข้าลานเพื่อส่งออก) <b>ของเลขตู้เดียวกัน</b></li>
+      <li>กำหนดกรอบตัด <b>0–21 วัน</b> — ถ้า Export เข้ามาภายใน 21 วันหลัง Import ออก ถือว่าเป็นการ "วนกลับมาใช้" ถ้าเกิน 21 วันไม่นับ (อาจถูกส่งไปท่า/เมืองอื่น หรือพักนานกว่านั้นจริง — ไม่มีข้อมูลพิสูจน์ได้)</li>
+      <li>ถ้าตู้ใบหนึ่งมี Export เข้าหลายครั้งในกรอบ 21 วัน <b>เลือกคู่ที่ใกล้ที่สุด (nearest match)</b> ต่อตู้ ไม่ใช่ทุกคู่ที่เป็นไปได้ — กันการนับซ้ำเกินจริง</li>
+      <li>คำนวณ <code>gap_days = export.time_in − import.time_out</code> แล้วนำไปแจกแจงเป็น distribution, แยกตามวันในสัปดาห์, แยกตามปีงบประมาณ</li>
+    </ol>
+    <div class="callout warn"><span class="tag">ทำไมต้องมีกรอบตัด 21 วัน</span>21 วันคือ<b>"กรอบที่ครอบคลุมพอ" ไม่ใช่ "จุดที่ตู้วนมากที่สุด"</b> — จากข้อมูลจริง สัปดาห์แรก (วัน 0-7) มีตู้วนมากที่สุดอยู่แล้ว 36.9% ของตู้ที่จับคู่ได้ ภายใน 14 วันจับได้ 80% เหตุผลที่ยังขยายไปถึง 21 วันคือเพื่อไม่ตัดส่วนหาง (อีก 20% ที่ใช้เวลา 15-21 วัน) ออกไปทั้งที่เป็นการวนจริง</div>
+    <p>ผลลัพธ์ที่ได้: จาก Import-exit 1,773,754 ใบ และ Export-entry 1,003,211 ใบ ทั่วข้อมูล 2.78 ล้านแถว — จับคู่ได้ <b>366,542 คู่ (20.7%)</b> ระยะเวลาวนกลับมา median <b>8.8 วัน</b> อัตรานี้คงที่ 18-23% ตลอด 4 ปีงบประมาณ ไม่ใช่ปรากฏการณ์ชั่วคราว</p>
+    <div class="callout info"><span class="tag">ข้อจำกัดที่ต้องระบุไว้ทุกครั้ง</span>วิธีนี้พิสูจน์ได้แค่ <b>"เลขตู้เดียวกันออก Import แล้วกลับมาเป็น Export ในกรอบเวลานี้"</b> — ไม่ได้พิสูจน์ว่าเป็น "รถบรรทุกคันเดียวกัน" หรือ "ผู้ประกอบการรายเดียวกัน" ดำเนินการ เพราะชุดข้อมูลนี้ไม่มีข้อมูลทะเบียนรถ/ผู้ขนส่ง ส่วน 79.3% ที่จับคู่ไม่ได้ ไม่ได้แปลว่า "ไม่วน" แค่แปลว่าไม่วนกลับมาที่ท่านี้ภายใน 21 วัน</div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">5</span><span class="sh-title">วิธีตรวจสอบย้อนกลับกับเอกสารต้นฉบับ</span></div>
+    <div class="sh-sub">ทำซ้ำได้จริง ไม่ต้องเชื่อตัวเลขในหน้าจอเฉยๆ</div>
+  </div>
+  <div class="panel">
+    <p><b>5.1 — สุ่มตรวจตู้ 1 ใบแบบ manual (เร็วที่สุด, ใช้แค่ Ctrl+F)</b> ใช้ตรวจ Section 6 (ตู้วน) ได้ตรงที่สุดเพราะอ้างถึงตู้รายใบจริง:</p>
+    <ol class="step-list">
+      <li>เปิดไฟล์ <code>DwellImportMarch2024_September2025.xlsx</code> ไปที่ sheet <code>March2024</code></li>
+      <li>กด Ctrl+F ค้นหาเลขตู้ <code>BMOU6228073</code> — จะเจอแถวเดียว (gkey 7705703) ที่ <code>time_out</code> = 27/3/2024 21:41:50 (วันพุธ)</li>
+      <li>เปิดไฟล์ <code>DwellExportMarch2024_September2025.xlsx</code> ไปที่ sheet <code>April2024</code> ค้นหาเลขตู้เดียวกัน — จะเจอ <code>time_in</code> = 5/4/2024 10:59:47 (วันศุกร์)</li>
+      <li>คำนวณส่วนต่าง: 5/4/2024 10:59:47 − 27/3/2024 21:41:50 = <b>8.55 วัน</b> — ตรงกับช่วง median ของ Section 6 (8.8 วัน) และตรงกับ pattern เด่นสุดที่รายงานไว้ (ออกพุธ → เข้าศุกร์)</li>
+    </ol>
+    <div class="worked-example">
+      <div class="we-title">ตัวอย่างตู้จริงที่ดึงจากไฟล์ต้นทางตรงๆ (สำหรับเปิดเทียบเอง)</div>
+      <div class="we-row"><span class="we-k">เลขตู้ (container id)</span><span class="we-v">BMOU6228073</span></div>
+      <div class="we-row"><span class="we-k">ไฟล์ / sheet (Import)</span><span class="we-v">DwellImportMarch2024_September2025.xlsx · March2024</span></div>
+      <div class="we-row"><span class="we-k">gkey</span><span class="we-v">7705703</span></div>
+      <div class="we-row"><span class="we-k">time_in (เข้าลาน, Import)</span><span class="we-v">2024-03-26 04:52:12</span></div>
+      <div class="we-row"><span class="we-k">time_out (ออกลาน, Import)</span><span class="we-v">2024-03-27 21:41:50 (พุธ)</span></div>
+      <div class="we-arrow">↓ 8.55 วัน ↓</div>
+      <div class="we-row"><span class="we-k">ไฟล์ / sheet (Export)</span><span class="we-v">DwellExportMarch2024_September2025.xlsx · April2024</span></div>
+      <div class="we-row"><span class="we-k">time_in (เข้าลาน, Export)</span><span class="we-v">2024-04-05 10:59:47 (ศุกร์)</span></div>
+      <div class="we-row"><span class="we-k">time_out (ออกลาน/ขึ้นเรือ, Export)</span><span class="we-v">2024-04-09 02:05:00</span></div>
+    </div>
+
+    <p><b>5.2 — ตรวจค่าเฉลี่ย/median ด้วย Excel formula เอง (ไม่ต้องเชื่อโค้ด)</b> เปิดไฟล์ดิบ รวม sheet ทุกเดือนเป็นชุดเดียว (Power Query หรือ copy-paste) แล้วใช้สูตรนี้เทียบกับตัวเลขใน Section 1:</p>
+    <div class="formula-box">
+      <span class="fl">// ค่าเฉลี่ย Normal segment (Import) ในช่วง Baseline</span><br>
+      =AVERAGEIFS(dwell, category,"IMPRT", dwell,"&gt;1", dwell,"&lt;=30", time_out,"&gt;=2022-07-01", time_out,"&lt;2025-01-01")<br><br>
+      <span class="fl">// จำนวนตู้ Export ที่ค้าง &gt;30 วัน ในช่วง Recent</span><br>
+      =COUNTIFS(category,"EXPRT", dwell,"&gt;30", time_out,"&gt;=2025-01-01")
+    </div>
+    <p>ถ้าตัวเลขที่ได้ตรงกับ Section 1-2 ของ infographic (ในระดับทศนิยม 1-2 ตำแหน่ง) แสดงว่าคำนวณตรงกับไฟล์ต้นทาง — ความต่างเล็กน้อยที่อาจเกิดได้มาจากการตัดเดือน ก.พ.2567 ออก (ดู Section 3 กฎที่ 3) ถ้าลืมตัดเดือนนี้ ตัวเลขจะเพี้ยนเล็กน้อย</p>
+
+    <p><b>5.3 — ตรวจ data layer ในไฟล์ HTML เอง (ไม่ต้องคำนวณใหม่)</b> ตัวเลขทั้งหมดที่แสดงผลใน <code>infographic_dwell_revenue.html</code> ถูกฝังเป็นตัวแปร JavaScript ไว้ในไฟล์ — เปิดไฟล์ด้วย text editor (ไม่ใช่เบราว์เซอร์) แล้วค้นหาชื่อตัวแปรเหล่านี้เพื่อดูค่าดิบที่ใช้ render กราฟ ก่อนจะถูกแปลงเป็น % หรือกราฟ:</p>
+    <table class="dtab">
+      <tr><th>ตัวแปร</th><th>เนื้อหา</th></tr>
+      <tr><td><code>TREND</code></td><td>Trend รายเดือน Import/Export mean dwell ทั้ง 46 เดือน พร้อม flag จุดที่เป็นการประมาณ (interpolate)</td></tr>
+      <tr><td><code>FY</code></td><td>สรุป 3 ช่วง (ฐาน/FY68/FY69) ของ mean/median/delta — ตรงกับตาราง Section 1</td></tr>
+      <tr><td><code>DIST</code></td><td>Distribution 9 buckets (0-1, 2-3, ... &gt;30 วัน) × 3 ช่วงเวลา × Import/Export</td></tr>
+      <tr><td><code>COUNTS</code></td><td>จำนวนตู้จริงแต่ละช่วง — ใช้แปลง % ในกราฟกลับเป็นจำนวนตู้จริง</td></tr>
+      <tr><td><code>REPOSITION</code></td><td>ผลจับคู่เลขตู้ Import↔Export ครบทุกมิติ (gap_buckets, gap_pct, top_combos, dow) — ตรงกับ Section 6</td></tr>
+    </table>
+    <div class="callout ok"><span class="tag">ทางลัดเร็วสุด</span>เปิด Developer Console ของเบราว์เซอร์ (F12) ตอนเปิดไฟล์ HTML แล้วพิมพ์ชื่อตัวแปร เช่น <code>REPOSITION</code> หรือ <code>FY</code> แล้ว Enter — จะเห็นค่าดิบทั้งหมดเป็น JSON object ทันที โดยไม่ต้องเปิดดูซอร์สโค้ด</div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">6</span><span class="sh-title">ข้อจำกัดที่ต้องคงไว้เสมอเมื่อนำตัวเลขไปอ้างต่อ</span></div>
+    <div class="sh-sub">สิ่งที่ตัวเลขชุดนี้พิสูจน์ได้ และพิสูจน์ไม่ได้</div>
+  </div>
+  <div class="panel">
+    <table class="dtab">
+      <tr><th style="width:30px;">#</th><th>ข้อจำกัด</th></tr>
+      <tr><td>1</td><td>รายได้ที่อ้างถึงเป็น<b>ค่าประมาณจากอัตราค่าภาระตามหนังสือ พ.ศ.2543</b> ไม่ใช่รายได้จริงที่บันทึกบัญชี</td></tr>
+      <tr><td>2</td><td>FY2569 มีข้อมูลเพียง 7-8 เดือน (ขึ้นกับชุดข้อมูล) — การ extrapolate เป็นรายปีเป็นค่าประมาณ ไม่ใช่ตัวเลขจริงทั้งปี</td></tr>
+      <tr><td>3</td><td>ต้นทุนใน Section 4 ของ infographic ยังไม่รวมค่าแรงงานลานและค่าทำความสะอาด เพราะไม่มีข้อมูลแยกในชุดนี้ — ห้ามนำเสนอเป็น "ต้นทุนรวมทั้งหมด"</td></tr>
+      <tr><td>4</td><td>ข้อมูลชั่วโมง/วันฝั่ง Export (exit) ไม่น่าเชื่อถือ เพราะ 99.8% เป็น batch event ถูกกรองออกไปเกือบหมด — ใช้ได้แค่ฝั่ง entry หรือระดับ batch-event เท่านั้น</td></tr>
+      <tr><td>5</td><td>Section 6 (ตู้วน) พิสูจน์ได้แค่ระดับ <b>"เลขตู้"</b> ไม่ใช่ระดับ "รถ/ผู้ขนส่ง" เพราะไม่มีข้อมูลทะเบียนรถ/ผู้ขนส่งในชุดข้อมูลนี้</td></tr>
+      <tr><td>6</td><td>กรอบตัด 21 วันใน Section 6 เป็น<b>เกณฑ์ที่เลือกเพื่อความครอบคลุม</b> ไม่ใช่ค่าธรรมชาติของข้อมูล — ถ้าเปลี่ยนกรอบ (เช่น ไม่ตัดเลย) ตัวเลข median/จำนวนคู่ที่จับได้จะเปลี่ยนไปจากที่รายงานไว้ในเอกสารนี้</td></tr>
+    </table>
+  </div>
+
+  <footer>
+    <span class="fcat">แหล่งข้อมูล</span>
+    ไฟล์ดิบ 5 ไฟล์ (2.78 ล้านแถว, ก.ค.2565-เม.ย.2569) จากระบบ TOS ท่าเรือกรุงเทพ — ดูรายชื่อทั้งหมดใน Section 2<br>
+    เอกสารอ้างอิงหลักการ: <code>METHODOLOGY_DwellTime.md</code>, <code>REPORT_DwellTime_Infoboardgraphic.md</code><br>
+    ไฟล์ที่ใช้งานจริง (live): <code>infographic_dwell_revenue.html</code> · ไฟล์เชิงลึกฉบับเต็ม: <code>Dwell_Time_Dashboard_2567-2569.html</code>
+
+    <span class="fcat">วิธีอ่านเอกสารนี้</span>
+    Section 1-3 อธิบายหลักการที่ใช้กับ <b>ทุก</b> panel ในไฟล์ infographic · Section 4-5 อธิบายเฉพาะ Section 6 (ตู้วน) อย่างละเอียดเพราะเป็นมิติที่ซับซ้อนสุดและเพิ่งทำเสร็จล่าสุด · Section 6 คือ checklist ข้อจำกัดที่ต้องพูดคู่กันทุกครั้งเมื่อนำตัวเลขไปใช้ต่อ
+
+    <span class="fcat">อัปเดตล่าสุด</span>
+    23 มิถุนายน 2569
+  </footer>
+
+</div>
+</body>
+</html>
