@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทำไมรายได้ ทกท. เพิ่มขึ้น? — Dwell Time × Revenue Infographic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#060f1e; --bg2:#0a1628; --panel:#0f1f38; --card:#152540;
+  --border:rgba(59,130,246,.12); --border2:rgba(59,130,246,.22);
+  --text:#edf2fc; --text2:#b4cce8; --text3:#5a7a9a;
+  --teal:#14b8a6; --teal2:#2dd4bf;
+  --amber:#f59e0b; --amber2:#fbbf24;
+  --red:#ef4444; --red2:#f87171;
+  --green:#10b981; --green2:#34d399;
+  --gray:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 60px;}
+
+header{border-bottom:1px solid var(--border2);padding-bottom:18px;margin-bottom:18px;}
+header .tag{font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--teal2);text-transform:uppercase;margin-bottom:8px;display:block;}
+header h1{font-size:28px;font-weight:700;margin:0 0 6px;line-height:1.3;}
+header .sub{font-size:14px;color:var(--text2);}
+header .meta{font-size:11.5px;color:var(--text3);margin-top:10px;}
+header .meta a{color:var(--teal2);text-decoration:none;}
+
+.hero-banner{background:linear-gradient(135deg, rgba(20,184,166,.14), rgba(59,130,246,.07));border:1px solid rgba(20,184,166,.3);border-radius:16px;padding:26px 28px;margin-bottom:30px;}
+.hero-banner .hb-title{font-size:12px;font-weight:600;color:var(--teal2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+.hero-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+@media (max-width:800px){.hero-row{grid-template-columns:repeat(2,1fr);}}
+.hero-stat{background:rgba(255,255,255,.03);border-radius:10px;padding:14px 16px;}
+.hero-stat .hs-val{font-size:22px;font-weight:700;font-family:'Kanit',monospace;line-height:1.1;margin-bottom:4px;}
+.hero-stat .hs-label{font-size:11.5px;color:var(--text3);}
+.hero-stat.up .hs-val{color:var(--amber2);}
+.hero-stat.gain .hs-val{color:var(--teal2);}
+.hero-stat.warn .hs-val{color:var(--red2);}
+.hero-stat.flat .hs-val{color:var(--green2);}
+.hero-banner .hb-text{font-size:14px;line-height:1.75;color:var(--text2);}
+.hero-banner .hb-text b{color:var(--text);}
+
+.toggle-bar{position:sticky;top:0;z-index:10;display:flex;gap:8px;align-items:center;background:rgba(6,15,30,.92);backdrop-filter:blur(6px);border:1px solid var(--border2);border-radius:30px;padding:8px 10px;margin-bottom:26px;}
+.toggle-bar .tb-label{font-size:11.5px;color:var(--text3);padding:0 6px;}
+.toggle-btn{background:var(--card);border:1px solid var(--border2);color:var(--text2);padding:7px 16px;border-radius:20px;font-family:'Kanit',sans-serif;font-size:13px;cursor:pointer;transition:.15s;}
+.toggle-btn:hover{border-color:var(--teal);color:var(--text);}
+.toggle-btn.active{background:var(--teal);border-color:var(--teal);color:#06281f;font-weight:600;}
+.cat-block{transition:opacity .2s;}
+.cat-block.dimmed{display:none;}
+
+.section-head{margin:46px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--border2);}
+.section-head .sh-row{display:flex;align-items:center;}
+.section-head .sh-num{display:inline-flex;align-items:center;justify-content:center;background:var(--teal);color:#06281f;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:50%;margin-right:12px;flex-shrink:0;}
+.section-head .sh-title{font-size:21px;font-weight:700;color:var(--text);}
+.section-head .sh-sub{font-size:13px;color:var(--text3);margin-top:5px;margin-left:40px;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:22px;}
+.chart-box{position:relative;height:300px;margin:18px 0;}
+
+.dist-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;margin-bottom:24px;}
+.dist-row:last-child{margin-bottom:0;}
+.dist-row .chart-box{margin:0;}
+.dist-row .callout{margin:0;}
+@media (max-width:760px){.dist-row{grid-template-columns:1fr;}}
+
+.compare-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+@media (max-width:760px){.compare-row{grid-template-columns:1fr;}}
+.cmp-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:18px 18px;text-align:center;}
+.cmp-card.base{border-color:rgba(107,114,128,.4);}
+.cmp-card.now{border-color:rgba(20,184,166,.5);background:rgba(20,184,166,.06);}
+.cmp-card .cc-label{font-size:11.5px;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;}
+.cmp-card .cc-row{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0;font-size:13px;color:var(--text2);}
+.cmp-card .cc-row b{font-size:18px;font-family:'Kanit',monospace;color:var(--text);}
+.cmp-card .cc-delta{font-size:12px;font-weight:600;margin-top:8px;color:var(--amber2);}
+
+.callout{border-radius:10px;padding:14px 18px;font-size:13.5px;line-height:1.7;margin:14px 0;}
+.callout.crisis{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--text2);}
+.callout.crisis b{color:var(--red2);}
+.callout.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);color:var(--text2);}
+.callout.ok b{color:var(--green2);}
+.callout.info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);color:var(--text2);}
+.callout.info b{color:#93c5fd;}
+.callout .tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;opacity:.85;}
+
+.callout-sub{font-size:12px;font-weight:600;color:var(--text);margin:10px 0 6px;}
+.callout-sub:first-of-type{margin-top:2px;}
+.callout-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;}
+.callout-list li{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:rgba(255,255,255,.05);border-radius:6px;padding:6px 10px;font-size:13px;}
+.callout-list .cl-label{flex:1;}
+.callout-list .cl-pct{font-family:'Kanit',monospace;font-weight:700;color:var(--text);flex-shrink:0;text-align:right;}
+.callout-conclude{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.6;}
+
+.kpi-hero{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.3);border-radius:14px;padding:26px;text-align:center;margin-bottom:18px;}
+.kpi-hero .kh-label{font-size:13px;color:var(--text2);margin-bottom:8px;}
+.kpi-hero .kh-val{font-size:42px;font-weight:800;color:var(--teal2);font-family:'Kanit',monospace;line-height:1;}
+.kpi-hero .kh-sub{font-size:13px;color:var(--text3);margin-top:8px;}
+
+.gain-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;margin-bottom:0;}
+.gain-row .kpi-hero{margin-bottom:0;}
+@media (max-width:760px){.gain-row{grid-template-columns:1fr;}}
+
+.gain-side{display:flex;flex-direction:column;gap:16px;}
+.gain-side .callout{margin:0;flex:1;}
+.gain-side .formula-box{margin:0;}
+
+.pattern-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin:14px 0 18px;}
+.pattern-row .matrix-wrap{justify-content:flex-start;margin-bottom:0;}
+.pattern-row .dow-detail{margin:10px 0 0;}
+.pattern-side{display:flex;flex-direction:column;gap:14px;}
+.pattern-side .callout{margin:0;}
+@media (max-width:760px){.pattern-row{grid-template-columns:1fr;}}
+
+.kh-breakdown{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);text-align:left;}
+.kh-breakdown table{width:100%;border-collapse:collapse;font-size:11.5px;}
+.kh-breakdown th{font-weight:500;color:var(--text3);text-align:right;padding:4px 6px;font-size:10px;}
+.kh-breakdown th:first-child{text-align:left;}
+.kh-breakdown td{padding:7px 6px;text-align:right;color:var(--text2);font-family:'Kanit',monospace;border-top:1px solid rgba(255,255,255,.06);}
+.kh-breakdown td:first-child{text-align:left;color:var(--text);font-family:'Kanit',sans-serif;font-weight:500;}
+.kh-breakdown td.total{color:var(--teal2);font-weight:700;}
+
+.formula-box{background:rgba(255,255,255,.02);border:1px dashed var(--border2);border-radius:10px;padding:14px 18px;font-size:12.5px;color:var(--text2);line-height:1.8;margin-bottom:18px;font-family:'Kanit',monospace;}
+.formula-box .fl{color:var(--text3);font-family:'Kanit',sans-serif;}
+
+.split2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:760px){.split2{grid-template-columns:1fr;}}
+
+.cost-group-label{font-size:12.5px;font-weight:600;color:var(--text2);margin:18px 0 10px;}
+.cost-group-label:first-child{margin-top:0;}
+.cost-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+@media (max-width:760px){.cost-grid{grid-template-columns:1fr;}}
+.cost-card{background:var(--card);border:1px solid var(--border2);border-left:4px solid var(--gray);border-radius:10px;padding:14px 16px;}
+.cost-card.good{border-left-color:var(--green);}
+.cost-card.tbd{border-left-color:var(--text3);border-left-style:dashed;}
+.cost-card .cc2-cap{font-size:11px;color:var(--text3);margin-bottom:6px;line-height:1.4;}
+.cost-card .cc2-val{font-size:19px;font-weight:700;font-family:'Kanit',monospace;color:var(--text);line-height:1.2;}
+.cost-card.good .cc2-val{color:var(--green2);}
+.cost-card.gain .cc2-val{color:var(--teal2);}
+.cost-card.tbd .cc2-val{color:var(--text3);font-style:italic;font-size:14px;font-weight:500;}
+.cost-card .cc2-desc{font-size:11.5px;color:var(--text3);margin-top:6px;}
+
+.dow-detail{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 18px;margin:10px 0 18px;font-size:13px;color:var(--text2);line-height:1.7;display:none;}
+.dow-detail b{color:var(--text);}
+.dow-detail .dd-title{font-size:13px;font-weight:600;color:var(--teal2);margin-bottom:6px;}
+
+.reposition-hero{background:linear-gradient(135deg, rgba(20,184,166,.16), rgba(59,130,246,.08));border:1px solid rgba(20,184,166,.35);border-radius:16px;padding:22px 24px;margin-bottom:20px;}
+.reposition-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media (max-width:800px){.reposition-stats{grid-template-columns:repeat(2,1fr);}}
+.rp-stat{background:rgba(255,255,255,.04);border-radius:10px;padding:14px 16px;text-align:center;}
+.rp-stat .rp-val{font-size:24px;font-weight:800;color:var(--teal2);font-family:'Kanit',monospace;line-height:1.1;}
+.rp-stat .rp-label{font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.4;}
+
+.combo-list{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+.combo-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:8px;padding:10px 14px;}
+.combo-row .combo-rank{font-size:11px;color:var(--text3);width:18px;flex-shrink:0;}
+.combo-row .combo-path{font-size:13px;color:var(--text2);flex:1;}
+.combo-row .combo-path b{color:var(--text);}
+.combo-row .combo-track{position:relative;margin-top:5px;}
+.combo-row .combo-bar{height:8px;border-radius:4px;background:linear-gradient(90deg, var(--teal), var(--teal2));}
+.combo-row .combo-avg-line{position:absolute;top:-3px;bottom:-3px;width:0;border-left:1px dashed rgba(255,255,255,.5);}
+.combo-row .combo-pct{font-size:14px;font-weight:700;color:var(--teal2);font-family:'Kanit',monospace;width:78px;text-align:right;flex-shrink:0;}
+.combo-row .combo-mult{font-size:10.5px;color:var(--text3);font-weight:400;}
+.combo-legend{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;margin:4px 0 12px;}
+
+.info-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.3);border-radius:14px;padding:20px 24px;margin-top:18px;}
+.info-box .ib-title{font-size:14px;font-weight:700;color:#93c5fd;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.info-box .ib-text{font-size:13.5px;line-height:1.85;color:var(--text2);}
+.info-box .ib-text b{color:var(--text);}
+.info-box .ib-caveat{font-size:12px;color:var(--text3);margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);line-height:1.7;}
+
+.matrix-wrap{overflow-x:auto;margin-bottom:10px;display:flex;justify-content:center;}
+.matrix-table{width:auto;max-width:640px;border-collapse:separate;border-spacing:2px;font-size:11px;margin:0 auto;}
+.matrix-table th{font-weight:500;color:var(--text3);padding:4px 5px;text-align:center;font-size:9.5px;white-space:nowrap;}
+.matrix-table th.row-h{text-align:right;color:var(--text2);font-weight:500;padding-right:8px;}
+.matrix-table td{padding:6px 3px;text-align:center;border-radius:5px;font-weight:600;font-family:'Kanit',monospace;font-size:10.5px;white-space:nowrap;cursor:pointer;border:1px solid transparent;min-width:48px;}
+.matrix-table td:hover{border-color:rgba(255,255,255,.4);}
+.matrix-table td.selected{border-color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.6);}
+
+table.simple{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.simple th{text-align:left;color:var(--text3);font-weight:500;font-size:11.5px;padding:6px 10px;border-bottom:1px solid var(--border2);}
+table.simple td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text2);font-family:'Kanit',monospace;}
+table.simple td.lbl{font-family:'Kanit',sans-serif;color:var(--text);}
+
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:1.8;}
+footer a{color:var(--teal2);text-decoration:none;}
+footer .fcat{color:var(--text2);font-weight:600;display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="tag">PAT Intelligence · Infoboardgraphic</span>
+    <h1>ทำไมรายได้ ทกท. เพิ่มขึ้น? — และมีต้นทุนสูงแค่ไหน</h1>
+    <div class="sub">เรื่องเดียว ตอบ 5 คำถาม: ตู้ค้างนานขึ้นจริงไหม → ค้างนานแค่ไหน → ได้รายได้เพิ่มเท่าไร → เสียต้นทุนเพิ่มไหม → ตู้เข้า-ออกแบบไหน</div>
+    <div class="meta">ข้อมูลจริงทั้งหมด ไม่มีตัวเลขสมมติ · อ้างอิงจาก <code>Dwell_Time_Dashboard_2567-2569.html</code> (ฉบับเต็ม รายละเอียดเชิงลึก) · เวอร์ชันนี้คือสรุปภาพสำหรับผู้บริหาร</div>
+  </header>
+
+  <div class="hero-banner">
+    <div class="hb-title">สรุป 1 นาที</div>
+    <div class="hero-row">
+      <div class="hero-stat up"><div class="hs-val">+10%</div><div class="hs-label">ตู้ค้างนานขึ้นจากปีฐาน (~ครึ่งวัน/ตู้)</div></div>
+      <div class="hero-stat gain"><div class="hs-val">~115 ล.</div><div class="hs-label">รายได้ค่าฝากเพิ่ม (7 เดือน FY2569)</div></div>
+      <div class="hero-stat warn"><div class="hs-val">5.3×</div><div class="hs-label">ตู้ Export ค้าง&gt;30วัน เทียบปีฐาน</div></div>
+      <div class="hero-stat flat"><div class="hs-val">-20%</div><div class="hs-label">ค่าซ่อมบำรุง (8 เดือน, YoY) — ลดลง</div></div>
+    </div>
+    <div class="hb-text">
+      ตู้สินค้าอยู่ในลานนานขึ้นทั้งนำเข้า-ส่งออก ทำให้เก็บค่าภาระฝากตู้ได้เพิ่มขึ้นจริง ~115 ล้านบาทในช่วง 7 เดือนแรกของปีงบ 2569 (ถ้าทั้งปีจะอยู่ราว <b>197 ล้านบาท</b>) ฝั่ง Export มีกลุ่มตู้ค้างเกิน 30 วันที่น่าเป็นห่วงเป็นพิเศษ ขณะที่ฝั่งต้นทุน (ค่าซ่อมบำรุง+ค่าพลังงาน ซึ่งเป็นข้อมูลจริงที่ตรวจสอบได้) <b>ไม่ได้เพิ่มขึ้นตามตู้ค้าง</b> ในภาพรวม 8 เดือนที่ผ่านมา — แต่มีจุดผิดปกติเฉพาะเดือนเดียวที่เชื่อมโยงกับช่วงตู้ค้างสูงที่ต้องติดตาม
+    </div>
+  </div>
+
+  <div class="toggle-bar" id="catToggle">
+    <span class="tb-label">ดูเฉพาะ:</span>
+    <button class="toggle-btn active" data-cat="all">ทั้งหมด</button>
+    <button class="toggle-btn" data-cat="import">นำเข้า (Import)</button>
+    <button class="toggle-btn" data-cat="export">ส่งออก (Export)</button>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">1</span><span class="sh-title">ตู้ค้างนาน — ข้อเท็จจริงพื้นฐาน</span></div>
+    <div class="sh-sub">ตู้ค้างนานขึ้นจริงหรือเปล่า?</div>
+  </div>
+
+  <div class="panel">
+    <div class="compare-row" id="dwellCompareImport"></div>
+    <div class="chart-box"><canvas id="dwellTrendChart"></canvas></div>
+    <div style="font-size:11.5px;color:var(--text3);margin:-8px 0 14px;display:flex;align-items:center;gap:6px;">
+      <span style="display:inline-block;width:18px;height:0;border-top:2px dashed #ef4444;"></span>
+      เส้นประสีแดง = ค่าประมาณด้วยการ interpolate เส้นตรงระหว่างเดือนก่อน-หลัง (ไม่ใช่ข้อมูลจริง) — ใช้เฉพาะเดือนที่ข้อมูลขาดหรือไม่ครบเดือน (มิ.ย.2566 Export, ก.พ.2567 ทั้งคู่)
+    </div>
+    <div class="callout info">
+      <span class="tag">ทำไมต้องดู Mean ไม่ใช่ Median</span>
+      Median (ค่ากลาง) ของทั้งสองช่วงแทบไม่เปลี่ยน (Import 4 วันเท่าเดิม, Export 5→6 วัน) เพราะตู้ส่วนใหญ่ยังออกเร็วเหมือนเดิม แต่ <b>ตู้ส่วนน้อยที่ค้างนานขึ้นมาก</b> ไปดึงค่าเฉลี่ย (Mean) ให้สูงขึ้น — ดูส่วนที่ 2 ว่าตู้กลุ่มนั้นคือใคร
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">2</span><span class="sh-title">ตู้กลุ่มไหนค้างนานขึ้น — Distribution Shift</span></div>
+    <div class="sh-sub">ตู้ส่วนใหญ่ค้างกี่วัน? มีกลุ่มที่ค้างนานผิดปกติเพิ่มขึ้นไหม?</div>
+  </div>
+
+  <div class="panel">
+    <div class="cat-block dist-row" data-cat="import">
+      <div class="chart-box" style="height:260px;"><canvas id="distChartImport"></canvas></div>
+      <div class="callout ok">
+        <span class="tag">ฝั่ง Import — ไม่มีสัญญาณวิกฤตเดียวกัน</span>
+        ตู้ Import ที่ค้างเกิน 30 วัน <b>ไม่ได้เพิ่มขึ้น</b> (0.35% ปีฐาน → 0.30% FY2569) ปัญหาตู้ค้างนานสุดขั้วเป็นเรื่องเฉพาะฝั่ง Export เท่านั้น — ทั้งสองฝั่งมีสัดส่วนตู้ค้างเกิน 7 วันเพิ่มขึ้นใกล้เคียงกัน (Import 15.7%→20.0%, Export 15.3%→22.3%) ซึ่งเป็นตัวขับเคลื่อนรายได้หลักในส่วนที่ 3
+      </div>
+    </div>
+    <div class="cat-block dist-row" data-cat="export">
+      <div class="chart-box" style="height:260px;"><canvas id="distChartExport"></canvas></div>
+      <div class="callout crisis">
+        <span class="tag">🚨 จุดที่ต้องติดตามเร่งด่วน — Export</span>
+        ตู้ Export ที่ค้างเกิน 30 วัน เพิ่มจาก <b>0.15%</b> ของตู้ทั้งหมด (ปีฐาน) เป็น <b>0.80%</b> (FY2569) — คิดเป็นสัดส่วนเพิ่มขึ้นประมาณ <b>5.3 เท่า</b> สัดส่วนยังเล็กในภาพรวม แต่จากฐานตู้ Export ~147,000 ใบใน 7 เดือน เท่ากับมีตู้ติดค้างเกิน 30 วันเพิ่มขึ้นจริงประมาณ <b>หลักพันใบ</b> ที่กินพื้นที่ลานต่อเนื่อง
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">3</span><span class="sh-title">ผลต่อรายได้ — The Gain</span></div>
+    <div class="sh-sub">ตู้ค้างนาน = เก็บค่าฝากได้เพิ่มขึ้นกี่บาท?</div>
+  </div>
+
+  <div class="panel">
+    <div class="gain-row">
+      <div class="kpi-hero">
+        <div class="kh-label">รายได้ค่าภาระฝากตู้เพิ่มขึ้น (เทียบฐาน FY2566-2567)</div>
+        <div class="kh-val">~115 ล้านบาท</div>
+        <div class="kh-sub">7 เดือนแรกของ FY2569 (ต.ค.68-เม.ย.69) · ถ้าเต็มปี ประมาณ <b>~197 ล้านบาท</b></div>
+        <div class="kh-breakdown">
+          <table>
+            <tr><th>ช่วง</th><th>Import</th><th>Export</th><th>รวม</th></tr>
+            <tr><td>FY2568 (เต็มปี)</td><td>+53.5 ล. (+17.8%)</td><td>+45.8 ล. (+28.7%)</td><td class="total">+99.3 ล้าน</td></tr>
+            <tr><td>FY2569 (7 เดือน)</td><td>+47.8 ล. (+27.4%)</td><td>+67.3 ล. (+76.5%)</td><td class="total">+115.1 ล้าน</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="gain-side">
+        <div class="callout info">
+          <span class="tag">สังเกต</span>
+          FY2568 รายได้เพิ่มขึ้นมาก่อนแล้ว (+99.3 ล้านบาท เต็มปี) ไม่ใช่ปรากฏการณ์ใหม่ของ FY2569 — และ FY2569 ฝั่ง Export มี % การเพิ่มขึ้นของค่าฝากต่อตู้สูงเป็นพิเศษ (+76.5%) เพราะอัตราค่าภาระเป็นแบบขั้นบันได ยิ่งค้างนานเกินขั้น ยิ่งจ่ายแพงขึ้นแบบไม่เป็นเส้นตรง
+        </div>
+        <div class="formula-box">
+          <span class="fl">วิธีคำนวณ:</span> ส่วนต่างรายได้ = (อัตราค่าภาระที่เก็บได้จริงตามวันค้างปัจจุบัน − อัตราตามวันค้างฐาน) × จำนวนตู้ในช่วงนั้น<br>
+          <span class="fl">อ้างอิง:</span> หนังสือค่าภาระ ท่าเรือกรุงเทพ พ.ศ.2543 (ตู้มีสินค้า FCL) × ขนาดตู้จริงแต่ละใบ (20/40/45 ฟุต)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">4</span><span class="sh-title">ต้นทุนที่เพิ่มตาม — The Cost</span></div>
+    <div class="sh-sub">ได้รายได้เพิ่ม แต่ต้นทุนเพิ่มไปกี่บาท?</div>
+  </div>
+
+  <div class="panel">
+    <div class="cost-group-label">✅ รายได้เพิ่ม (จากส่วนที่ 3)</div>
+    <div class="cost-grid">
+      <div class="cost-card gain" style="border-left-color:var(--teal);">
+        <div class="cc2-cap">ค่าภาระฝากตู้เพิ่ม</div>
+        <div class="cc2-val">+115 ล้าน</div>
+        <div class="cc2-desc">7-8 เดือนแรก FY2569</div>
+      </div>
+    </div>
+
+    <div class="cost-group-label">⚠️ ต้นทุนที่มีข้อมูลจริง (8 เดือน YoY, จาก Financial Dashboard)</div>
+    <div class="cost-grid">
+      <div class="cost-card good">
+        <div class="cc2-cap">ค่าซ่อมแซมและบำรุงรักษา</div>
+        <div class="cc2-val">335.6 ล. (-20.3%)</div>
+        <div class="cc2-desc">ลดลงเมื่อเทียบปีก่อนหน้า</div>
+      </div>
+      <div class="cost-card good">
+        <div class="cc2-cap">ค่าพลังงาน/น้ำมัน</div>
+        <div class="cc2-val">144.9 ล. (-2.7%)</div>
+        <div class="cc2-desc">ลดลงเมื่อเทียบปีก่อนหน้า</div>
+      </div>
+      <div class="cost-card tbd">
+        <div class="cc2-cap">ค่าแรงงานลาน</div>
+        <div class="cc2-val">ไม่มีข้อมูลแยก</div>
+        <div class="cc2-desc">TBD</div>
+      </div>
+      <div class="cost-card tbd">
+        <div class="cc2-cap">ค่าทำความสะอาดตู้</div>
+        <div class="cc2-val">ไม่มีข้อมูลแยก</div>
+        <div class="cc2-desc">TBD</div>
+      </div>
+    </div>
+    <div class="callout ok">
+      <span class="tag">ผลลัพธ์ — ในภาพรวม 8 เดือน ต้นทุนไม่ได้เพิ่มตามตู้ค้าง</span>
+      ทั้งค่าซ่อมบำรุงและค่าพลังงาน <b>ลดลง</b>เมื่อเทียบปีก่อนหน้า (8 เดือนเทียบ 8 เดือน) แม้ตู้จะค้างนานขึ้น — ข้อมูลนี้ไม่สนับสนุนสมมติฐาน "ตู้ค้างนาน → ซ่อมเพิ่ม" ในภาพรวม แต่ยังไม่รวมค่าแรงงานและค่าทำความสะอาดที่ไม่มีข้อมูลแยก จึงยังสรุปภาพรวมต้นทุนทั้งหมดไม่ได้ 100%
+    </div>
+    <div class="callout crisis">
+      <span class="tag">แต่มีจุดเดียวที่ต้องจับตา — ก.พ. 2569</span>
+      ค่าซ่อมแซมเดือน ก.พ.2569 พุ่งขึ้นเป็น <b>118.0 ล้านบาท</b> (ปกติเฉลี่ย ~47 ล้านบาท/เดือน คือสูงขึ้น ~2.5 เท่า) ตามรายงานการเงินของ ทกท. เชื่อมโยงกับช่วงตู้ค้างสูงผิดปกติในเดือน ม.ค.2569 ก่อนหน้า (ห่างกัน 1 เดือน) — รูปแบบเดียวกันถูกพบซ้ำอีกครั้งช่วง เม.ย.→พ.ค.2569 จุดนี้สนับสนุนว่าความเชื่อมโยง "ตู้ค้างนาน → ซ่อมเพิ่ม" มีอยู่จริงในบางช่วง แม้แนวโน้มรวม 8 เดือนจะลดลงก็ตาม
+    </div>
+
+    <div class="info-box">
+      <div class="ib-title">🔗 มองรวม 3 มุม — ตู้ค้าง (1) × รายได้ (3) × ต้นทุน (4) ไปทิศทางเดียวกันหรือไม่</div>
+      <div class="chart-box" style="height:230px;"><canvas id="linkChart"></canvas></div>
+      <div class="ib-text">
+        <b>สัมพันธ์กันแค่ 2 ใน 3:</b> ตู้ค้างนาน (+10.2-10.4%) กับรายได้ค่าฝาก (+27.4% ถึง +76.5%) ไปทิศทางเดียวกันชัดเจน — สมเหตุสมผลเพราะรายได้คำนวณจากวันค้างตรงๆ ตามสูตรขั้นบันได (ดูส่วนที่ 3) แต่<b>ต้นทุนไปคนละทิศ</b>: ค่าซ่อมบำรุงและค่าพลังงานกลับ<b>ลดลง</b> (-20.3%, -2.7%) ในช่วงเวลาเดียวกันที่ตู้ค้างนานขึ้นและรายได้เพิ่มขึ้น จึง<b>ไม่สนับสนุนว่าทั้ง 3 มุมเพิ่มขึ้นไปด้วยกัน</b>ในภาพรวม — ยกเว้นจุด anomaly เฉพาะเดือน (ก.พ. และ เม.ย.→พ.ค. 2569) ที่ค่าซ่อมพุ่งขึ้นตามหลังเดือนตู้ค้างสูงผิดปกติ 1 เดือน ซึ่งบอกว่าความเชื่อมโยงอาจมีอยู่จริงแบบ lag เฉพาะช่วงที่ตู้ค้างพุ่งรุนแรง ไม่ใช่ในแนวโน้มปกติ
+      </div>
+      <div class="ib-caveat">
+        <b>ข้อจำกัด:</b> ช่วงเวลาเทียบไม่ตรงกัน 100% — ตู้ค้าง/รายได้เทียบ FY2569 (7 เดือน) กับฐาน FY2566-2567 (เฉลี่ย 3 ปี) ส่วนต้นทุนเทียบ YoY 8 เดือน (ปีก่อนหน้าเทียบปีปัจจุบัน) เพราะเป็นช่วงเวลาที่มีข้อมูลจริงของแต่ละชุดต่างกัน ไม่ใช่ period เดียวกันเป๊ะ
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">5</span><span class="sh-title">ตู้เข้า-ออกวันไหนบ้าง — Operational Pattern</span></div>
+    <div class="sh-sub">ตู้เข้าวันไหน มีโอกาสค้างนานกว่าวันอื่นไหม?</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-sub" style="font-size:12px;color:var(--text3);margin-bottom:14px;">คำนวณจาก raw data จริง 2.78 ล้านแถว (Normal segment) — ไม่ใช่ตัวเลขตัวอย่าง · Import และ Export มีพฤติกรรมต่างกันมาก จึงแยกอธิบายคนละแบบ</div>
+
+    <div class="cat-block" data-cat="import">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">Import — ตู้ออกทีละใบ มี pattern วันเข้า→วันออกจริง</div>
+      <div style="font-size:12.5px;color:var(--text3);margin-bottom:10px;">% ของตู้ Import ทั้งหมด (FY2569/ล่าสุด) แยกตาม วันที่เข้า (แถว) × วันที่ออก (คอลัมน์) · คลิกช่องเพื่อดูรายละเอียด</div>
+      <div class="pattern-row">
+        <div>
+          <div class="matrix-wrap" id="entryExitMatrix"></div>
+          <div class="dow-detail" id="matrixDetail"></div>
+        </div>
+        <div class="pattern-side">
+          <div class="callout crisis">
+            <span class="tag">รูปแบบเด่น — ตู้เข้า "เสาร์-อาทิตย์" ไปกระจุกออก "อังคาร-พุธ"</span>
+            <div class="callout-sub">ตู้ที่เข้าวันธรรมดา — ออกประมาณ 2 วันถัดไป (ปกติ):</div>
+            <ul class="callout-list">
+              <li><span class="cl-label">เข้า<b>จันทร์</b> → ออก<b>พุธ</b></span> <span class="cl-pct">4.05%</span></li>
+              <li><span class="cl-label">เข้า<b>อังคาร</b> → ออก<b>พฤหัส</b></span> <span class="cl-pct">4.39%</span></li>
+              <li><span class="cl-label">เข้า<b>พุธ</b> → ออก<b>ศุกร์</b></span> <span class="cl-pct">4.30%</span></li>
+            </ul>
+            <div class="callout-sub">ตู้ที่เข้า<b>เสาร์-อาทิตย์</b> — ไม่ออกจันทร์ตามลำดับ แต่ไปกระจุกที่อังคาร-พุธของสัปดาห์ถัดไป:</div>
+            <ul class="callout-list">
+              <li><span class="cl-label">เข้า<b>เสาร์</b> → ออก<b>อังคาร</b></span> <span class="cl-pct">4.39%</span></li>
+              <li><span class="cl-label">เข้า<b>อาทิตย์</b> → ออก<b>พุธ</b></span> <span class="cl-pct">3.85%</span></li>
+            </ul>
+            <div class="callout-conclude">→ เป็นหลักฐานตรงของ <b>"Weekend Penalty"</b>: ตู้เข้าวันหยุดมีคนดำเนินการช้ากว่าตู้เข้าวันธรรมดาจริง</div>
+          </div>
+          <div class="callout info">
+            <span class="tag">เทียบปีฐาน — รูปแบบนี้คงที่ ไม่ใช่ของใหม่</span>
+            จับคู่วันเข้า-ออกที่เด่นที่สุดในปีฐาน (เข้าเสาร์→ออกอังคาร 5.04%, เข้าอังคาร→ออกพฤหัส 4.69%, เข้าพุธ→ออกศุกร์ 4.26%) เกือบเหมือนล่าสุดทุกคู่ (ต่างกัน &lt;0.7pp) — แปลว่าตู้ค้างนานขึ้นโดยรวม (ดู Section 1) <b>ไม่ได้มาจากการเปลี่ยนรูปแบบวันเข้า-ออก</b> แต่เป็นเพราะตู้ค้างนานขึ้นในทุกรูปแบบเดิมพร้อมกัน
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-block" data-cat="export">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">Export — ตู้ออกเป็นล็อตใหญ่ตามรอบเรือ ไม่ใช่ pattern รายวัน</div>
+      <div style="font-size:12.5px;color:var(--text3);margin-bottom:10px;">99.8% ของตู้ Export "ออก" พร้อมกันเป็นล็อต (หลายร้อยใบ สแกนเวลาเดียวกันถึงวินาที) ตามรอบเรือเข้าเทียบท่า ไม่ใช่ลูกค้ามารับเองทีละใบแบบ Import</div>
+      <div class="compare-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+        <div class="cmp-card base"><div class="cc-label">ตู้ที่ออกแบบล็อต</div><div class="cc-row"><b>99.8%</b></div></div>
+        <div class="cmp-card base"><div class="cc-label">ขนาดล็อตเฉลี่ย</div><div class="cc-row"><b>~203 ตู้</b></div><div class="cc-delta" style="color:var(--text3);">มัธยฐาน 211 ตู้</div></div>
+        <div class="cmp-card base"><div class="cc-label">ล็อตใหญ่สุด (7 เดือน FY69)</div><div class="cc-row"><b>725 ตู้</b></div><div class="cc-delta" style="color:var(--text3);">30 มิ.ย.2568 (จันทร์)</div></div>
+        <div class="cmp-card base"><div class="cc-label">สัดส่วนล็อตขนาด &gt;100 ตู้</div><div class="cc-row"><b>75%</b></div></div>
+      </div>
+      <div class="chart-box" style="height:180px;max-width:640px;margin:18px auto;"><canvas id="exportBatchChart"></canvas></div>
+      <div class="callout ok">
+        <span class="tag">ไม่มีวันใดวันหนึ่งที่ "ขึ้นเรือ" บ่อยกว่าวันอื่นชัดเจน</span>
+        ปริมาณตู้ที่ออกแบบล็อตกระจายค่อนข้างสม่ำเสมอทุกวันในสัปดาห์ (12.9%-15.2% ต่อวัน ไม่มีวันไหนเด่นผิดปกติ) ต่างจาก Import ที่มี pattern วันเข้า-ออกชัดเจน — เพราะ Export ขึ้นอยู่กับ<b>ตารางเรือ</b> ไม่ใช่พฤติกรรมลูกค้ารายวัน การจะลดตู้ Export ค้างนานต้องดูที่ "รอบเรือและการจองที่ก่อนเรือมา" มากกว่าวันในสัปดาห์
+      </div>
+    </div>
+
+    <div class="cat-block" data-cat="import">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">ไม่ใช่แค่ "วันไหน" — "ช่วงเวลาไหน" ก็มีผลด้วย (Import)</div>
+      <div style="font-size:12.5px;color:var(--text3);margin-bottom:14px;"><b style="color:var(--text2);">% ของตู้ Import ทั้งหมด</b> แยกตามช่วงเวลาที่ถูกรับออกจากลาน (ล่าสุด FY2569, n=279,215 ใบ — คำนวณจาก raw data ทั้งหมด ไม่ใช่ตัวอย่าง)</div>
+
+      <div class="pattern-row">
+        <div class="chart-box" style="height:220px;margin:0;"><canvas id="hourChart"></canvas></div>
+        <div class="pattern-side">
+          <div class="callout crisis">
+            <span class="tag">เคอร์ฟิวรถบรรทุก — เห็นรอยทั้งเช้าและเย็น แต่ไม่ใช่ตัวขับเคลื่อนหลัก</span>
+            <ul class="callout-list">
+              <li><span class="cl-label">ดึก-เช้ามืด (00-05) — ช่วงที่ตู้ออกมากที่สุด</span> <span class="cl-pct">33.8%</span></li>
+              <li><span class="cl-label">เคอร์ฟิวเช้า (06-09) — แทบไม่มีตู้ออก</span> <span class="cl-pct">0.9%</span></li>
+              <li><span class="cl-label">กลางวัน (09-16) — ปกติ มากที่สุด</span> <span class="cl-pct">38.1%</span></li>
+              <li><span class="cl-label">เคอร์ฟิวเย็น (16-20) — ลดลงชัดเจน</span> <span class="cl-pct">11.1%</span></li>
+              <li><span class="cl-label">หลังเคอร์ฟิวปลด (20-24) — เด้งกลับ</span> <span class="cl-pct">16.1%</span></li>
+            </ul>
+            <div class="callout-conclude">รวมแล้ว <b>72% ของตู้ Import หลีกเคอร์ฟิวไปอยู่ช่วงดึก-เช้ามืดหรือกลางวันอยู่แล้ว</b> มีแค่ ~27% ที่ตกอยู่ในช่วงเคอร์ฟิวเย็น+หลังปลด ซึ่งเป็นกลุ่มที่ dwell เฉลี่ยขยับขึ้น (5.86→6.22 วัน ดูกราฟชั่วโมงก่อนหน้า) — เคอร์ฟิวจึง<b>มีผลจริงกับตู้ส่วนน้อย</b> ไม่ใช่สาเหตุหลักของภาพรวม</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6;">หมายเหตุ (ไม่เกี่ยวกับเคอร์ฟิว): ตัวเลข 08:00 ที่ SKILL_DwellTime_TKK.md เดิมเคยอ้างว่าผิดปกติ (dwell 7.49 วัน) ตรวจซ้ำด้วยข้อมูลครบแล้วไม่จริง เป็นค่าปกติ ~5.5 วัน เหมือนชั่วโมงข้างเคียง</div>
+    </div>
+
+    <div class="cat-block" data-cat="export">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:22px;margin-bottom:4px;">ไม่ใช่แค่ "วันไหน" — "ช่วงเวลาไหน" ก็มีผลด้วย (Export)</div>
+      <div style="font-size:12.5px;color:var(--text3);margin-bottom:14px;"><b style="color:var(--text2);">% ของตู้ Export ทั้งหมด</b> แยกตามช่วงเวลาที่ <b style="color:var(--text2);">เข้า</b>ลานด้วยรถบรรทุก (time_in — ฝั่งที่รถบรรทุกเกี่ยวข้องจริง ไม่ใช่ตอนโหลดขึ้นเรือ) ล่าสุด FY2569, n=147,001 ใบ</div>
+
+      <div class="pattern-row">
+        <div class="chart-box" style="height:220px;margin:0;"><canvas id="exportHourChart"></canvas></div>
+        <div class="pattern-side">
+          <div class="callout crisis">
+            <span class="tag">Export เห็นรอยเคอร์ฟิวชัดกว่า Import มาก</span>
+            <ul class="callout-list">
+              <li><span class="cl-label">ดึก-เช้ามืด (00-05)</span> <span class="cl-pct">24.7%</span></li>
+              <li><span class="cl-label">เคอร์ฟิวเช้า (06-09) — แทบไม่มีตู้เข้า</span> <span class="cl-pct">3.8%</span></li>
+              <li><span class="cl-label">กลางวัน (09-16)</span> <span class="cl-pct">31.5%</span></li>
+              <li><span class="cl-label">เคอร์ฟิวเย็น (16-20) — ลดลง</span> <span class="cl-pct">12.7%</span></li>
+              <li><span class="cl-label">หลังเคอร์ฟิวปลด (20-24) — พุ่งสูงสุด</span> <span class="cl-pct">27.2%</span></li>
+            </ul>
+            <div class="callout-conclude">ฝั่ง Export ช่วง "หลังเคอร์ฟิวปลด" (20-24) มีตู้เข้ามากถึง <b>27.2%</b> — มากกว่า Import เกือบ 2 เท่า (16.1%) เพราะผู้ส่งออกมี<b>deadline เรือ</b>ต้องรีบนำตู้มาส่งทันทีที่วิ่งได้ ขณะที่ผู้รับ Import เลือกเวลาได้ยืดหยุ่นกว่า (กระจายไปดึก-เช้ามืดได้) — เป็นหลักฐาน<b>ที่ชัดกว่า</b>ฝั่ง Import ว่าเคอร์ฟิวกระทบพฤติกรรมรถบรรทุกจริง</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6;">ตรวจสอบเพิ่ม: เวลาที่ตู้ Export ถูก<b>โหลดขึ้นเรือ</b> (time_out) ไม่มี pattern แบบนี้เลย (สูงสุดช่วง 05:00-06:00, ต่ำสุดช่วง 18:00-21:00) เพราะเป็นตารางเรือ/เครน ไม่ใช่รถบรรทุก — ยืนยันว่า pattern เคอร์ฟิวที่เห็นเกิดจากฝั่ง "รถบรรทุก" เท่านั้น ไม่ใช่ความบังเอิญของเวลาทั่วไป</div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-head">
+    <div class="sh-row"><span class="sh-num">6</span><span class="sh-title">ตู้วน — จาก Import สู่ Export</span></div>
+    <div class="sh-sub">ตู้เปล่าที่เพิ่งออกจาก Import ถูกนำไปใช้ส่งออกจากท่าเดียวกันจริงแค่ไหน?</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-sub" style="font-size:12px;color:var(--text3);margin-bottom:6px;">จับคู่ <b style="color:var(--text2);">เลขตู้ (container id) เดียวกันจริง</b> ระหว่างตอนออกจากฝั่ง Import กับตอนเข้าฝั่ง Export — เลขตู้เป็น ID ตายตัวต่อกล่องจริงตามมาตรฐาน ISO 6346 ไม่ใช่การสุ่มซ้ำ จึงเป็นหลักฐานตรงของการใช้กล่องเดิมซ้ำ ไม่ใช่การอนุมานจาก pattern เฉยๆ</div>
+    <div class="panel-sub" style="font-size:11.5px;color:var(--text3);margin-bottom:18px;">วิเคราะห์จากตู้ Import-ออก 1,773,754 ใบ จับคู่กับ Export-เข้า 1,003,211 ใบ ทั่วข้อมูลจริง 2.78 ล้านแถว (ก.ค.2565-เม.ย.2569) เงื่อนไข: Export เข้าภายใน 0-21 วันหลัง Import ออก ที่ท่าเดียวกัน · เลือกคู่ที่ใกล้ที่สุดต่อตู้</div>
+
+    <div class="reposition-hero">
+      <div class="reposition-stats">
+        <div class="rp-stat"><div class="rp-val">20.7%</div><div class="rp-label">ของตู้ Import ที่ออก มีเลขตู้เดียวกันกลับมาเป็น Export ภายใน 21 วัน (กรอบตัดที่ใช้นับ ไม่ใช่จุดที่ตู้มากที่สุด — ดูกราฟด้านล่าง)</div></div>
+        <div class="rp-stat"><div class="rp-val">366,542</div><div class="rp-label">คู่ตู้ที่จับคู่ได้จริง (ทั่วทั้งช่วงข้อมูล 45 เดือน)</div></div>
+        <div class="rp-stat"><div class="rp-val">8.8 วัน</div><div class="rp-label">ระยะเวลาวนกลับมา (มัธยฐาน) — ตรงกับจุดที่มีตู้มากที่สุดจริงๆ (สัปดาห์แรก)</div></div>
+        <div class="rp-stat"><div class="rp-val">18-23%</div><div class="rp-label">อัตราเดียวกันนี้คงที่ทุกปีงบประมาณ FY2566-2569 — ไม่ใช่ปรากฏการณ์ชั่วคราว (ดูกราฟด้านล่าง)</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:20px 0 4px;">อัตราตู้วนแยกตามปีงบประมาณ — ย้อนไปถึงปีฐานด้วย</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">% ของตู้ Import ที่ออกในปีนั้น แล้วมีเลขตู้เดียวกันกลับมาเป็น Export ภายใน 21 วัน — คำนวณจาก raw data ทั้งหมดแยกตามปีงบประมาณของวันที่ตู้ออก (time_out)</div>
+    <div class="pattern-row">
+      <div class="chart-box" style="height:220px;margin:0;"><canvas id="repositionByYearChart"></canvas></div>
+      <div class="pattern-side">
+        <div class="callout info">
+          <span class="tag">มีมาตั้งแต่ปีฐานแล้ว ไม่ใช่ของใหม่</span>
+          <ul class="callout-list">
+            <li><span class="cl-label">FY2566 (ปีฐาน)</span> <span class="cl-pct">19.9%</span></li>
+            <li><span class="cl-label">FY2567 (ปีฐาน) — สูงสุดในรอบ 4 ปี</span> <span class="cl-pct">23.2%</span></li>
+            <li><span class="cl-label">FY2568</span> <span class="cl-pct">21.7%</span></li>
+            <li><span class="cl-label">FY2569 (7 เดือน)</span> <span class="cl-pct">19.1%</span></li>
+          </ul>
+          <div class="callout-conclude">อัตราตู้วนอยู่ในช่วง <b>18-23%</b> มาตลอด 4 ปีงบประมาณ ไม่มีปีไหนต่ำหรือสูงผิดปกติ — แม้แต่ปีฐาน FY2566-67 ที่ใช้เทียบเรื่อง dwell time ก็มีอัตราตู้วนเท่าๆกับปีล่าสุด (FY2567 สูงสุดด้วยซ้ำ) <span style="color:var(--text3);">(ตัวเลข FY2569 ปรับ censoring แล้ว — ตู้ที่ออกใน 21 วันสุดท้ายของข้อมูลตัดออก เพราะยังไม่มีเวลาให้เห็นคู่ที่ตรงกัน)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">21 วัน คือกรอบตัด ไม่ใช่จุดที่ตู้วนมากที่สุด</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">สัดส่วนตู้ที่จับคู่ได้ (n=366,542) แยกตามว่ากลับมาภายในสัปดาห์ไหน — เพื่อให้เห็นว่าตู้ส่วนใหญ่ไม่ได้รอจนใกล้ 21 วัน</div>
+    <div class="pattern-row">
+      <div class="chart-box" style="height:200px;margin:0;"><canvas id="repoWeekChart"></canvas></div>
+      <div class="pattern-side">
+        <div class="callout ok">
+          <span class="tag">21 วันคือ "กรอบที่ครอบคลุมพอ" ไม่ใช่ "จุดเด่น"</span>
+          <ul class="callout-list">
+            <li><span class="cl-label">สัปดาห์ 1 (วัน 0-7)</span> <span class="cl-pct">36.9%</span></li>
+            <li><span class="cl-label">สัปดาห์ 2 (วัน 8-14)</span> <span class="cl-pct">38.4%</span></li>
+            <li><span class="cl-label">สัปดาห์ 3 (วัน 15-21)</span> <span class="cl-pct">24.7%</span></li>
+          </ul>
+          <div class="callout-conclude">วันเดียวที่มีตู้มากที่สุดจริงๆคือ<b>วันที่ 6-8</b> (สัปดาห์แรก) ไม่ใช่วันที่ 21 — ภายใน 14 วัน (2 สัปดาห์) จับได้แล้ว <b>80%</b> ของตู้วนทั้งหมด เหลือแค่ 20% ที่ต้องรอจนถึงสัปดาห์ที่ 3 เราเลือก 21 วันเป็นกรอบตัดเพื่อให้ครอบคลุมส่วนหางนี้ด้วย ไม่ใช่เพราะ 21 วันเป็นจุดที่ตู้วนมากที่สุด</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">เปรียบเทียบวันในสัปดาห์ — ตู้ที่จับคู่ได้เท่านั้น (n=366,542)</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">วันที่ตู้ <span style="color:#3b82f6;">ออกจาก Import</span> เทียบกับวันที่ตู้เดียวกัน <span style="color:#f59e0b;">เข้า Export</span></div>
+    <div class="chart-box" style="height:280px;"><canvas id="repositionDowChart"></canvas></div>
+
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">คู่วันที่เจอบ่อยที่สุด</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">วันออก Import × วันเข้า Export มีคู่ที่เป็นไปได้ทั้งหมด <b style="color:var(--text2);">7×7 = 49 คู่</b> แต่ละ % ด้านล่างคำนวณจากฐานเดียวกันเสมอคือตู้ที่จับคู่ได้ทั้งหมด <b style="color:var(--text2);">366,542 ตู้</b> — ถ้าตู้กระจายเท่ากันทุกคู่ (ไม่มี pattern เลย) แต่ละคู่จะได้แค่ <b style="color:var(--text2);">100% ÷ 49 = 2.04%</b> เส้นประในแถบด้านล่างคือจุดนี้ ใช้เทียบว่าคู่นั้นเด่นกว่าค่าเฉลี่ยกี่เท่า</div>
+    <div class="combo-legend"><span style="display:inline-block;width:14px;height:0;border-top:1px dashed rgba(255,255,255,.5);"></span> เส้นประ = ค่าเฉลี่ยถ้ากระจายเท่ากันทุกคู่ (2.04%)</div>
+    <div class="combo-list" id="comboList"></div>
+    <div style="font-size:11.5px;color:var(--text3);margin:8px 0 0;">รวม Top 5 ที่แสดงด้านบน = 18.6% ของตู้ทั้งหมด (Top 10 = 35.8%) — ที่เหลืออีก 39 คู่ กระจายกันอยู่ในอีก ~64% ที่เหลือ เฉลี่ยคู่ละไม่ถึง 2%</div>
+
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:24px 0 4px;">ระยะเวลาที่วนกลับมา (วัน)</div>
+    <div class="chart-box" style="height:240px;"><canvas id="gapDaysChart"></canvas></div>
+
+    <div class="info-box">
+      <div class="ib-title">💡 ความเชื่อมโยงที่เจอ — สรุปสำหรับผู้บริหาร</div>
+      <div class="ib-text">
+        1 ใน 5 ของตู้ Import ที่ปล่อยออกจากท่า ถูกนำมาใช้ส่งออกจากท่าเดียวกันซ้ำภายในไม่ถึง 3 สัปดาห์ — ตัวเลขนี้<b>คงที่ตลอด 45 เดือน</b> ไม่ใช่เหตุการณ์ผิดปกติช่วงใดช่วงหนึ่ง สะท้อนว่าผู้ประกอบการขนส่ง/เจ้าของตู้มีการ<b>บริหารตู้เปล่าอย่างเป็นระบบ</b> เพื่อลดต้นทุนเที่ยวรถเปล่า (empty-leg) และอาจรวมถึงค่าเช่าตู้ (container leasing cost) ไปด้วย<br><br>
+        รูปแบบวันที่เจอบ่อยสุดคือ <b>ตู้ออก Import วันพุธ/อังคาร แล้วกลับเข้ามาเป็น Export วันศุกร์</b> — สอดคล้องกับจังหวะที่ผู้ส่งออกใช้เวลา 2-3 วันบรรจุสินค้าก่อนนำมาที่ท่าในช่วงปลายสัปดาห์ ส่วนตู้ที่ใช้เวลานานกว่านั้น (ส่วนใหญ่ 7-21 วัน) น่าจะถูกพักไว้รอคำสั่งซื้อหรือจองพื้นที่เรือก่อนนำมาใช้ใหม่
+      </div>
+      <div class="ib-caveat">
+        <b>ข้อจำกัด:</b> การจับคู่นี้ยืนยันแค่ว่า "เลขตู้เดียวกันออก Import แล้วกลับมาเป็น Export ในกรอบเวลานี้" — ไม่ได้พิสูจน์ว่าเป็น "รถบรรทุกคันเดียวกัน" หรือ "ผู้ประกอบการรายเดียวกัน" ดำเนินการ (ไม่มีข้อมูลผู้ขนส่ง/ทะเบียนรถในชุดข้อมูลนี้) สัดส่วน 79.3% ที่เหลือคือตู้ที่ไม่พบการวนกลับมาใช้ที่ท่านี้ภายใน 21 วัน อาจถูกส่งไปใช้ที่ท่า/เมืองอื่น หรือพักนานกว่า 21 วัน
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="fcat">แหล่งข้อมูล</span>
+    Section 1-3: ข้อมูล Dwell Time 2.78 ล้านแถว (Google Drive, ก.ค.2565-เม.ย.2569) ตามที่ใช้ใน <code>Dwell_Time_Dashboard_2567-2569.html</code> และ <code>dwell_dashboard_data_v2.json</code><br>
+    Section 4: <code>Financial Dashboard repo/BKP_Workspace.html</code> และ <code>Report_ทกท_2569-05.html</code> (Power BI GL export, FY2568-2569 8 เดือน)<br>
+    Section 5: คำนวณใหม่จาก raw Excel ต้นทาง 5 ไฟล์ (2.78 ล้านแถว) ตามนิยาม segmentation ใน <code>METHODOLOGY_DwellTime.md</code><br>
+    Section 6: จับคู่เลขตู้ (container id) จริงระหว่าง Import-ออก กับ Export-เข้า จาก raw Excel ต้นทางเดียวกัน 2.78 ล้านแถว — เงื่อนไข Export เข้าภายใน 0-21 วันหลัง Import ออก เลือกคู่ที่ใกล้ที่สุดต่อตู้
+
+    <span class="fcat">ข้อจำกัด/Caveat</span>
+    • รายได้ที่อ้างถึงเป็นค่าประมาณจากอัตราค่าภาระตามหนังสือ พ.ศ.2543 ไม่ใช่รายได้จริงที่บันทึกบัญชี (ดูกราฟเชื่อมโยงรายได้จริงในไฟล์ dashboard ฉบับเต็ม)<br>
+    • FY2569 มีข้อมูลเพียง 7-8 เดือน (ขึ้นกับชุดข้อมูล) การ extrapolate เป็นรายปีเป็นค่าประมาณ ไม่ใช่ตัวเลขจริงทั้งปี<br>
+    • ค่าซ่อมบำรุง/พลังงานใน Section 4 ยังไม่รวมค่าแรงงานลานและค่าทำความสะอาด ซึ่งไม่มีข้อมูลแยกให้วิเคราะห์ ณ ขณะนี้<br>
+    • ตัวเลข "5.3 เท่า" (Export ค้าง&gt;30วัน) คำนวณจากตาราง distribution matrix จริงในไฟล์ dashboard ฉบับเต็ม โดยเทียบฐานถ่วงน้ำหนักตามจำนวนตู้ปี 2566+2567
+
+    <span class="fcat">อัปเดตล่าสุด</span>
+    20 มิถุนายน 2569 · ดูรายละเอียดเชิงลึกทุก panel ได้ใน <code>Dwell_Time_Dashboard_2567-2569.html</code>
+  </footer>
+
+</div>
+
+<script>
+const TREND = [{"ym": "2022-07", "imp_mean": 5.34, "exp_mean": 6.16}, {"ym": "2022-08", "imp_mean": 5.47, "exp_mean": 5.17}, {"ym": "2022-09", "imp_mean": 5.07, "exp_mean": 6.08}, {"ym": "2022-10", "imp_mean": 5.51, "exp_mean": 5.34}, {"ym": "2022-11", "imp_mean": 5.12, "exp_mean": 5.93}, {"ym": "2022-12", "imp_mean": 5.23, "exp_mean": 5.33}, {"ym": "2023-01", "imp_mean": 5.4, "exp_mean": 5.64}, {"ym": "2023-02", "imp_mean": 5.05, "exp_mean": 4.37}, {"ym": "2023-03", "imp_mean": 4.73, "exp_mean": 4.73}, {"ym": "2023-04", "imp_mean": 5.61, "exp_mean": 4.8}, {"ym": "2023-05", "imp_mean": 5.4, "exp_mean": 4.72}, {"ym": "2023-06", "imp_mean": 5.13, "exp_mean": 5.04, "exp_estimated": true}, {"ym": "2023-07", "imp_mean": 4.84, "exp_mean": 5.36}, {"ym": "2023-08", "imp_mean": 5.23, "exp_mean": 5.41}, {"ym": "2023-09", "imp_mean": 4.79, "exp_mean": 5.77}, {"ym": "2023-10", "imp_mean": 4.9, "exp_mean": 5.15}, {"ym": "2023-11", "imp_mean": 4.89, "exp_mean": 4.62}, {"ym": "2023-12", "imp_mean": 5.19, "exp_mean": 5.13}, {"ym": "2024-01", "imp_mean": 5.44, "exp_mean": 5.98}, {"ym": "2024-02", "imp_mean": 4.94, "exp_mean": 5.43, "imp_estimated": true, "exp_estimated": true}, {"ym": "2024-03", "imp_mean": 4.43, "exp_mean": 4.87}, {"ym": "2024-04", "imp_mean": 5.45, "exp_mean": 5.96}, {"ym": "2024-05", "imp_mean": 5.38, "exp_mean": 6.25}, {"ym": "2024-06", "imp_mean": 5.22, "exp_mean": 5.87}, {"ym": "2024-07", "imp_mean": 5.19, "exp_mean": 5.67}, {"ym": "2024-08", "imp_mean": 5.49, "exp_mean": 5.75}, {"ym": "2024-09", "imp_mean": 5.13, "exp_mean": 5.69}, {"ym": "2024-10", "imp_mean": 5.43, "exp_mean": 5.76}, {"ym": "2024-11", "imp_mean": 4.89, "exp_mean": 6.22}, {"ym": "2024-12", "imp_mean": 5.33, "exp_mean": 6.57}, {"ym": "2025-01", "imp_mean": 6.17, "exp_mean": 6.33}, {"ym": "2025-02", "imp_mean": 5.87, "exp_mean": 5.59}, {"ym": "2025-03", "imp_mean": 4.99, "exp_mean": 5.72}, {"ym": "2025-04", "imp_mean": 6.33, "exp_mean": 6.14}, {"ym": "2025-05", "imp_mean": 6.0, "exp_mean": 6.48}, {"ym": "2025-06", "imp_mean": 5.79, "exp_mean": 6.37}, {"ym": "2025-07", "imp_mean": 6.12, "exp_mean": 6.33}, {"ym": "2025-08", "imp_mean": 5.89, "exp_mean": 7.1}, {"ym": "2025-09", "imp_mean": 5.38, "exp_mean": 6.7}, {"ym": "2025-10", "imp_mean": 5.64, "exp_mean": 6.2}, {"ym": "2025-11", "imp_mean": 5.24, "exp_mean": 5.96}, {"ym": "2025-12", "imp_mean": 5.47, "exp_mean": 6.18}, {"ym": "2026-01", "imp_mean": 6.37, "exp_mean": 6.28}, {"ym": "2026-02", "imp_mean": 5.39, "exp_mean": 5.78}, {"ym": "2026-03", "imp_mean": 5.69, "exp_mean": 5.32}, {"ym": "2026-04", "imp_mean": 6.05, "exp_mean": 5.82}];
+
+const FY = {
+  import: {base:{mean:5.18,median:4.0}, fy68:{mean:5.70,median:4.0,delta:0.52,pct:10.0}, fy69:{mean:5.72,median:4.0,delta:0.54,pct:10.4}},
+  export: {base:{mean:5.37,median:5.0}, fy68:{mean:6.28,median:6.0,delta:0.91,pct:16.9}, fy69:{mean:5.92,median:5.0,delta:0.55,pct:10.2}}
+};
+
+const DIST = {
+  buckets: ['0-1','2-3','4-5','6-7','8-10','11-15','16-20','21-30','>30'],
+  import: {
+    base:[15.18,34.48,23.41,11.28,8.19,5.15,1.40,0.65,0.35],
+    fy68:[8.4,31.8,25.9,13.5,10.0,7.2,1.9,1.1,0.0],
+    fy69:[14.3,31.3,22.3,11.9,9.9,6.7,1.9,1.2,0.3]
+  },
+  export: {
+    base:[1.5,22.17,38.3,22.68,10.69,3.8,0.5,0.15,0.15],
+    fy68:[0.3,12.2,33.0,28.5,18.5,6.2,1.0,0.2,0.0],
+    fy69:[1.2,17.6,35.3,23.7,14.3,5.7,1.2,0.3,0.8]
+  }
+};
+const BUCKET_COLORS = ['#10b981','#34d399','#fbbf24','#f59e0b','#fb923c','#ef4444','#dc2626','#b91c1c','#7f1d1d'];
+
+const DOW_DAYS = ['จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์','อาทิตย์'];
+const DOW_DAYS_SHORT = ['จ.','อ.','พ.','พฤ.','ศ.','ส.','อา.'];
+const COUNTS = {
+  import: {base:888587, fy68:480106, fy69:279215},
+  export: {base:499604, fy68:266356, fy69:147001}
+};
+// Import: entry-day (row) x exit-day (col) %, recent period (Normal segment, exit batch-filtered), n=558,328
+const ENTRY_EXIT_RECENT = [
+  [0.94,1.58,4.05,3.61,2.63,1.09,0.34],
+  [1.29,1.16,1.89,4.39,3.39,1.45,0.40],
+  [1.78,1.60,1.21,2.01,4.30,1.93,0.54],
+  [2.58,2.50,1.84,1.27,2.04,2.43,0.68],
+  [3.10,3.49,2.58,1.82,1.22,0.76,0.53],
+  [2.84,4.39,3.85,2.70,1.84,0.76,0.28],
+  [1.26,3.66,3.85,2.92,2.07,0.86,0.25]
+];
+// Export: batch-exit volume share by day-of-week, recent period (n=1,661 batch events, 337,849 containers)
+const EXPORT_BATCH_DOW = [14.9,12.9,15.2,13.7,14.4,13.7,15.1];
+
+function buildCompareCards(){
+  const el = document.getElementById('dwellCompareImport');
+  ['import','export'].forEach(cat=>{
+    const f = FY[cat];
+    const label = cat==='import' ? 'นำเข้า (Import)' : 'ส่งออก (Export)';
+    [['base','ปีฐาน FY2566-2567',f.base,null],['fy68','FY2568',f.fy68,f.base],['fy69','FY2569 (7m)',f.fy69,f.base]].forEach(([key,lbl,vals,base])=>{
+      const card = document.createElement('div');
+      card.className = 'cmp-card cat-block ' + (key==='base'?'base':'now');
+      card.dataset.cat = cat;
+      let deltaHtml = '';
+      if(base){
+        deltaHtml = `<div class="cc-delta">+${vals.delta}d (+${vals.pct}%) vs ฐาน</div>`;
+      }
+      card.innerHTML = `<div class="cc-label">${lbl}${key==='base'?'':' · '+label.split(' ')[0]}</div>
+        <div class="cc-row"><span>${label}</span><b>${vals.mean.toFixed(2)}d</b></div>
+        ${deltaHtml}`;
+      el.appendChild(card);
+    });
+  });
+}
+buildCompareCards();
+
+const MONTH_TH = {'01':'ม.ค.','02':'ก.พ.','03':'มี.ค.','04':'เม.ย.','05':'พ.ค.','06':'มิ.ย.','07':'ก.ค.','08':'ส.ค.','09':'ก.ย.','10':'ต.ค.','11':'พ.ย.','12':'ธ.ค.'};
+function thaiMonthLabel(ym){
+  const [y,m] = ym.split('-');
+  return MONTH_TH[m] + ' ' + (parseInt(y)+543).toString().slice(-2);
+}
+function isEstimatedSegment(ctx, key){
+  const p0 = TREND[ctx.p0DataIndex], p1 = TREND[ctx.p1DataIndex];
+  return !!(p0 && p0[key]) || !!(p1 && p1[key]);
+}
+
+const trendChart = new Chart(document.getElementById('dwellTrendChart'), {
+  type:'line',
+  data:{
+    labels: TREND.map(d=>d.ym),
+    datasets:[
+      {label:'Import mean', data:TREND.map(d=>d.imp_mean), borderColor:'#3b82f6', backgroundColor:'transparent', tension:.25, pointRadius:(ctx)=>TREND[ctx.dataIndex]&&TREND[ctx.dataIndex].imp_estimated?3:0, pointBackgroundColor:'#ef4444', borderWidth:2, _cat:'import',
+        segment:{ borderColor: (ctx)=> isEstimatedSegment(ctx,'imp_estimated') ? '#ef4444' : '#3b82f6', borderDash: (ctx)=> isEstimatedSegment(ctx,'imp_estimated') ? [6,4] : undefined }
+      },
+      {label:'Export mean', data:TREND.map(d=>d.exp_mean), borderColor:'#f59e0b', backgroundColor:'transparent', tension:.25, pointRadius:(ctx)=>TREND[ctx.dataIndex]&&TREND[ctx.dataIndex].exp_estimated?3:0, pointBackgroundColor:'#ef4444', borderWidth:2, _cat:'export',
+        segment:{ borderColor: (ctx)=> isEstimatedSegment(ctx,'exp_estimated') ? '#ef4444' : '#f59e0b', borderDash: (ctx)=> isEstimatedSegment(ctx,'exp_estimated') ? [6,4] : undefined }
+      },
+      {label:'Import baseline 5.18d', data:TREND.map(()=>5.18), borderColor:'rgba(59,130,246,.35)', borderDash:[4,4], pointRadius:0, borderWidth:1, _cat:'import'},
+      {label:'Export baseline 5.37d', data:TREND.map(()=>5.37), borderColor:'rgba(245,158,11,.35)', borderDash:[4,4], pointRadius:0, borderWidth:1, _cat:'export'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#b4cce8',font:{size:11}}},
+      tooltip:{
+        callbacks:{
+          title: (items)=> thaiMonthLabel(items[0].label),
+          label: (item)=>{
+            const v = item.parsed.y;
+            if(v===null || v===undefined) return item.dataset.label + ': ไม่มีข้อมูล';
+            const base = item.dataset.label.includes('Import') ? 5.18 : 5.37;
+            const isBaseline = item.dataset.label.includes('baseline');
+            if(isBaseline) return item.dataset.label;
+            const diff = (v-base);
+            const sign = diff>=0?'+':'';
+            const row = TREND[item.dataIndex];
+            const estKey = item.dataset.label.includes('Import') ? 'imp_estimated' : 'exp_estimated';
+            const estTag = row && row[estKey] ? ' ⚠️ ค่าประมาณ (interpolate) ไม่ใช่ข้อมูลจริง — เดือนนี้ข้อมูลขาด/ไม่ครบ' : '';
+            return `${item.dataset.label}: ${v.toFixed(2)}d (${sign}${diff.toFixed(2)}d vs ฐาน)${estTag}`;
+          }
+        }
+      }
+    },
+    scales:{x:{ticks:{color:'#5a7a9a',font:{size:10},maxTicksLimit:12}},y:{ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}}}
+  }
+});
+
+function buildDistChart(canvasId, cat, title){
+  const d = DIST[cat];
+  const counts = COUNTS[cat];
+  const periodKeys = ['base','fy68','fy69'];
+  new Chart(document.getElementById(canvasId), {
+    type:'bar',
+    data:{
+      labels:['ปีฐาน FY65-67','FY2568','FY2569 (7m)'],
+      datasets: DIST.buckets.map((b,i)=>({
+        label:b+'d',
+        data:[d.base[i], d.fy68[i], d.fy69[i]],
+        backgroundColor: BUCKET_COLORS[i]
+      }))
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#b4cce8',font:{size:10},boxWidth:12}},
+        title:{display:true,text:title,color:'#edf2fc',font:{size:13}},
+        tooltip:{
+          callbacks:{
+            label: (item)=>{
+              const pct = item.parsed.x;
+              const n = counts[periodKeys[item.dataIndex]];
+              const approxCount = Math.round(pct/100*n).toLocaleString('th-TH');
+              return `${item.dataset.label}: ${pct}% (~${approxCount} ตู้)`;
+            }
+          }
+        }
+      },
+      scales:{x:{stacked:true,max:100,ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}},y:{stacked:true,ticks:{color:'#b4cce8'}}}
+    }
+  });
+}
+buildDistChart('distChartImport','import','Import — สัดส่วนตู้ตามช่วงวันค้าง (%)');
+buildDistChart('distChartExport','export','Export — สัดส่วนตู้ตามช่วงวันค้าง (%)');
+
+function matrixColor(val, lo, hi){
+  const t = Math.max(0, Math.min(1, (val-lo)/(hi-lo)));
+  let r,g,b;
+  if(t<0.5){ const u=t/0.5; r=45+u*(205-45); g=184+u*(184-184); b=146+u*(32-146); }
+  else { const u=(t-0.5)/0.5; r=205+u*(216-205); g=184+u*(64-184); b=32+u*(64-32); }
+  return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+}
+
+function buildEntryExitMatrix(){
+  const flat = ENTRY_EXIT_RECENT.flat();
+  const lo = Math.min(...flat), hi = Math.max(...flat);
+  let html = '<table class="matrix-table"><tr><th></th>' + DOW_DAYS_SHORT.map(d=>`<th>ออก ${d}</th>`).join('') + '</tr>';
+  ENTRY_EXIT_RECENT.forEach((row,ei)=>{
+    html += `<tr><th class="row-h">เข้า ${DOW_DAYS_SHORT[ei]}</th>` + row.map((v,xi)=>{
+      const bg = matrixColor(v, lo, hi);
+      return `<td data-e="${ei}" data-x="${xi}" style="background:${bg};color:#0a1019;">${v.toFixed(2)}</td>`;
+    }).join('') + '</tr>';
+  });
+  html += '</table>';
+  document.getElementById('entryExitMatrix').innerHTML = html;
+
+  document.querySelectorAll('#entryExitMatrix td').forEach(td=>{
+    td.addEventListener('click', ()=>{
+      document.querySelectorAll('#entryExitMatrix td.selected').forEach(c=>c.classList.remove('selected'));
+      td.classList.add('selected');
+      const ei = +td.dataset.e, xi = +td.dataset.x;
+      const v = ENTRY_EXIT_RECENT[ei][xi];
+      const detail = document.getElementById('matrixDetail');
+      detail.style.display = 'block';
+      detail.innerHTML = `<div class="dd-title">เข้า${DOW_DAYS[ei]} → ออก${DOW_DAYS[xi]}</div>
+        <b>${v.toFixed(2)}%</b> ของตู้ Import ทั้งหมด (ล่าสุด) เข้าลานวัน${DOW_DAYS[ei]} แล้วออกวัน${DOW_DAYS[xi]} (ระยะห่าง ${((xi-ei+7)%7)} วันตามปฏิทิน)<br>
+        คิดเป็นตู้ประมาณ <b>${Math.round(v/100*COUNTS.import.fy69).toLocaleString('th-TH')} ใบ</b> ในช่วง 7 เดือนนี้`;
+      detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+  });
+}
+buildEntryExitMatrix();
+
+// % ของตู้ที่ "ออก" (Import time_out) / "เข้า" (Export time_in) แยกตาม 5 ช่วงเวลา — คำนวณจาก raw Excel จริงทั้งหมด (279,215 / 147,001 ใบ ตรงกับฐานที่ใช้ทั้งไฟล์)
+// แบ่งช่วงตามเรื่องเคอร์ฟิวรถบรรทุก 10 ล้อขึ้นไป กรอบทั่วไปของ กทม. (06:00-09:00, 16:00-20:00)
+const HOUR_PHASE_LABELS = ['ดึก-เช้ามืด\n00-05','เคอร์ฟิวเช้า\n06-09','กลางวัน\n09-16','เคอร์ฟิวเย็น\n16-20','หลังเคอร์ฟิวปลด\n20-24'];
+const HOUR_PHASE_COLORS = ['#14b8a6','#ef4444','#14b8a6','#f59e0b','#fb923c'];
+const IMPORT_HOUR_PCT = [33.75, 0.93, 38.09, 11.14, 16.10]; // Import time_out (รับตู้ออกด้วยรถบรรทุก)
+const EXPORT_HOUR_PCT = [24.69, 3.84, 31.50, 12.72, 27.24]; // Export time_in (นำตู้เข้าด้วยรถบรรทุก)
+
+function buildHourPctChart(canvasId, values, label){
+  new Chart(document.getElementById(canvasId), {
+    type:'bar',
+    data:{
+      labels: HOUR_PHASE_LABELS,
+      datasets:[{label, data: values, backgroundColor: HOUR_PHASE_COLORS, borderRadius:6}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ทั้งหมด`}}
+      },
+      scales:{
+        x:{ticks:{color:'#b4cce8',font:{size:10}}},
+        y:{min:0,max:42,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+buildHourPctChart('hourChart', IMPORT_HOUR_PCT, '% ของตู้ Import ที่ออก');
+buildHourPctChart('exportHourChart', EXPORT_HOUR_PCT, '% ของตู้ Export ที่เข้า');
+
+function buildExportBatchChart(){
+  new Chart(document.getElementById('exportBatchChart'), {
+    type:'bar',
+    data:{
+      labels: DOW_DAYS,
+      datasets:[{label:'% ของปริมาณตู้ที่ออกแบบล็อต', data: EXPORT_BATCH_DOW, backgroundColor:'#f59e0b'}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        title:{display:true,text:'Export — ปริมาณตู้ที่ออกแบบล็อต แยกตามวันในสัปดาห์ (%) · ใกล้เคียงกันทุกวัน',color:'#edf2fc',font:{size:12.5}},
+        tooltip:{callbacks:{label:(item)=>`${item.label}: ${item.parsed.y}% ของตู้ที่ออกแบบล็อตทั้งหมด`}}
+      },
+      scales:{
+        x:{ticks:{color:'#b4cce8'}},
+        y:{min:0,max:18,ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+buildExportBatchChart();
+
+function buildLinkChart(){
+  const labels = ['ตู้ค้าง — Import','ตู้ค้าง — Export','รายได้ค่าฝาก — Import','รายได้ค่าฝาก — Export','ค่าซ่อมบำรุง','ค่าพลังงาน/น้ำมัน'];
+  const values = [10.4, 10.2, 27.4, 76.5, -20.3, -2.7];
+  const colors = ['#f59e0b','#f59e0b','#14b8a6','#14b8a6','#10b981','#10b981'];
+  new Chart(document.getElementById('linkChart'), {
+    type:'bar',
+    data:{ labels, datasets:[{label:'% เปลี่ยนแปลง', data: values, backgroundColor: colors, borderRadius:4}] },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        title:{display:true,text:'% เปลี่ยนแปลง — ตู้ค้าง/รายได้ (FY69 7m vs ฐาน) vs ต้นทุน (8m YoY)',color:'#edf2fc',font:{size:12}},
+        tooltip:{callbacks:{label:(item)=>`${item.parsed.x>0?'+':''}${item.parsed.x}%`}}
+      },
+      scales:{
+        x:{ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.06)'}},
+        y:{ticks:{color:'#b4cce8',font:{size:11}}}
+      }
+    }
+  });
+}
+buildLinkChart();
+
+// Container-reposition match (real container id join, Import-exit -> Export-entry within 21 days), n=366,542 matched pairs
+const REPOSITION = {
+  imp_exit_dow: [13.5,18.7,19.9,19.0,17.8,8.5,2.7],
+  exp_entry_dow: [11.0,16.4,18.1,17.1,18.7,13.8,4.9],
+  gap_buckets: ['0-1','1-2','2-3','3-5','5-7','7-10','10-14','14-21'],
+  gap_pct: [0.35,3.70,6.17,13.10,13.59,19.66,18.75,24.68],
+  top_combos: [
+    {from:'พุธ', to:'ศุกร์', pct:4.1},
+    {from:'อังคาร', to:'ศุกร์', pct:3.9},
+    {from:'พฤหัส', to:'พุธ', pct:3.6},
+    {from:'ศุกร์', to:'พุธ', pct:3.5},
+    {from:'อังคาร', to:'พฤหัส', pct:3.5}
+  ]
+};
+
+// อัตราตู้วน (Import-ออก → Export-เข้า เลขตู้เดียวกัน ภายใน 21 วัน) แยกตามปีงบประมาณ — คำนวณจาก raw data ทั้งหมด 2.78 ล้านแถวจริง ไม่ใช่ตัวอย่าง
+// FY2569 ปรับ censoring (ตัด 21 วันสุดท้ายของข้อมูลออกจากฐาน เพราะตู้ที่ออกใกล้ปลายข้อมูลยังไม่มีเวลาให้เห็นคู่ที่ตรงกัน)
+const REPO_YEAR_LABELS = ['FY2566\n(ปีฐาน)','FY2567\n(ปีฐาน)','FY2568','FY2569\n(7 เดือน)'];
+const REPO_YEAR_PCT = [19.9, 23.2, 21.7, 19.1];
+const REPO_YEAR_COLORS = ['#6b7280','#6b7280','#14b8a6','#2dd4bf'];
+
+function buildRepositionByYearChart(){
+  new Chart(document.getElementById('repositionByYearChart'), {
+    type:'bar',
+    data:{
+      labels: REPO_YEAR_LABELS,
+      datasets:[{label:'% ตู้วน', data: REPO_YEAR_PCT, backgroundColor: REPO_YEAR_COLORS, borderRadius:6}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ Import ที่ออกปีนั้น`}}
+      },
+      scales:{
+        x:{ticks:{color:'#b4cce8',font:{size:10.5}}},
+        y:{min:0,max:28,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+buildRepositionByYearChart();
+
+// สัดส่วนตู้วน (จาก 366,542 คู่ที่จับคู่ได้) แยกตามสัปดาห์ที่กลับมา — คำนวณจาก gap_days จริงทุกคู่ ไม่ใช่ตัวอย่าง
+// แสดงว่าจุดสูงสุดจริงคือสัปดาห์แรก (วัน 6-8) ไม่ใช่วันที่ 21 ซึ่งเป็นแค่กรอบตัดที่เลือกใช้
+const REPO_WEEK_LABELS = ['สัปดาห์ 1\n(วัน 0-7)','สัปดาห์ 2\n(วัน 8-14)','สัปดาห์ 3\n(วัน 15-21)'];
+const REPO_WEEK_PCT = [36.9, 38.4, 24.7];
+const REPO_WEEK_COLORS = ['#14b8a6','#2dd4bf','#6b7280'];
+
+function buildRepoWeekChart(){
+  new Chart(document.getElementById('repoWeekChart'), {
+    type:'bar',
+    data:{
+      labels: REPO_WEEK_LABELS,
+      datasets:[{label:'% ของตู้วนทั้งหมด', data: REPO_WEEK_PCT, backgroundColor: REPO_WEEK_COLORS, borderRadius:6}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:(item)=>`${item.parsed.y.toFixed(1)}% ของตู้ที่วนกลับมาทั้งหมด (366,542 คู่)`}}
+      },
+      scales:{
+        x:{ticks:{color:'#b4cce8',font:{size:11}}},
+        y:{min:0,max:45,ticks:{color:'#5a7a9a',callback:(v)=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+}
+buildRepoWeekChart();
+
+function buildRepositionDowChart(){
+  new Chart(document.getElementById('repositionDowChart'), {
+    type:'bar',
+    data:{
+      labels: DOW_DAYS,
+      datasets:[
+        {label:'ออก Import', data: REPOSITION.imp_exit_dow, backgroundColor:'#3b82f6'},
+        {label:'เข้า Export', data: REPOSITION.exp_entry_dow, backgroundColor:'#f59e0b'}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#b4cce8',font:{size:11}}},
+        tooltip:{callbacks:{label:(item)=>`${item.dataset.label} วัน${item.label}: ${item.parsed.y}% ของตู้ที่จับคู่ได้`}}
+      },
+      scales:{x:{ticks:{color:'#b4cce8'}}, y:{ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'},title:{display:true,text:'% ของตู้ที่จับคู่ได้',color:'#5a7a9a',font:{size:11}}}}
+    }
+  });
+}
+buildRepositionDowChart();
+
+function buildGapDaysChart(){
+  new Chart(document.getElementById('gapDaysChart'), {
+    type:'bar',
+    data:{
+      labels: REPOSITION.gap_buckets.map(b=>b+' วัน'),
+      datasets:[{label:'% ของตู้ที่จับคู่ได้', data: REPOSITION.gap_pct, backgroundColor:'#14b8a6'}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:(item)=>`ใช้เวลาวนกลับมา ${item.label}: ${item.parsed.y}%`}}
+      },
+      scales:{x:{ticks:{color:'#b4cce8'}}, y:{ticks:{color:'#5a7a9a'},grid:{color:'rgba(255,255,255,.04)'}}}
+    }
+  });
+}
+buildGapDaysChart();
+
+const COMBO_AVG_PCT = 100/49; // 2.04% — ถ้าตู้กระจายเท่ากันทุกคู่ใน 49 คู่ที่เป็นไปได้
+function buildComboList(){
+  const el = document.getElementById('comboList');
+  const trackMax = 5; // headroom เหนือค่าสูงสุด 4.1% เพื่อให้เห็นเส้นเฉลี่ยชัด
+  const avgLeft = (COMBO_AVG_PCT/trackMax*100).toFixed(1);
+  el.innerHTML = REPOSITION.top_combos.map((c,i)=>`
+    <div class="combo-row">
+      <span class="combo-rank">${i+1}</span>
+      <div style="flex:1;">
+        <div class="combo-path">ออก Import <b>${c.from}</b> → เข้า Export <b>${c.to}</b></div>
+        <div class="combo-track">
+          <div class="combo-bar" style="width:${(c.pct/trackMax*100).toFixed(1)}%;"></div>
+          <div class="combo-avg-line" style="left:${avgLeft}%;"></div>
+        </div>
+      </div>
+      <span class="combo-pct">${c.pct}% <span class="combo-mult">(×${(c.pct/COMBO_AVG_PCT).toFixed(1)})</span></span>
+    </div>
+  `).join('');
+}
+buildComboList();
+
+function setCategory(cat){
+  document.querySelectorAll('#catToggle .toggle-btn').forEach(b=>b.classList.toggle('active', b.dataset.cat===cat));
+  document.querySelectorAll('.cat-block').forEach(block=>{
+    const show = cat==='all' || block.dataset.cat===cat;
+    block.classList.toggle('dimmed', !show);
+  });
+  trendChart.data.datasets.forEach((ds,i)=>{
+    trendChart.setDatasetVisibility(i, cat==='all' || ds._cat===cat);
+  });
+  trendChart.update();
+}
+document.querySelectorAll('#catToggle .toggle-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> setCategory(btn.dataset.cat));
+});
+</script>
+</body>
+</html>

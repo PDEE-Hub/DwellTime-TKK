@@ -1,0 +1,212 @@
+═══════════════════════════════════════════════════════════════════════════════
+🎯 INFOGRAPHIC-DASHBOARD PROJECT SUMMARY
+Dwell Time × Revenue Linkage — Why ทกท. Revenue Grew
+═══════════════════════════════════════════════════════════════════════════════
+
+PROJECT OBJECTIVE:
+─────────────────
+Create 1 standalone HTML infographic that explains:
+  ✓ Why ทกท. (Bangkok Port) revenue increased from FY2566-2569
+  ✓ It's NOT because container volume increased
+  ✓ It's because containers stay in the yard LONGER (dwell time ↑)
+  ✓ Revenue gained: ~115 ล้านบาท (7 months FY2569)
+  ✓ But operational cost impact is UNCLEAR (needs deeper analysis)
+
+KEY NUMBERS (Confirmed from Dashboard v5):
+──────────────────────────────────────────
+  Baseline (FY65-67):  Import 5.18d | Export 5.37d
+  Current (FY69):      Import 5.72d | Export 5.92d
+  Change:              +0.54d / +0.55d (+~10%)
+  
+  Export Alert:        >30d containers = 4.2× more ← CRITICAL
+  Revenue Impact:      ~115 ล้าน (7m) / ~197 ล้าน annual (estimate)
+  Cost Impact:         Unknown (hypothesis: repairs ↑ due to longer dwell)
+
+FRAMEWORK CREATED (4 FILES):
+───────────────────────────
+
+1. 📄 Infographic_DwellTime_Revenue_FRAMEWORK.md
+   Purpose: Architecture + visual layout specifications
+   Size: ~4KB
+   Use: Read first — understand big picture, layout zones
+   Status: ✅ READY
+
+2. 📄 Issue_Decomposition_Dwell_Revenue.md
+   Purpose: Detailed breakdown of 5 separate issues (NO mixing)
+   Size: ~8KB
+   Content:
+     - Issue 1️⃣: Dwell time shift (confirmation)
+     - Issue 2️⃣: Distribution shift (tail growth)
+     - Issue 3️⃣: Revenue impact (the gain)
+     - Issue 4️⃣: Cost impact (unknown — honest)
+     - Issue 5️⃣: Operational pattern (when/how)
+   Use: This is what Claude Code will build FROM
+   Status: ✅ READY
+
+3. 📄 Quick_Reference.md
+   Purpose: TL;DR + ready-to-copy prompt for Claude Code
+   Size: ~3KB
+   Content:
+     - 5 issues in 1 page each
+     - Data available vs missing
+     - Ready-to-copy Claude Code prompt
+     - Success criteria
+   Use: Quick glance before running Claude Code
+   Status: ✅ READY
+
+4. 📄 infographic_dwell_revenue_TEMPLATE.html
+   Purpose: HTML template with placeholder structure
+   Size: ~7KB
+   Content:
+     - All 5 sections already built (Import/Export comparison → Revenue → Cost → Pattern)
+     - Sample data filled in
+     - CSS styling (responsive, color-coded)
+     - Layout: responsive, mobile-friendly
+   Use: Reference for Claude Code — shows output target design
+   Status: ✅ READY (can be used as-is or modified)
+
+════════════════════════════════════════════════════════════════════════════════
+
+WORKFLOW FOR VS CODE / CLAUDE CODE:
+───────────────────────────────────
+
+Step 1: Copy framework files to VS Code workspace
+  $ cd ~/PAT-Intelligence-Hub (or wherever your workspace is)
+  $ Copy files from /home/claude/:
+    ├─ Issue_Decomposition_Dwell_Revenue.md ← MAIN INSTRUCTION
+    ├─ Quick_Reference.md ← FOR CONTEXT
+    └─ infographic_dwell_revenue_TEMPLATE.html ← REFERENCE OUTPUT
+
+Step 2: Open Claude Code terminal in VS Code
+  Ctrl+` (or View → Terminal)
+
+Step 3: Invoke PDEE-AI with prompt
+  Use prompt from Quick_Reference.md OR:
+
+  ---PROMPT START---
+  File: Issue_Decomposition_Dwell_Revenue.md (in same folder)
+  
+  Build interactive infographic HTML for: "Dwell Time × Revenue Linkage — ทกท."
+  
+  Key confirmed data:
+    • FY65-67 baseline: Import 5.18d, Export 5.37d
+    • FY69 current: Import 5.72d, Export 5.92d
+    • Change: +0.54d / +0.55d (+10%)
+    • Revenue uplift: ~115 ล้าน (7m FY2569) / ~197 ล้าน annual
+    • Export >30d: 4.2× increase
+    • Cost impact: Unknown (Hypothesis: repairs ↑)
+  
+  Output: /home/claude/infographic_dwell_revenue.html
+    • 5 sections: dwell comparison → distribution → revenue → cost → pattern
+    • Responsive (≥360px mobile)
+    • Color-coded severity (Green/Amber/Orange/Red)
+    • Tone: Business storytelling (non-technical audience)
+    • Include: Data sources, caveats, last updated date
+  
+  Reference: infographic_dwell_revenue_TEMPLATE.html (shows design target)
+  ---PROMPT END---
+
+Step 4: Claude Code builds output
+  Expected time: 30-60 minutes
+  Output file: infographic_dwell_revenue.html
+
+Step 5: Review & Test
+  ✓ Open in browser (Chrome/Safari)
+  ✓ Check mobile view (iPhone 12 size)
+  ✓ Share with 1 non-technical colleague
+    → Ask: "What do you understand in 2 minutes?"
+    → Target: "Dwell up / Revenue up / Cost unclear / Export >30d is problem"
+
+Step 6: Final Deploy
+  Copy to: /pdee-hub.github.io/dashboards/ (if for hub)
+  OR Share as standalone HTML
+
+════════════════════════════════════════════════════════════════════════════════
+
+WHAT'S INCLUDED & WHAT'S NOT:
+────────────────────────────
+
+✅ INCLUDED (Ready to use):
+  • Dwell time comparison (5.18d → 5.72d verified)
+  • Distribution shift visualization (4.2× Export >30d)
+  • Revenue impact estimate (~115 ล้าน)
+  • Cost impact frame (marked as "Unknown — hypothesis")
+  • Operational pattern context (when containers arrive/exit)
+  • Color-coded severity (Green/Amber/Orange/Red)
+  • Mobile responsive design
+  • Print-friendly CSS
+
+❓ NOT INCLUDED (Need additional data):
+  • Actual repair cost correlation (not available in Dwell dashboard)
+  • Detailed entry/exit day breakdown (may be in raw data, not extracted yet)
+  • Container size mix impact (20ft vs 40ft vs 45ft breakdown)
+  • Customs hold vs importer delay breakdown
+  • Projected cost increase scenarios
+
+📌 NOTE: Framework is designed to be EXPANDABLE
+  → As more data becomes available, sections can be updated
+  → Current state: "Honest about unknowns" (mark TBD, show hypotheses)
+
+════════════════════════════════════════════════════════════════════════════════
+
+SUCCESS CRITERIA:
+─────────────────
+
+This infographic is SUCCESSFUL if:
+
+✓ Non-technical colleague (random ทกท. staff) reads it in <3 minutes and can answer:
+   1. "Did dwell time go up?" → YES
+   2. "By how much?" → ~0.5 days (half day more)
+   3. "What did we gain?" → ~115 ล้านบาท (extra storage fee)
+   4. "What's the main problem?" → Export >30d (stuck containers, 4.2× more)
+   5. "What's the cost impact?" → We don't know yet (marks as TBD)
+
+✓ Design is clean (no clutter, good spacing)
+✓ Numbers are verifiable (source traceable)
+✓ Tone is professional (not sensational, not academic)
+✓ Mobile view works (readable on iPhone)
+✓ Print version looks good
+
+════════════════════════════════════════════════════════════════════════════════
+
+FILES LOCATION:
+───────────────
+
+/home/claude/ (workspace directory):
+  ├── Infographic_DwellTime_Revenue_FRAMEWORK.md
+  ├── Issue_Decomposition_Dwell_Revenue.md
+  ├── Quick_Reference.md
+  ├── infographic_dwell_revenue_TEMPLATE.html
+  └── SUMMARY_Infographic_Project.txt ← This file
+
+/mnt/user-data/uploads/:
+  └── Dwell_Time_Dashboard_2567-2569.html (source data)
+
+════════════════════════════════════════════════════════════════════════════════
+
+NEXT IMMEDIATE STEPS:
+─────────────────────
+
+□ Read: Quick_Reference.md (5 min)
+□ Review: Issue_Decomposition_Dwell_Revenue.md (10 min)
+□ Check: infographic_dwell_revenue_TEMPLATE.html in browser (1 min)
+□ Open: VS Code with Claude Code
+□ Run: Paste prompt from Quick_Reference.md
+□ Wait: ~30-60 min for Claude Code to build
+□ Test: Open output HTML in browser
+□ Feedback: 5-10 min with colleague
+□ Deploy: Copy to hub or share as standalone
+
+TOTAL TIME: 2-3 hours (mostly Claude Code execution time)
+
+════════════════════════════════════════════════════════════════════════════════
+
+CONTACT & OWNERSHIP:
+────────────────────
+
+Framework Creator: Claude (Anthropic)
+Project Owner: Palabordee (Port Authority Evaluation Division)
+Date Created: June 2026
+Status: 🟢 READY FOR VS CODE EXECUTION
+
+════════════════════════════════════════════════════════════════════════════════
